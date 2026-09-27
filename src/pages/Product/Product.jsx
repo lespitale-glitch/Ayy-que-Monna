@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router-dom'
 import ProductGallery from '../../components/product/ProductGallery.jsx'
 import ProductTags from '../../components/product/ProductTags.jsx'
 import QuantitySelector from '../../components/product/QuantitySelector.jsx'
+import ShippingInfo from '../../components/product/ShippingInfo.jsx'
 import NotFound from '../NotFound/NotFound.jsx'
 import { MAX_QUANTITY } from '../../context/CartContext.jsx'
 import { useCart } from '../../hooks/useCart.js'
@@ -70,9 +71,7 @@ function ProductDetail({ product }) {
             </button>
           </div>
 
-          <p className="mt-8 border-t border-line pt-6 text-xs uppercase tracking-widest text-stone">
-            Pedidos y consultas por WhatsApp
-          </p>
+          <ShippingInfo />
         </div>
       </div>
     </article>

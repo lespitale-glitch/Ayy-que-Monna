@@ -1,10 +1,13 @@
 import { Link } from 'react-router-dom'
 import BrandLogo from './BrandLogo.jsx'
-import { CATEGORIES, INSTAGRAM_URL } from '../../config.js'
+import { CATEGORIES } from '../../config.js'
+import { useSettings } from '../../hooks/useSettings.js'
+import { instagramUrl } from '../../utils/settings.js'
 
 function Footer() {
   // Calculamos el año actual para no tener que actualizarlo a mano cada enero
   const year = new Date().getFullYear()
+  const { instagramHandle } = useSettings()
 
   return (
     <footer className="mt-24 border-t border-line">
@@ -30,17 +33,20 @@ function Footer() {
           </ul>
         </nav>
 
-        <div>
-          <h2 className="font-sans text-xs uppercase tracking-widest text-stone">Seguinos</h2>
-          <a
-            href={INSTAGRAM_URL}
-            target="_blank"
-            rel="noreferrer"
-            className="mt-4 inline-block text-sm decoration-fucsia decoration-2 underline-offset-4 hover:underline"
-          >
-            Instagram @ayyquemonna
-          </a>
-        </div>
+        {/* Si no hay usuario de Instagram cargado en los ajustes, la columna no se muestra */}
+        {instagramHandle && (
+          <div>
+            <h2 className="font-sans text-xs uppercase tracking-widest text-stone">Seguinos</h2>
+            <a
+              href={instagramUrl(instagramHandle)}
+              target="_blank"
+              rel="noreferrer"
+              className="mt-4 inline-block text-sm decoration-fucsia decoration-2 underline-offset-4 hover:underline"
+            >
+              Instagram @{instagramHandle}
+            </a>
+          </div>
+        )}
       </div>
 
       <p className="border-t border-line py-6 text-center text-xs uppercase tracking-widest text-stone">

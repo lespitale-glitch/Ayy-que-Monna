@@ -11,6 +11,10 @@ export function getAdminErrorMessage(error) {
     return 'La foto supera el tamaño máximo permitido (5 MB).'
   }
   if (/mime type/i.test(text)) return 'Formato de foto no permitido (usa JPG, PNG o WebP).'
+  // Las reglas de store_settings se llaman store_settings_<columna>_check
+  if (error?.code === '23514' && text.includes('store_settings')) {
+    return 'Algún ajuste no es válido. Revisa el número de WhatsApp y el usuario de Instagram.'
+  }
   if (error?.code === '23514') return 'Algún dato no es válido (revisa precio, categoría o colección).'
   if (error?.code === '42501' || error?.code === 'PGRST116' || /permis/i.test(text)) {
     return 'No tienes permisos para este cambio. Vuelve a iniciar sesión.'

@@ -1,14 +1,18 @@
-import { useRef } from 'react'
+import { useMemo, useRef } from 'react'
 import HeroSlide from './HeroSlide.jsx'
 import SliderControls from './SliderControls.jsx'
-import { HERO_SLIDES } from '../../../data/heroSlides.js'
+import { buildHeroSlides } from '../../../data/heroSlides.js'
+import { useSettings } from '../../../hooks/useSettings.js'
 import { useSlider } from '../../../hooks/useSlider.js'
 
 const SWIPE_THRESHOLD = 50 // px mínimos de deslizamiento para cambiar de diapositiva
 
 // Carrusel principal de la Home (patrón de carrusel accesible de WAI-ARIA)
 function HeroSlider() {
-  const slider = useSlider(HERO_SLIDES.length)
+  const { pickupPoints, instagramHandle } = useSettings()
+  // useMemo: la lista se rearma solo si cambian los ajustes que la afectan
+  const slides = useMemo(() => buildHeroSlides({ pickupPoints, instagramHandle }), [pickupPoints, instagramHandle])
+  const slider = useSlider(slides.length)
   const pointerStartX = useRef(null)
 
   // Deslizar con el dedo (o arrastrar con el mouse)
@@ -44,20 +48,20 @@ function HeroSlider() {
         onPointerCancel={() => (pointerStartX.current = null)}
         className="grid touch-pan-y select-none overflow-hidden md:rounded-3xl lg:aspect-[16/7]"
       >
-        {HERO_SLIDES.map((slide, i) => (
+        {slides.map((slide, i) => (
           <HeroSlide
             key={slide.id}
             slide={slide}
             isActive={i === slider.index}
             position={i + 1}
-            total={HERO_SLIDES.length}
+            total={slides.length}
             isFirst={i === 0}
           />
         ))}
       </div>
 
       <SliderControls
-        total={HERO_SLIDES.length}
+        total={slides.length}
         index={slider.index}
         onGoTo={slider.goTo}
         onPrev={slider.prev}

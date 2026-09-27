@@ -24,9 +24,9 @@ src/
   assets/        # imágenes de la interfaz (logo, banners) importadas desde el código
   components/    # componentes reutilizables (Button, ProductCard, Header…)
   pages/         # una carpeta por ruta (Home, Shop, Product, Cart, Admin)
-  context/       # ProductsContext (catálogo), CartContext, AuthContext (solo /admin)
+  context/       # ProductsContext (catálogo), SettingsContext (ajustes), CartContext, AuthContext (solo /admin)
   lib/           # supabase.js (cliente; null si faltan las claves)
-  services/      # productsService.js: ÚNICO lugar que habla con Supabase
+  services/      # productsService.js y settingsService.js: ÚNICOS lugares que hablan con Supabase
   data/          # products.json
   hooks/         # hooks propios (useCart…)
 fotos-originales/  # fotos originales pesadas, IGNORADA por Git, solo local
@@ -75,7 +75,13 @@ Solo se consulta como referencia: no copiar código de allí.
   Los cambios se guardan juntos con "Guardar orden" → `reorderProducts(ids)` → `reorder_products()` (atómico,
   lista completa incluidos los ocultos). Aviso al salir con cambios sin guardar (`useBlocker` + `beforeunload`).
   Lógica pura en `utils/reorder.js` (`moveItem`, `hasOrderChanged`, `sortByIds`).
-- Cambios sin guardar: `useUnsavedChangesGuard(isDirty)` + `<UnsavedChangesDialog>` (formulario y orden).
+- Ajustes de la tienda (`/admin/ajustes`): tabla `store_settings` (una sola fila, id = 1) con WhatsApp, Instagram,
+  envíos (texto, costo "desde") y puntos de retiro. La tienda los lee con `useSettings()`; NADA de números o
+  usuarios fijos en los componentes (los valores por defecto viven en `DEFAULT_SETTINGS` de `config.js`).
+  Los textos usan los valores por defecto mientras cargan; el botón de WhatsApp del carrito espera a
+  `status === 'ready'` (nunca manda un pedido a un número viejo). Reglas en `utils/settings.js` (espejo de schema.sql).
+- Menú del panel: `AdminNav` (Productos | Ajustes); Productos abarca también el formulario y el orden.
+- Cambios sin guardar: `useUnsavedChangesGuard(isDirty)` + `<UnsavedChangesDialog>` (formulario, orden y ajustes).
   En el formulario, `isFormDirty` (utils/productForm.js); mientras se guarda no se bloquea la navegación.
 
 ## Reglas de arquitectura

@@ -60,6 +60,22 @@ Decisiones: Supabase (PostgreSQL + Auth + Storage), una única cuenta de adminis
 - [ ] Probar el panel completo contra el proyecto real de Supabase
 **Hecho cuando:** la administradora cambia el orden en el panel y se refleja en la tienda.
 
+## Fase 3.5 — Configuración, colecciones, bot, inventario y analítica
+Todo con herramientas gratuitas. Decisiones de la dueña:
+- Envíos a todo el país, costo a cargo del comprador; puntos de retiro gratis. Configurable desde el panel.
+- Colecciones configurables (reemplazan el campo fijo "Marina").
+- Bot sin IA lo más completo posible; guarda de forma anónima las preguntas que no supo responder.
+- Página /preguntas-frecuentes indexable por Google (datos estructurados FAQPage + sitemap).
+- Stock por producto con modo: sin control / con stock / a pedido. Con stock en 0 → "Agotado" (no se puede
+  agregar al carrito). "Últimas unidades" opcional (activado por defecto). Aviso de stock bajo en panel y por email.
+- Analítica: Google Analytics 4 + Meta Pixel, con aviso de cookies; el panel no se mide.
+
+- [x] Etapa A: Ajustes (WhatsApp, Instagram, envíos y puntos de retiro) editables desde /admin/ajustes
+- [ ] Etapa B: Colecciones configurables (/admin/colecciones), migración de "marina"
+- [ ] Etapa C: Bot de preguntas frecuentes + preguntas sin respuesta + página SEO
+- [ ] Etapa D: Inventario (modos de stock) + alertas en panel y email (Resend + función de Supabase)
+- [ ] Etapa E: GA4 + Meta Pixel con aviso de cookies (IDs desde Ajustes)
+
 ## Fase 4 — Newsletter
 - [ ] Formulario de suscripción en el footer y en un modal discreto
 - [ ] Integración con proveedor (por decidir: Mailchimp, Brevo, Resend)

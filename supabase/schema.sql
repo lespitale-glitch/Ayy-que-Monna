@@ -198,3 +198,57 @@ create policy "Admin: borrar fotos"
   on storage.objects for delete
   to authenticated
   using (bucket_id = 'products' and (select public.is_admin()));
+
+
+-- -----------------------------------------------------------------------------
+-- 6. Ajustes de la tienda (una sola fila, editable desde /admin/ajustes)
+-- -----------------------------------------------------------------------------
+create table if not exists public.store_settings (
+  -- Siempre id = 1: la tabla tiene exactamente una fila
+  id               smallint primary key default 1 check (id = 1),
+  -- Código de país + área + número, sin "+" ni espacios (ej. 5491112345678)
+  whatsapp_number  text not null check (whatsapp_number ~ '^[0-9]{10,15}$'),
+  -- Usuario de Instagram sin "@"
+  instagram_handle text not null default '' check (instagram_handle ~ '^[A-Za-z0-9._]{0,30}$'),
+  shipping_enabled boolean not null default true,         -- ¿se hacen envíos?
+  shipping_note    text not null default '' check (length(shipping_note) <= 300),
+  shipping_from    integer check (shipping_from is null or shipping_from >= 0), -- "desde $…" (opcional)
+  pickup_points    text[] not null default '{}'           -- puntos de retiro gratis
+                   check (cardinality(pickup_points) <= 10),
+  updated_at       timestamptz not null default now()
+);
+
+drop trigger if exists store_settings_set_updated_at on public.store_settings;
+create trigger store_settings_set_updated_at
+  before update on public.store_settings
+  for each row execute function public.set_updated_at();
+
+-- Valores iniciales (los del sitio original). "on conflict do nothing": no pisa lo que se
+-- haya cambiado desde el panel si este archivo se vuelve a ejecutar.
+insert into public.store_settings (id, whatsapp_number, instagram_handle, shipping_note, shipping_from, pickup_points)
+values (
+  1,
+  '5491112345678', -- ⚠️ número de prueba: cambiarlo desde /admin/ajustes
+  'ayyquemonna',
+  'Enviamos a todo el país. El costo del envío está a cargo de quien compra y varía según la ubicación.',
+  6000,
+  array['Ballester', 'Carapachay', 'Belgrano']
+)
+on conflict (id) do nothing;
+
+alter table public.store_settings enable row level security;
+grant select on public.store_settings to anon, authenticated;
+grant update on public.store_settings to authenticated;
+
+drop policy if exists "Público: ver ajustes" on public.store_settings;
+create policy "Público: ver ajustes"
+  on public.store_settings for select
+  to anon, authenticated
+  using (true);
+
+drop policy if exists "Admin: editar ajustes" on public.store_settings;
+create policy "Admin: editar ajustes"
+  on public.store_settings for update
+  to authenticated
+  using ((select public.is_admin()))
+  with check ((select public.is_admin()));

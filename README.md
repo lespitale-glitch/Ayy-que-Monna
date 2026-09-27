@@ -28,6 +28,8 @@ npm run dev                  # http://localhost:5173
   cuando la lista tiene al menos un testimonio. Solo reseñas reales y con permiso de la clienta.
 - **Diapositivas del inicio:** `src/data/heroSlides.js` (texto, botón y foto de cada una).
 - **Colecciones del menú:** `src/data/selections.js`.
+- **WhatsApp, Instagram, envíos y puntos de retiro:** desde el panel, en **/admin/ajustes**.
+  Sin Supabase (modo local) se usan los valores de `DEFAULT_SETTINGS` en `src/config.js`.
 
 ---
 
@@ -54,6 +56,10 @@ cambiar un poco con el tiempo; si algo no coincide, busca la opción equivalente
 
 > Los dos archivos se pueden volver a ejecutar sin romper nada. El seed **no** pisa
 > productos que ya existan, así que no se pierden las ediciones hechas desde el panel.
+
+> **Cuando `schema.sql` cambia** (por ejemplo, al sumar los Ajustes de la tienda): vuelve a pegar
+> el archivo completo en el SQL Editor y toca **Run**. Revisa que el selector de rol (arriba a la
+> derecha del editor) diga **postgres**; con otro rol aparece *permission denied*.
 
 ### 3. Crear la cuenta de administradora
 1. **Authentication** → **Users** → **Add user** → **Create new user**.
@@ -106,6 +112,8 @@ No hay ningún enlace visible en la tienda a propósito. Sin sesión, te lleva a
 | Cambiar la foto principal | En el formulario: estrella ☆ sobre la foto o flechas ← → |
 | Eliminar para siempre | Ícono de la papelera → confirmar (borra también sus fotos subidas) |
 | Cambiar el orden de la tienda | **Ordenar catálogo** → arrastrar (o flechas ↑ ↓) → **Guardar orden** |
+| Cambiar el WhatsApp de pedidos | **Ajustes** → número con código de país → **Probar este número** → **Guardar ajustes** |
+| Cambiar Instagram, envíos o puntos de retiro | **Ajustes** → editar → **Guardar ajustes** |
 | Salir | **Cerrar sesión** (arriba a la derecha) |
 
 Notas:
@@ -137,5 +145,5 @@ dirección como `/tienda/aros` o `/admin` daría error 404, porque esas páginas
 Router en el navegador y no existen como archivos en el servidor.
 
 ### Antes de publicar
-- [ ] Reemplazar `WHATSAPP_NUMBER` en `src/config.js` por el número real de la tienda.
+- [ ] Cargar el número real de WhatsApp en **/admin/ajustes** (el de fábrica es de prueba).
 - [ ] Verificar que el registro público de Supabase esté desactivado (Paso 0.4).
