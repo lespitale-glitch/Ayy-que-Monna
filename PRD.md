@@ -42,7 +42,7 @@ filtro por terminación Dorado/Plateado deducida del nombre, logo.jpg procesado 
 - [x] Paso 2: Hero Slider accesible con los banners originales (WebP, autoplay con pausa, swipe, reducir movimiento)
 - [x] Paso 3: buscador en modal con filtros (categoría, terminación, precio, Marina)
 - [x] Paso 4: mega-menú "Colecciones" + página `/seleccion/:slug` (Marina, Novedades, Destacados, Dorados, Plateados)
-- [ ] Paso 5: sección de testimonios (oculta hasta cargar reseñas reales)
+- [x] Paso 5: sección de testimonios (oculta hasta cargar reseñas reales en `src/data/testimonials.js`)
 - [ ] Paso 6: regresión completa (tienda, carrito, panel) y cierre
 
 ## Fase 3 — Panel Admin con Drag & Drop (Supabase)
