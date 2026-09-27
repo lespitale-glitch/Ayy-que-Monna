@@ -21,7 +21,8 @@ y sumar gestión de catálogo y newsletter.
 **Hecho cuando:** `npm run dev` levanta una página con fuentes y colores de marca.
 
 ## Fase 2 — Frontend e-commerce
-- [ ] Header minimalista (logo centrado, menú, icono carrito) y footer
+- [x] Rutas (React Router), Layout con Header y Footer, `formatPrice`
+- [ ] Icono de carrito en el Header (Paso 4)
 - [ ] Home: hero con imagen grande, colecciones destacadas, grid de novedades
 - [ ] Tienda: grid de productos con filtro por categoría
 - [ ] Página de producto: galería, precio, descripción, "Agregar al carrito"
