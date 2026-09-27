@@ -9,12 +9,13 @@ Se conservan los productos, textos e imágenes originales de la web anterior.
 - **React Router** para navegación
 - **dnd-kit** para el drag & drop del panel admin (Fase 3)
 - Estado: `useState`/`useContext` (carrito en un `CartContext`). No usar Redux.
-- Datos: al principio, JSON local en `src/data/products.json`; backend se decide en Fase 3.
+- Datos: **Supabase** (PostgreSQL + Auth + Storage) desde la Fase 3. `src/data/products.json` queda como fuente del seed inicial.
 
 ## Comandos
 - `npm run dev` — servidor de desarrollo
 - `npm run build` — build de producción
 - `npm run lint` — linter (oxlint, viene con la plantilla de Vite)
+- `npm run db:seed` — regenera `supabase/seed.sql` desde `products.json`
 
 ## Estructura
 public/
@@ -27,6 +28,8 @@ src/
   data/          # products.json
   hooks/         # hooks propios (useCart…)
 fotos-originales/  # fotos originales pesadas, IGNORADA por Git, solo local
+supabase/          # schema.sql (tabla, RLS, Storage) y seed.sql (generado)
+scripts/           # generate-seed.mjs
 
 El sitio original (Next.js) está respaldado en el repo aparte `lespitale-glitch/Monna_legacy`.
 Solo se consulta como referencia: no copiar código de allí.
@@ -42,6 +45,13 @@ Solo se consulta como referencia: no copiar código de allí.
 - `category`: "aros" | "collares" | "anillos" | "pulseras".
 - `images[0]` es la foto principal; `images[1]` (opcional) se usa en el hover.
 - `collection` (opcional): hoy solo `"marina"`.
+
+## Supabase
+- La tabla usa snake_case (`is_featured`); el frontend usa camelCase (`isFeatured`). La conversión vive SOLO en la capa de servicios.
+- Seguridad = políticas RLS de `supabase/schema.sql`. La administradora se identifica con `public.is_admin()` (tabla `admins`).
+- En el frontend solo va la clave pública (anon/publishable) vía `.env.local`. NUNCA la `service_role`.
+- Cambios de esquema: editar `schema.sql` de forma idempotente (`if not exists`, `drop policy if exists`) y volver a ejecutarlo.
+- Fotos nuevas → bucket `products` del Storage; las originales siguen en `public/products/`.
 
 ## Reglas de arquitectura
 - Componentes funcionales, uno por archivo, nombre en PascalCase.

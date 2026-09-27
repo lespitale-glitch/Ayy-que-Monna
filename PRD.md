@@ -33,11 +33,17 @@ y sumar gestión de catálogo y newsletter.
 - [x] Pulido: fade-in al scroll (respeta "reducir movimiento"), alt descriptivos, sin desbordes en 320–1280px, 0 errores axe (WCAG 2 AA)
 **Hecho cuando:** se puede navegar y armar un carrito con todos los productos originales.
 
-## Fase 3 — Panel Admin con Drag & Drop
-- [ ] Ruta `/admin` protegida con login
-- [ ] CRUD de productos (crear, editar, borrar, subir imágenes)
-- [ ] Reordenar productos y colecciones con drag & drop (dnd-kit)
-- [ ] Backend/persistencia: por decidir (Supabase, Firebase, etc.)
+## Fase 3 — Panel Admin con Drag & Drop (Supabase)
+Decisiones: Supabase (PostgreSQL + Auth + Storage), una única cuenta de administradora
+(email/password) en `/admin`, fotos originales en `public/products/` y fotos nuevas en Storage.
+- [x] Paso 1: `supabase/schema.sql` (tabla, RLS, `is_admin`, `reorder_products`, bucket), `seed.sql` (67 productos), guía del Paso 0 en README, `vercel.json`
+- [ ] Paso 0 (dueña): crear proyecto, ejecutar SQL, crear admin, cerrar registro, cargar `.env.local`
+- [ ] Paso 2: cliente Supabase + `productsService` + `ProductsContext`; la tienda lee de Supabase
+- [ ] Paso 3: `AuthContext`, `/admin/login` y rutas protegidas (carga diferida)
+- [ ] Paso 4: lista de productos con toggles Visible / Destacado / Nuevo / Marina, búsqueda y filtro
+- [ ] Paso 5: crear / editar / eliminar; subida de fotos a Storage (WebP ≤ 1600px)
+- [ ] Paso 6: reordenar el catálogo con drag & drop (dnd-kit)
+- [ ] Paso 7: pulido, accesibilidad del panel y documentación
 **Hecho cuando:** la administradora cambia el orden en el panel y se refleja en la tienda.
 
 ## Fase 4 — Newsletter
@@ -50,5 +56,5 @@ y sumar gestión de catálogo y newsletter.
 Multi-idioma, cuentas de cliente, gestión de stock avanzada.
 
 ## Preguntas abiertas
-- Proveedor de backend y de newsletter
-- Dominio y hosting (Vercel/Netlify)
+- Proveedor de newsletter
+- Dominio (hosting: Vercel)
