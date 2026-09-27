@@ -10,7 +10,7 @@ function CartButton() {
       type="button"
       onClick={openCart}
       aria-label={`Abrir carrito, ${totalItems} ${totalItems === 1 ? 'producto' : 'productos'}`}
-      className="relative -mr-2 p-2"
+      className="relative p-2"
     >
       <ShoppingBag size={22} strokeWidth={1.25} />
       {totalItems > 0 && (

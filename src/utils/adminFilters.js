@@ -1,9 +1,4 @@
-// Quita acentos y pasa a minúsculas: "Acuático" y "acuatico" coinciden al buscar
-const normalize = (text) =>
-  text
-    .normalize('NFD')
-    .replace(/[̀-ͯ]/g, '')
-    .toLowerCase()
+import { normalize } from './text.js'
 
 // Filtra la lista del panel por texto (nombre o id), categoría y estado de visibilidad
 export function filterAdminProducts(products, { query, category, visibility }) {

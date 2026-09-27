@@ -44,4 +44,9 @@
   .scrollbar-none::-webkit-scrollbar {
     display: none;
   }
+
+  /* Oculta la "x" azul nativa de Chrome en campos de búsqueda (el buscador ya tiene su botón de cerrar) */
+  .search-no-cancel::-webkit-search-cancel-button {
+    appearance: none;
+  }
 }
