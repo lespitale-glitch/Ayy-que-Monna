@@ -2,8 +2,9 @@
 // así no hay que buscar valores sueltos dentro de los componentes.
 
 // Número de WhatsApp para el checkout, con código de país y sin "+" ni espacios.
-// Ejemplo Argentina: "5491122334455". Se usa en el Paso 4 (carrito).
-export const WHATSAPP_NUMBER = ''
+// ⚠️ PLACEHOLDER DE PRUEBA: reemplazar por el número real de la tienda antes del deploy final.
+// Formato Argentina: 549 + código de área + número (ej. "5491112345678").
+export const WHATSAPP_NUMBER = '5491112345678'
 
 export const INSTAGRAM_URL = 'https://www.instagram.com/ayyquemonna'
 

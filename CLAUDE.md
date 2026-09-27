@@ -57,8 +57,8 @@ Solo se consulta como referencia: no copiar código de allí.
 **Filosofía:** el producto es el protagonista. Mucho aire, poco ruido.
 
 - **Color:** paleta neutra (tokens en `tailwind.config.js`, no usar hex sueltos).
-  - Fondo `bone` #FAF8F5 (hueso), texto `ink` #1A1A1A, secundario `stone` #8A8580, bordes `line` #E8E4DF.
-  - Un único acento cálido y discreto: `gold` #B89B72, solo en detalles.
+  - Fondo `bone` #FAF8F5 (hueso), texto `ink` #1A1A1A, secundario `stone` #716C67, bordes `line` #E8E4DF.
+  - Un único acento cálido y discreto: `gold` #B89B72, solo en bordes y líneas finas. Nunca como color de texto (no pasa AA).
 - **Tipografía:**
   - Títulos: serif elegante (Cormorant Garamond), peso ligero.
   - Texto/UI: sans-serif limpia (Inter / Helvetica Neue), 14–16px.

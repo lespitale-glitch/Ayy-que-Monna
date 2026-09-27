@@ -20,7 +20,7 @@ function Footer() {
           <ul className="mt-4 space-y-2 text-sm">
             {CATEGORIES.map((c) => (
               <li key={c.slug}>
-                <Link to={`/tienda/${c.slug}`} className="hover:text-gold">
+                <Link to={`/tienda/${c.slug}`} className="underline-offset-4 decoration-gold hover:underline">
                   {c.label}
                 </Link>
               </li>
@@ -34,7 +34,7 @@ function Footer() {
             href={INSTAGRAM_URL}
             target="_blank"
             rel="noreferrer"
-            className="mt-4 inline-block text-sm hover:text-gold"
+            className="mt-4 inline-block text-sm underline-offset-4 decoration-gold hover:underline"
           >
             Instagram @ayyquemonna
           </a>

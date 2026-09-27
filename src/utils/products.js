@@ -12,3 +12,8 @@ export function getProductsByCategory(slug) {
   if (!slug) return products
   return products.filter((product) => product.category === slug)
 }
+
+// Busca un producto por su id. .find() devuelve el primero que coincide, o undefined.
+export function getProductById(id) {
+  return products.find((product) => product.id === id)
+}
