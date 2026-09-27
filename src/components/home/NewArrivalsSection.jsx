@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 import SectionHeading from './SectionHeading.jsx'
 import ProductCard from '../ProductCard.jsx'
 import Reveal from '../Reveal.jsx'
-import editorialImage from '../../assets/nuevo.jpg'
+import editorialImage from '../../assets/hero/nuevo-lg.webp'
 import { useProducts } from '../../hooks/useProducts.js'
 
 // Bloque editorial: una foto grande a un lado y cuatro novedades al otro.

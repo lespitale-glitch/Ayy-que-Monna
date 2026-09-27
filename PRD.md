@@ -39,7 +39,7 @@ Decisiones: slider con los banners originales, testimonios armados pero ocultos 
 filtro por terminación Dorado/Plateado deducida del nombre, logo.jpg procesado con sharp, paleta en todo el sitio.
 - [x] Paso 0: normas de diseño en CLAUDE.md
 - [x] Paso 1: identidad (logo WebP transparente, favicon, paleta, Comfortaa + Geist autoalojadas, botones)
-- [ ] Paso 2: Hero Slider accesible con los banners originales
+- [x] Paso 2: Hero Slider accesible con los banners originales (WebP, autoplay con pausa, swipe, reducir movimiento)
 - [ ] Paso 3: buscador en modal con filtros (categoría, terminación, precio, Marina)
 - [ ] Paso 4: mega-menú "Colecciones" + página `/seleccion/:slug`
 - [ ] Paso 5: sección de testimonios (oculta hasta cargar reseñas reales)
