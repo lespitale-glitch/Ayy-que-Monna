@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import { Menu, X } from 'lucide-react'
 import Logo from './Logo.jsx'
+import CartButton from '../cart/CartButton.jsx'
 import { CATEGORIES } from '../../config.js'
 
 const NAV_LINKS = [
@@ -38,20 +39,20 @@ function Header() {
 
         <Logo />
 
-        <nav aria-label="Principal" className="hidden md:block">
-          <ul className="flex gap-8">
-            {NAV_LINKS.map((link) => (
-              <li key={link.to}>
-                <NavLink to={link.to} end={link.end} className={linkClass}>
-                  {link.label}
-                </NavLink>
-              </li>
-            ))}
-          </ul>
-        </nav>
-
-        {/* Espacio reservado para el carrito (Paso 4); mantiene el logo centrado en móvil */}
-        <span className="w-9 md:hidden" aria-hidden="true" />
+        <div className="flex items-center gap-10">
+          <nav aria-label="Principal" className="hidden md:block">
+            <ul className="flex gap-8">
+              {NAV_LINKS.map((link) => (
+                <li key={link.to}>
+                  <NavLink to={link.to} end={link.end} className={linkClass}>
+                    {link.label}
+                  </NavLink>
+                </li>
+              ))}
+            </ul>
+          </nav>
+          <CartButton />
+        </div>
       </div>
 
       {isOpen && (

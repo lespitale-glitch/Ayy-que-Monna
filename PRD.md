@@ -22,13 +22,14 @@ y sumar gestión de catálogo y newsletter.
 
 ## Fase 2 — Frontend e-commerce
 - [x] Rutas (React Router), Layout con Header y Footer, `formatPrice`
-- [ ] Icono de carrito en el Header (Paso 4)
+- [x] Icono de carrito con contador en el Header
 - [ ] Home: hero con imagen grande, colecciones destacadas, grid de novedades
 - [x] Tienda: ProductCard (4:5, hover, precio ARS) y grid con filtro por categoría
 - [x] Página de producto: galería con miniaturas, precio, descripción, cantidad, etiqueta Marina y 404
-- [ ] Conectar "Agregar al carrito" al CartContext (Paso 4)
-- [ ] Carrito lateral (drawer) con persistencia en localStorage
-- [ ] Checkout: por definir (WhatsApp, Mercado Pago, etc.)
+- [x] "Agregar al carrito" conectado al CartContext (abre el panel)
+- [x] Carrito lateral (drawer) con persistencia en localStorage (`ayyquemonna_cart`)
+- [x] Checkout por WhatsApp (mensaje con detalle y total)
+- [ ] Reemplazar `WHATSAPP_NUMBER` placeholder por el número real antes del deploy
 - [ ] Responsive, accesible y con imágenes optimizadas
 **Hecho cuando:** se puede navegar y armar un carrito con todos los productos originales.
 
@@ -49,6 +50,5 @@ y sumar gestión de catálogo y newsletter.
 Multi-idioma, cuentas de cliente, gestión de stock avanzada.
 
 ## Preguntas abiertas
-- Método de pago y de envío
 - Proveedor de backend y de newsletter
 - Dominio y hosting (Vercel/Netlify)

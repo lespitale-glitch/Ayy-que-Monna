@@ -4,6 +4,8 @@ import ProductGallery from '../../components/product/ProductGallery.jsx'
 import ProductTags from '../../components/product/ProductTags.jsx'
 import QuantitySelector from '../../components/product/QuantitySelector.jsx'
 import NotFound from '../NotFound/NotFound.jsx'
+import { MAX_QUANTITY } from '../../context/CartContext.jsx'
+import { useCart } from '../../hooks/useCart.js'
 import { formatPrice } from '../../utils/formatPrice.js'
 import { getCategory, getProductById } from '../../utils/products.js'
 
@@ -19,10 +21,15 @@ function Product() {
 
 function ProductDetail({ product }) {
   const [quantity, setQuantity] = useState(1)
+  const { addItem, openCart } = useCart()
   const category = getCategory(product.category)
 
-  // El carrito se conecta en el Paso 4 (CartContext). Por ahora el botón no hace nada.
-  const handleAddToCart = () => {}
+  // Agrega la cantidad elegida y abre el panel para que se vea el resultado
+  const handleAddToCart = () => {
+    addItem(product.id, quantity)
+    openCart()
+    setQuantity(1)
+  }
 
   return (
     <article className="mx-auto max-w-7xl px-6 py-10 md:py-16">
@@ -52,7 +59,7 @@ function ProductDetail({ product }) {
           )}
 
           <div className="mt-10 flex gap-4">
-            <QuantitySelector value={quantity} onChange={setQuantity} />
+            <QuantitySelector value={quantity} onChange={setQuantity} max={MAX_QUANTITY} />
             <button
               type="button"
               onClick={handleAddToCart}
