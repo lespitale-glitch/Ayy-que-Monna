@@ -1,0 +1,36 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Fotos originales pesadas (~500 MB): se guardan fuera de Git.
+# En el repo solo van muestras optimizadas en src/assets/.
+fotos-originales/
+legacy/**/*.jpg
+legacy/**/*.jpeg
+legacy/**/*.png
+legacy/**/*.tif
+legacy/**/*.tiff
+legacy/**/*.heic
+legacy/**/*.psd
+legacy/**/*.raw
