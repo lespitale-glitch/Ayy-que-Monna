@@ -24,7 +24,7 @@ y sumar gestión de catálogo y newsletter.
 - [x] Rutas (React Router), Layout con Header y Footer, `formatPrice`
 - [ ] Icono de carrito en el Header (Paso 4)
 - [ ] Home: hero con imagen grande, colecciones destacadas, grid de novedades
-- [ ] Tienda: grid de productos con filtro por categoría
+- [x] Tienda: ProductCard (4:5, hover, precio ARS) y grid con filtro por categoría
 - [ ] Página de producto: galería, precio, descripción, "Agregar al carrito"
 - [ ] Carrito lateral (drawer) con persistencia en localStorage
 - [ ] Checkout: por definir (WhatsApp, Mercado Pago, etc.)
