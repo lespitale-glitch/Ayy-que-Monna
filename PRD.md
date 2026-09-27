@@ -25,7 +25,8 @@ y sumar gestión de catálogo y newsletter.
 - [ ] Icono de carrito en el Header (Paso 4)
 - [ ] Home: hero con imagen grande, colecciones destacadas, grid de novedades
 - [x] Tienda: ProductCard (4:5, hover, precio ARS) y grid con filtro por categoría
-- [ ] Página de producto: galería, precio, descripción, "Agregar al carrito"
+- [x] Página de producto: galería con miniaturas, precio, descripción, cantidad, etiqueta Marina y 404
+- [ ] Conectar "Agregar al carrito" al CartContext (Paso 4)
 - [ ] Carrito lateral (drawer) con persistencia en localStorage
 - [ ] Checkout: por definir (WhatsApp, Mercado Pago, etc.)
 - [ ] Responsive, accesible y con imágenes optimizadas
