@@ -113,15 +113,76 @@ export async function updateProduct(id, changes) {
   return fromRow(data)
 }
 
+// Un producto por id (incluye ocultos). Devuelve null si no existe.
+export async function fetchAdminProduct(id) {
+  requireSupabase()
+  const { data, error } = await supabase.from('products').select(ADMIN_COLUMNS).eq('id', id).maybeSingle()
+
+  if (error) throw error
+  return data ? fromRow(data) : null
+}
+
+// Crea un producto al final del catálogo (después se puede reordenar con drag & drop)
+export async function createProduct(product) {
+  requireSupabase()
+  const { data: last, error: positionError } = await supabase
+    .from('products')
+    .select('position')
+    .order('position', { ascending: false })
+    .limit(1)
+    .maybeSingle()
+  if (positionError) throw positionError
+
+  const { data, error } = await supabase
+    .from('products')
+    .insert(toRow({ ...product, position: (last?.position ?? 0) + 1 }))
+    .select(ADMIN_COLUMNS)
+    .single()
+
+  if (error) throw error
+  return fromRow(data)
+}
+
+// ---------------------------------------------------------------------------
+// Fotos (Storage)
+// ---------------------------------------------------------------------------
+
+// Sube una foto ya comprimida y devuelve su URL pública.
+// El nombre es aleatorio (no depende del id del producto, que todavía puede cambiar).
+export async function uploadProductImage(blob) {
+  requireSupabase()
+  const extension = blob.type === 'image/webp' ? 'webp' : 'jpg'
+  const path = `${crypto.randomUUID()}.${extension}`
+
+  const { error } = await supabase.storage.from(STORAGE_BUCKET).upload(path, blob, {
+    contentType: blob.type,
+    cacheControl: '31536000', // el nombre nunca se reutiliza: el navegador puede guardarla 1 año
+    upsert: false,
+  })
+  if (error) throw error
+
+  return supabase.storage.from(STORAGE_BUCKET).getPublicUrl(path).data.publicUrl
+}
+
 // Si la foto está en nuestro bucket, devuelve su ruta dentro del bucket; si no, null.
-// Ej: https://x.supabase.co/storage/v1/object/public/products/aros-nube/1.webp → "aros-nube/1.webp"
+// Ej: https://x.supabase.co/storage/v1/object/public/products/abc.webp → "abc.webp"
 export function getStoragePath(imageUrl) {
   const marker = `/storage/v1/object/public/${STORAGE_BUCKET}/`
   const index = imageUrl.indexOf(marker)
   return index === -1 ? null : decodeURIComponent(imageUrl.slice(index + marker.length))
 }
 
-// Borra el producto y sus fotos del Storage (las de public/products/ no se tocan)
+// Borra del Storage las fotos de la lista que sean nuestras (ignora las de public/products/).
+// Si falla, solo lo avisa en consola: el producto ya quedó guardado o borrado.
+export async function removeStorageImages(imageUrls) {
+  const paths = imageUrls.map(getStoragePath).filter(Boolean)
+  if (paths.length === 0) return
+
+  const { error } = await supabase.storage.from(STORAGE_BUCKET).remove(paths)
+  if (error) console.warn('No se pudieron borrar algunas fotos del Storage:', error)
+}
+
+// Borra el producto y sus fotos del Storage
 export async function deleteProduct(product) {
   requireSupabase()
   const { data, error } = await supabase.from('products').delete().eq('id', product.id).select('id')
@@ -129,10 +190,5 @@ export async function deleteProduct(product) {
   if (error) throw error
   if (data.length === 0) throw new Error('No se eliminó ningún producto (¿sin permisos?)')
 
-  const storagePaths = product.images.map(getStoragePath).filter(Boolean)
-  if (storagePaths.length > 0) {
-    // Si falla la limpieza de fotos, el producto ya se borró: solo lo avisamos en consola
-    const { error: storageError } = await supabase.storage.from(STORAGE_BUCKET).remove(storagePaths)
-    if (storageError) console.warn('No se pudieron borrar algunas fotos del Storage:', storageError)
-  }
+  await removeStorageImages(product.images)
 }

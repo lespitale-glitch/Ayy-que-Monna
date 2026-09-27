@@ -1,4 +1,6 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { Plus } from 'lucide-react'
 import AdminProductCards from '../../components/admin/AdminProductCards.jsx'
 import AdminProductsTable from '../../components/admin/AdminProductsTable.jsx'
 import ConfirmDialog from '../../components/admin/ConfirmDialog.jsx'
@@ -13,6 +15,16 @@ function AdminProducts() {
   const [filters, setFilters] = useState(INITIAL_FILTERS)
   // Producto que se está por eliminar (abre el diálogo de confirmación)
   const [toDelete, setToDelete] = useState(null)
+
+  // Mensaje que deja el formulario al guardar (navigate con state). Lo leemos una vez
+  // y lo borramos del historial para que no vuelva a aparecer al recargar.
+  const location = useLocation()
+  const navigate = useNavigate()
+  const [flash] = useState(location.state?.flash ?? null)
+  useEffect(() => {
+    if (location.state?.flash) navigate(location.pathname, { replace: true, state: null })
+  }, [location, navigate])
+  const message = feedback ?? (flash ? { type: 'success', text: flash } : null)
 
   const visibleProducts = filterAdminProducts(products, filters)
   const hiddenCount = products.filter((p) => !p.isVisible).length
@@ -58,9 +70,18 @@ function AdminProducts() {
           <p className="text-xs uppercase tracking-widest text-stone">Panel de administración</p>
           <h1 className="mt-3 text-4xl">Productos</h1>
         </div>
-        <p className="text-xs uppercase tracking-widest text-stone">
-          {products.length} en total · {hiddenCount} {hiddenCount === 1 ? 'oculto' : 'ocultos'}
-        </p>
+        <div className="flex flex-wrap items-center gap-6">
+          <p className="text-xs uppercase tracking-widest text-stone">
+            {products.length} en total · {hiddenCount} {hiddenCount === 1 ? 'oculto' : 'ocultos'}
+          </p>
+          <Link
+            to="/admin/productos/nuevo"
+            className="flex items-center gap-2 bg-ink px-5 py-3 text-xs uppercase tracking-widest text-bone transition-colors duration-300 ease-soft hover:bg-ink/85"
+          >
+            <Plus size={14} strokeWidth={1.5} aria-hidden="true" />
+            Nuevo producto
+          </Link>
+        </div>
       </header>
 
       <div className="mt-10">
@@ -69,12 +90,12 @@ function AdminProducts() {
 
       {/* aria-live: los lectores de pantalla anuncian cada resultado sin mover el foco */}
       <div aria-live="polite" className="mt-6 min-h-6">
-        {feedback && (
+        {message && (
           <p
-            role={feedback.type === 'error' ? 'alert' : undefined}
-            className={`border-l-2 px-4 py-2 text-sm ${feedback.type === 'error' ? 'border-ink bg-white' : 'border-gold'}`}
+            role={message.type === 'error' ? 'alert' : undefined}
+            className={`border-l-2 px-4 py-2 text-sm ${message.type === 'error' ? 'border-ink bg-white' : 'border-gold'}`}
           >
-            {feedback.text}
+            {message.text}
           </p>
         )}
       </div>

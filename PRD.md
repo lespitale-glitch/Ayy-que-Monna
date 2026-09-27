@@ -41,7 +41,7 @@ Decisiones: Supabase (PostgreSQL + Auth + Storage), una única cuenta de adminis
 - [x] Paso 2: cliente Supabase + `productsService` + `ProductsContext`; la tienda lee de Supabase (fallback a `products.json` sin claves)
 - [x] Paso 3: `AuthContext`, `/admin/login`, `ProtectedRoute`, cerrar sesión, carga diferida y `noindex`
 - [x] Paso 4: lista de productos (tabla / tarjetas en móvil) con toggles Visible / Destacado / Nuevo / Marina, búsqueda, filtros y eliminar con confirmación
-- [ ] Paso 5: crear / editar / eliminar; subida de fotos a Storage (WebP ≤ 1600px)
+- [x] Paso 5: formulario crear / editar con validación, slug automático, fotos a Storage (WebP ≤ 1600px), reordenar y quitar fotos
 - [ ] Paso 6: reordenar el catálogo con drag & drop (dnd-kit)
 - [ ] Paso 7: pulido, accesibilidad del panel y documentación
 **Hecho cuando:** la administradora cambia el orden en el panel y se refleja en la tienda.

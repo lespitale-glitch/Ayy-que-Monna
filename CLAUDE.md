@@ -66,6 +66,9 @@ Solo se consulta como referencia: no copiar código de allí.
 - Escrituras del panel: `productsService` (`updateProduct`, `deleteProduct`) + hook `useAdminProducts` con actualización optimista y reversión si falla.
 - Errores de Supabase → mensajes en español con `getAdminErrorMessage` (utils/adminErrors.js).
 - Eliminar borra también las fotos del bucket (`getStoragePath`); las de `public/products/` no se tocan.
+- Formulario (`/admin/productos/nuevo` y `/:id`): validación en `utils/productForm.js` (espejo de las reglas de `schema.sql`).
+- Fotos nuevas: se comprimen al elegirlas (`compressImage`, WebP, lado mayor ≤ 1600px) y se SUBEN recién al guardar; si el guardado falla se borran. Nombre de archivo aleatorio (`crypto.randomUUID()`).
+- El id (slug) solo se elige al crear; al editar es de solo lectura (enlaces y carritos dependen de él).
 
 ## Reglas de arquitectura
 - Componentes funcionales, uno por archivo, nombre en PascalCase.
