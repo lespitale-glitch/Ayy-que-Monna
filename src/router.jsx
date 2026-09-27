@@ -5,9 +5,12 @@ import Shop from './pages/Shop/Shop.jsx'
 import Product from './pages/Product/Product.jsx'
 import NotFound from './pages/NotFound/NotFound.jsx'
 
-// Todas las páginas comparten el Layout (Header + Footer).
-// Las rutas "hijas" se dibujan dentro del <Outlet /> del Layout.
+// "lazy" carga el código del panel solo cuando alguien entra a /admin.
+// import() devuelve una Promesa con el módulo; usamos su export por defecto como componente.
+const lazyPage = (importer) => async () => ({ Component: (await importer()).default })
+
 export const router = createBrowserRouter([
+  // Tienda pública: todas las páginas comparten el Layout (Header + Footer)
   {
     element: <Layout />,
     children: [
@@ -16,6 +19,24 @@ export const router = createBrowserRouter([
       { path: '/tienda/:categoria', element: <Shop /> },
       { path: '/producto/:id', element: <Product /> },
       { path: '*', element: <NotFound /> },
+    ],
+  },
+  // Panel de administración (layout propio, sin Header/Footer de la tienda)
+  {
+    path: '/admin',
+    lazy: lazyPage(() => import('./pages/Admin/AdminRoot.jsx')),
+    children: [
+      { path: 'login', lazy: lazyPage(() => import('./pages/Admin/AdminLogin.jsx')) },
+      {
+        // Todo lo que está aquí adentro exige sesión de administradora
+        lazy: lazyPage(() => import('./components/admin/ProtectedRoute.jsx')),
+        children: [
+          {
+            lazy: lazyPage(() => import('./components/admin/AdminLayout.jsx')),
+            children: [{ index: true, lazy: lazyPage(() => import('./pages/Admin/AdminDashboard.jsx')) }],
+          },
+        ],
+      },
     ],
   },
 ])

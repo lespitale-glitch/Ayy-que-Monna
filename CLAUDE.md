@@ -24,7 +24,7 @@ src/
   assets/        # imágenes de la interfaz (logo, banners) importadas desde el código
   components/    # componentes reutilizables (Button, ProductCard, Header…)
   pages/         # una carpeta por ruta (Home, Shop, Product, Cart, Admin)
-  context/       # ProductsContext (catálogo), CartContext
+  context/       # ProductsContext (catálogo), CartContext, AuthContext (solo /admin)
   lib/           # supabase.js (cliente; null si faltan las claves)
   services/      # productsService.js: ÚNICO lugar que habla con Supabase
   data/          # products.json
@@ -57,6 +57,12 @@ Solo se consulta como referencia: no copiar código de allí.
 - Sin `.env.local` la tienda usa `products.json` (modo local). Con claves, si Supabase falla se muestra "Reintentar" (no se cae a datos viejos).
 - Los componentes leen el catálogo con `useProducts()`; nunca importan `products.json` ni `supabase` directamente.
 - La consulta pública filtra `is_visible = true` explícitamente (con sesión de admin, RLS dejaría ver los ocultos).
+
+## Panel /admin
+- Rutas cargadas con `lazy` en `router.jsx`: la tienda nunca descarga código del panel.
+- `AdminRoot` (AuthProvider + meta noindex) → `/admin/login` | `ProtectedRoute` → `AdminLayout` → páginas.
+- `isAdmin` sale de `supabase.rpc('is_admin')`; una cuenta válida que no es admin se desloguea al instante.
+- Indexación: meta `noindex` + cabecera `X-Robots-Tag` (vercel.json). `/admin` NO se bloquea en robots.txt (si no, el buscador no ve el noindex).
 
 ## Reglas de arquitectura
 - Componentes funcionales, uno por archivo, nombre en PascalCase.

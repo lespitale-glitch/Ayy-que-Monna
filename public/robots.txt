@@ -1,0 +1,7 @@
+# Ayy Que Monna
+User-agent: *
+Allow: /
+
+# /admin NO se bloquea aquí a propósito: si un buscador no puede rastrear una página,
+# tampoco ve su "noindex". El panel se excluye con <meta name="robots" content="noindex">
+# y con la cabecera X-Robots-Tag (vercel.json).
