@@ -8,9 +8,12 @@
     "build": "vite build",
     "lint": "oxlint",
     "preview": "vite preview",
-    "db:seed": "node scripts/generate-seed.mjs"
+    "db:seed": "node scripts/generate-seed.mjs",
+    "brand:logo": "node scripts/process-logo.mjs"
   },
   "dependencies": {
+    "@fontsource-variable/comfortaa": "^5.3.0",
+    "@fontsource-variable/geist": "^5.3.0",
     "@supabase/supabase-js": "^2.117.2",
     "lucide-react": "^1.48.0",
     "react": "^19.2.8",

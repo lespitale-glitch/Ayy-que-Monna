@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, Outlet } from 'react-router-dom'
 import { ExternalLink, LogOut } from 'lucide-react'
+import BrandLogo from '../layout/BrandLogo.jsx'
 import { useAuth } from '../../hooks/useAuth.js'
 
 // Estructura común de las páginas protegidas del panel
@@ -18,8 +19,8 @@ function AdminLayout() {
     <div className="min-h-screen">
       <header className="border-b border-line bg-bone">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-6">
-          <Link to="/admin" className="whitespace-nowrap font-serif text-xl font-light">
-            Ayy Que <span className="italic">Monna</span>
+          <Link to="/admin" className="flex items-center whitespace-nowrap" aria-label="Ayy Que Monna, panel de administración">
+            <BrandLogo className="h-7" />
             <span className="ml-3 hidden font-sans text-[10px] uppercase tracking-widest text-stone sm:inline">
               Panel
             </span>
@@ -41,7 +42,7 @@ function AdminLayout() {
               type="button"
               onClick={handleSignOut}
               disabled={isSigningOut}
-              className="flex items-center gap-2 border border-ink px-3 py-2 text-xs sm:px-4 uppercase tracking-widest transition-colors duration-300 ease-soft hover:bg-ink hover:text-bone disabled:opacity-50"
+              className="btn-outline px-3 py-2 sm:px-4 disabled:opacity-50"
             >
               <LogOut size={14} strokeWidth={1.5} aria-hidden="true" />
               {/* En móvil solo se ve el icono; el texto sigue disponible para lectores de pantalla */}

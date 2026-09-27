@@ -10,15 +10,15 @@ const FILTERS = [{ to: '/tienda', label: 'Todo', end: true }].concat(
 function CategoryFilter() {
   return (
     <nav aria-label="Filtrar por categoría" className="-mx-6 overflow-x-auto px-6">
-      <ul className="flex gap-6 whitespace-nowrap md:justify-center md:gap-10">
+      <ul className="flex gap-2 whitespace-nowrap md:justify-center md:gap-3">
         {FILTERS.map((filter) => (
           <li key={filter.to}>
             <NavLink
               to={filter.to}
               end={filter.end}
               className={({ isActive }) =>
-                `inline-block border-b pb-1 text-xs uppercase tracking-widest transition-colors duration-300 ease-soft ${
-                  isActive ? 'border-ink text-ink' : 'border-transparent text-stone hover:text-ink'
+                `inline-block rounded-full px-4 py-2 text-xs uppercase tracking-widest transition-colors duration-300 ease-soft ${
+                  isActive ? 'bg-brand-deep text-white' : 'text-stone hover:bg-brand-soft hover:text-ink'
                 }`
               }
             >

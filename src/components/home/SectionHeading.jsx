@@ -2,7 +2,7 @@
 function SectionHeading({ eyebrow, title, children, align = 'left' }) {
   return (
     <header className={align === 'center' ? 'text-center' : ''}>
-      {eyebrow && <p className="text-xs uppercase tracking-widest text-stone">{eyebrow}</p>}
+      {eyebrow && <p className="text-xs font-medium uppercase tracking-widest text-fucsia-deep">{eyebrow}</p>}
       <h2 className="mt-3 text-4xl md:text-5xl">{title}</h2>
       {children}
     </header>

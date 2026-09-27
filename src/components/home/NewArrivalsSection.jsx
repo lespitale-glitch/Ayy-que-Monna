@@ -9,7 +9,7 @@ import { useProducts } from '../../hooks/useProducts.js'
 function NewArrivalsSection() {
   const newArrivals = useProducts().getNewArrivals(4)
   return (
-    <section className="border-t border-line">
+    <section className="bg-brand-soft">
       <div className="mx-auto grid max-w-7xl gap-12 px-6 py-24 md:grid-cols-12 md:gap-16">
         <Reveal className="md:col-span-5">
           <SectionHeading eyebrow="Recién llegados" title="Novedades">
@@ -21,7 +21,7 @@ function NewArrivalsSection() {
             src={editorialImage}
             alt="Collar con dije de flor sobre fondo naranja"
             loading="lazy"
-            className="mt-10 aspect-product w-full object-cover"
+            className="mt-10 aspect-product w-full rounded-2xl object-cover"
           />
         </Reveal>
 
@@ -35,7 +35,7 @@ function NewArrivalsSection() {
           </ul>
           <Link
             to="/tienda"
-            className="mt-12 inline-block border border-ink px-8 py-3 text-xs uppercase tracking-widest transition-colors duration-300 ease-soft hover:bg-ink hover:text-bone"
+            className="btn-outline mt-12"
           >
             Ver toda la tienda
           </Link>

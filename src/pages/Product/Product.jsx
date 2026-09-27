@@ -64,7 +64,7 @@ function ProductDetail({ product }) {
             <button
               type="button"
               onClick={handleAddToCart}
-              className="h-12 flex-1 bg-ink px-3 text-xs uppercase tracking-widest text-bone transition-colors duration-300 ease-soft hover:bg-ink/85"
+              className="btn-primary h-12 flex-1 px-3"
             >
               Agregar al carrito
             </button>

@@ -10,7 +10,29 @@
   h1,
   h2,
   h3 {
-    @apply font-serif font-light;
+    @apply font-display font-normal;
+  }
+
+  /* Foco visible con el color de la marca (navegación con teclado) */
+  :focus-visible {
+    @apply outline outline-2 outline-offset-2 outline-fucsia-deep;
+  }
+}
+
+@layer components {
+  /* Botón principal: degradado de marca en tonos "deep" para que el texto blanco pase AA */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-brand-deep px-8 py-3 text-xs font-medium uppercase tracking-widest text-white transition-[filter,opacity] duration-300 ease-soft hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  /* Botón secundario: contorno fino */
+  .btn-outline {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-ink px-8 py-3 text-xs font-medium uppercase tracking-widest transition-colors duration-300 ease-soft hover:bg-ink hover:text-bone disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  /* Texto con el degradado de la marca (versión deep: legible sobre fondo claro) */
+  .text-gradient {
+    @apply bg-brand-deep bg-clip-text text-transparent;
   }
 }
 

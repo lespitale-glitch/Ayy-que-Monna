@@ -20,7 +20,9 @@ function TrustSection() {
         {/* "Icon" en mayúscula: así JSX lo trata como componente y lo puede dibujar */}
         {ITEMS.map(({ icon: Icon, title, text }) => (
           <Reveal as="li" key={title} className="text-center">
-            <Icon size={28} strokeWidth={1.25} className="mx-auto" aria-hidden="true" />
+            <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-brand-soft">
+              <Icon size={26} strokeWidth={1.5} className="text-fucsia-deep" aria-hidden="true" />
+            </span>
             <h3 className="mt-5 font-sans text-xs uppercase tracking-widest">{title}</h3>
             <p className="mx-auto mt-3 max-w-60 text-sm leading-relaxed text-stone">{text}</p>
           </Reveal>

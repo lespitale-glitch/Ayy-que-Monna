@@ -14,7 +14,7 @@ function ProductCarousel({ products, label }) {
   }
 
   const arrowClass =
-    'flex h-10 w-10 items-center justify-center border border-line transition-colors duration-300 ease-soft hover:border-ink'
+    'flex h-10 w-10 items-center justify-center rounded-full border border-line bg-white transition-colors duration-300 ease-soft hover:border-fucsia'
 
   return (
     <div>

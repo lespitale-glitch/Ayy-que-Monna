@@ -21,7 +21,7 @@ function CatalogGate({ children }) {
         <button
           type="button"
           onClick={reload}
-          className="mt-8 border border-ink px-8 py-3 text-xs uppercase tracking-widest transition-colors duration-300 ease-soft hover:bg-ink hover:text-bone"
+          className="btn-outline mt-8"
         >
           Reintentar
         </button>

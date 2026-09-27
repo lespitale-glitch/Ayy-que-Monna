@@ -8,11 +8,11 @@ import { useProducts } from '../../hooks/useProducts.js'
 function MarinaSection() {
   const marina = useProducts().getCollectionProducts('marina')
   return (
-    <section className="border-y border-line bg-white">
+    <section className="bg-marina/10">
       <div className="mx-auto max-w-7xl px-6 py-24">
         <Reveal>
-          <SectionHeading eyebrow="Colección" title={<span className="italic">Marina</span>} align="center">
-            <span className="mx-auto mt-6 block h-px w-16 bg-gold" aria-hidden="true" />
+          <SectionHeading eyebrow="Colección" title={<span className="text-marina-deep">Marina</span>} align="center">
+            <span className="mx-auto mt-6 block h-1 w-16 rounded-full bg-marina" aria-hidden="true" />
             <p className="mx-auto mt-6 max-w-md text-sm leading-relaxed text-stone">
               Perlas, conchas y destellos turquesa para llevar el océano con vos.
             </p>

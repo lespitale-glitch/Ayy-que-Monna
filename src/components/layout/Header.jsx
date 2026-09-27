@@ -14,7 +14,7 @@ const NAV_LINKS = [
 // está activo y así podemos subrayar la página actual.
 const linkClass = ({ isActive }) =>
   `text-xs uppercase tracking-widest transition-colors duration-300 ease-soft hover:text-ink ${
-    isActive ? 'text-ink underline underline-offset-8 decoration-gold' : 'text-stone'
+    isActive ? 'text-ink underline decoration-fucsia decoration-2 underline-offset-8' : 'text-stone'
   }`
 
 function Header() {

@@ -1,20 +1,29 @@
 /** @type {import('tailwindcss').Config} */
-// Tokens de diseño de Ayy Que Monna (estética minimalista estilo Gortari Studio).
-// Todos los colores y fuentes de la marca se definen aquí: no usar hex sueltos en los componentes.
+// Tokens de diseño de Ayy Que Monna. Todos los colores y fuentes de la marca se
+// definen aquí: no usar hex sueltos en los componentes.
+// Contraste medido sobre `bone`: mango/fucsia/marina NO pasan AA como texto → solo decorativos.
 export default {
   content: ['./index.html', './src/**/*.{js,jsx}'],
   theme: {
     extend: {
       colors: {
-        bone: '#FAF8F5', // fondo principal
-        ink: '#1A1A1A', // texto principal
-        stone: '#716C67', // texto secundario / precios (contraste AA 4.9:1 sobre bone)
-        line: '#E8E4DF', // bordes finos
-        gold: '#B89B72', // acento cálido: solo bordes y líneas, NUNCA texto (contraste 2.5:1)
+        bone: '#FFF8F3', // fondo crema cálido (el del logo original)
+        ink: '#1A1A1A', // texto principal (16.5:1)
+        stone: '#716C67', // texto secundario / precios (4.9:1)
+        line: '#F2E3DA', // bordes finos
+        // Colores del logo. DEFAULT = decorativo; deep = texto y botones con texto blanco (AA)
+        mango: { DEFAULT: '#FD8927', deep: '#C2410C' }, // deep: 4.9:1
+        fucsia: { DEFAULT: '#F27084', deep: '#BE185D' }, // deep: 5.7:1
+        marina: { DEFAULT: '#2BB5C3', deep: '#0E7490' }, // Colección Marina; deep: 5.1:1
+      },
+      backgroundImage: {
+        brand: 'linear-gradient(90deg, #FD8927, #F27084)', // decorativo (el degradado del logo)
+        'brand-deep': 'linear-gradient(90deg, #C2410C, #BE185D)', // con texto blanco encima
+        'brand-soft': 'linear-gradient(135deg, #FFF1E6, #FFE8EC)', // fondos de sección suaves
       },
       fontFamily: {
-        serif: ['"Cormorant Garamond"', 'Georgia', 'serif'],
-        sans: ['Inter', '"Helvetica Neue"', 'Arial', 'sans-serif'],
+        display: ['"Comfortaa Variable"', 'ui-rounded', 'system-ui', 'sans-serif'],
+        sans: ['"Geist Variable"', '"Helvetica Neue"', 'Arial', 'sans-serif'],
       },
       aspectRatio: {
         product: '4 / 5',

@@ -11,7 +11,7 @@ function ProductCard({ product }) {
     <Reveal>
       <Link to={`/producto/${product.id}`} className="group block">
         {/* "group" permite que los hijos reaccionen al hover de todo el link */}
-        <div className="relative aspect-product overflow-hidden bg-white">
+        <div className="relative aspect-product overflow-hidden rounded-2xl bg-white">
           <img
             src={mainImage}
             alt={toTitleCase(product.name)}
@@ -33,7 +33,7 @@ function ProductCard({ product }) {
             />
           )}
           {product.isNew && (
-            <span className="absolute left-3 top-3 bg-bone/90 px-2 py-1 text-[10px] uppercase tracking-widest">
+            <span className="absolute left-3 top-3 rounded-full bg-brand-deep px-3 py-1 text-[10px] font-medium uppercase tracking-widest text-white">
               Nuevo
             </span>
           )}

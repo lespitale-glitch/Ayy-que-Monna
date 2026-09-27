@@ -129,7 +129,7 @@ function ProductForm({ initialValues, isNew, phase, saveError, onSubmit, onField
         <button
           type="submit"
           disabled={isBusy}
-          className="whitespace-nowrap bg-ink px-4 py-3 text-xs uppercase tracking-widest text-bone sm:px-6 hover:bg-ink/85 disabled:cursor-wait disabled:opacity-60"
+          className="btn-primary whitespace-nowrap px-4 sm:px-6"
         >
           {PHASE_LABEL[phase] ?? (isNew ? 'Crear producto' : 'Guardar cambios')}
         </button>

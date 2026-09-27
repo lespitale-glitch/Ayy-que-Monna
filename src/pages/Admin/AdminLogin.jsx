@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 import AdminLoader from '../../components/admin/AdminLoader.jsx'
+import BrandLogo from '../../components/layout/BrandLogo.jsx'
 import { useAuth } from '../../hooks/useAuth.js'
 import { getAuthErrorMessage } from '../../utils/authErrors.js'
 
@@ -40,9 +41,9 @@ function AdminLogin() {
   return (
     <main className="flex min-h-screen items-center justify-center px-6 py-16">
       <div className="w-full max-w-sm">
-        <p className="text-center font-serif text-3xl font-light">
-          Ayy Que <span className="italic">Monna</span>
-        </p>
+        <div className="flex justify-center">
+          <BrandLogo className="h-12" />
+        </div>
         <h1 className="mt-3 text-center font-sans text-xs font-normal uppercase tracking-widest text-stone">
           Panel de administración
         </h1>
@@ -92,7 +93,7 @@ function AdminLogin() {
             <button
               type="submit"
               disabled={isSubmitting || !email || !password}
-              className="h-12 w-full bg-ink text-xs uppercase tracking-widest text-bone transition-colors duration-300 ease-soft hover:bg-ink/85 disabled:cursor-not-allowed disabled:opacity-40"
+              className="btn-primary h-12 w-full"
             >
               {isSubmitting ? 'Ingresando…' : 'Ingresar'}
             </button>

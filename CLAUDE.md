@@ -97,6 +97,7 @@ El producto sigue siendo el protagonista: el color acompaña, no compite.
 - **Tipografía:**
   - Títulos: `font-display` (Comfortaa, redondeada como el logotipo), peso 400–700.
   - Texto/UI: `font-sans` (Geist), 14–16px.
+  - Fuentes autoalojadas con `@fontsource-variable` (importadas en `main.jsx`): no usar Google Fonts.
   - Acentos: palabras clave de los títulos con `text-gradient`. Eyebrows y navegación en MAYÚSCULAS con `tracking-widest`.
 - **Espaciado:** generoso (secciones `py-24`+). Grid de 12 columnas, márgenes amplios.
 - **Imágenes:** grandes y protagonistas, proporción uniforme (`aspect-product`, 4:5), esquinas `rounded-2xl`.

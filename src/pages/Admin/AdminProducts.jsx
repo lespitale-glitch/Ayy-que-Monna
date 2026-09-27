@@ -49,11 +49,11 @@ function AdminProducts() {
   if (status === 'error') {
     return (
       <div role="alert" className="py-24 text-center">
-        <p className="font-serif text-2xl">No se pudieron cargar los productos</p>
+        <p className="font-display text-2xl">No se pudieron cargar los productos</p>
         <button
           type="button"
           onClick={reload}
-          className="mt-6 border border-ink px-8 py-3 text-xs uppercase tracking-widest hover:bg-ink hover:text-bone"
+          className="btn-outline mt-6"
         >
           Reintentar
         </button>
@@ -76,7 +76,7 @@ function AdminProducts() {
           </p>
           <Link
             to="/admin/productos/nuevo"
-            className="flex items-center gap-2 bg-ink px-5 py-3 text-xs uppercase tracking-widest text-bone transition-colors duration-300 ease-soft hover:bg-ink/85"
+            className="btn-primary px-5"
           >
             <Plus size={14} strokeWidth={1.5} aria-hidden="true" />
             Nuevo producto
@@ -93,7 +93,7 @@ function AdminProducts() {
         {message && (
           <p
             role={message.type === 'error' ? 'alert' : undefined}
-            className={`border-l-2 px-4 py-2 text-sm ${message.type === 'error' ? 'border-ink bg-white' : 'border-gold'}`}
+            className={`border-l-2 px-4 py-2 text-sm ${message.type === 'error' ? 'border-ink bg-white' : 'border-fucsia'}`}
           >
             {message.text}
           </p>

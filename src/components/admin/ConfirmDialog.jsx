@@ -41,7 +41,7 @@ function ConfirmDialog({ open, title, children, confirmLabel, onConfirm, onCance
           type="button"
           onClick={onConfirm}
           disabled={isBusy}
-          className="bg-ink px-5 py-3 text-xs uppercase tracking-widest text-bone hover:bg-ink/85 disabled:opacity-60"
+          className="btn-primary px-5"
         >
           {isBusy ? 'Eliminando…' : confirmLabel}
         </button>
