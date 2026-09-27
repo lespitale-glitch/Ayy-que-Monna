@@ -5,7 +5,7 @@ import BrandLogo from './BrandLogo.jsx'
 function Logo({ onClick }) {
   return (
     <Link to="/" onClick={onClick} aria-label="Ayy Que Monna, ir al inicio" className="inline-flex">
-      <BrandLogo className="h-7 md:h-9" />
+      <BrandLogo size="md" />
     </Link>
   )
 }

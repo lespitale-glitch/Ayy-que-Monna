@@ -90,8 +90,10 @@ Solo se consulta como referencia: no copiar código de allí.
 **Filosofía:** colorida y jovial como la marca original, pero con el orden y el aire del rediseño.
 El producto sigue siendo el protagonista: el color acompaña, no compite.
 
-- **Logo:** `src/assets/brand/` (generado por `npm run brand:logo` desde el logo original). Wordmark "monna" en el Header
-  y el Footer; la "M" sola para favicon y espacios chicos. No redibujar ni recolorear el logo.
+- **Logo:** `BrandLogo` = "ayy que" (texto, Comfortaa bold, degradado `bg-brand`) arriba de "Monna", donde la "M" es el
+  símbolo original. La imagen sale de `npm run brand:logo` (logo original sin su cola final en forma de "s": la marca es
+  "Monna", no "monnas"). La "M" sola para favicon y espacios chicos. No redibujar ni recolorear el símbolo.
+  El nombre de la marca es **Ayy Que Monna**.
 - **Color** (tokens en `tailwind.config.js`, no usar hex sueltos):
   - Base: fondo `bone` (crema cálido), texto `ink`, secundario `stone`, bordes `line`.
   - Marca, SOLO decorativo (fondos, bordes, degradados, íconos grandes): `mango` #FD8927 y `fucsia` #F27084
