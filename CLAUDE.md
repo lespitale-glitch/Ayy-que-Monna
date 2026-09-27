@@ -1,6 +1,6 @@
 # CLAUDE.md — Ayy Que Monna
 
-Tienda online de bijouterie. Rediseño minimalista y editorial inspirado en Gortari Studio.
+Tienda online de bijouterie. Identidad colorida y jovial (logo original de Ayy Que Monna) sobre una base limpia y espaciada.
 Se conservan los productos, textos e imágenes originales de la web anterior.
 
 ## Stack técnico
@@ -80,21 +80,33 @@ Solo se consulta como referencia: no copiar código de allí.
 - Comentarios breves en español explicando el *porqué* (pensados para aprender JS).
 - Trabajo por fases (ver PRD.md): no adelantar funcionalidades de fases futuras.
 
-## Normas de diseño (estilo Gortari Studio)
-**Filosofía:** el producto es el protagonista. Mucho aire, poco ruido.
+## Normas de diseño (identidad Ayy Que Monna)
+**Filosofía:** colorida y jovial como la marca original, pero con el orden y el aire del rediseño.
+El producto sigue siendo el protagonista: el color acompaña, no compite.
 
-- **Color:** paleta neutra (tokens en `tailwind.config.js`, no usar hex sueltos).
-  - Fondo `bone` #FAF8F5 (hueso), texto `ink` #1A1A1A, secundario `stone` #716C67, bordes `line` #E8E4DF.
-  - Un único acento cálido y discreto: `gold` #B89B72, solo en bordes y líneas finas. Nunca como color de texto (no pasa AA).
+- **Logo:** `src/assets/brand/` (generado por `npm run brand:logo` desde el logo original). Wordmark "monna" en el Header
+  y el Footer; la "M" sola para favicon y espacios chicos. No redibujar ni recolorear el logo.
+- **Color** (tokens en `tailwind.config.js`, no usar hex sueltos):
+  - Base: fondo `bone` (crema cálido), texto `ink`, secundario `stone`, bordes `line`.
+  - Marca, SOLO decorativo (fondos, bordes, degradados, íconos grandes): `mango` #FD8927 y `fucsia` #F27084
+    (los colores exactos del logo). Degradado de marca: `bg-brand` (mango → fucsia).
+  - Marca para TEXTO y botones con texto blanco (pasan AA): `mango-deep` #C2410C, `fucsia-deep` #BE185D.
+    Degradado de texto: `text-gradient` (mango-deep → fucsia-deep).
+  - Colección Marina: `marina` (decorativo) y `marina-deep` (texto).
+  - Regla de contraste: mango, fucsia y marina NUNCA como color de texto ni como fondo de texto blanco (no pasan AA).
 - **Tipografía:**
-  - Títulos: serif elegante (Cormorant Garamond), peso ligero.
-  - Texto/UI: sans-serif limpia (Inter / Helvetica Neue), 14–16px.
-  - Navegación y botones en MAYÚSCULAS pequeñas con `tracking-widest`.
+  - Títulos: `font-display` (Comfortaa, redondeada como el logotipo), peso 400–700.
+  - Texto/UI: `font-sans` (Geist), 14–16px.
+  - Acentos: palabras clave de los títulos con `text-gradient`. Eyebrows y navegación en MAYÚSCULAS con `tracking-widest`.
 - **Espaciado:** generoso (secciones `py-24`+). Grid de 12 columnas, márgenes amplios.
-- **Imágenes:** grandes y protagonistas, proporción uniforme (`aspect-product`, 4:5) en la grilla. Hover = cambio suave a segunda imagen.
+- **Imágenes:** grandes y protagonistas, proporción uniforme (`aspect-product`, 4:5), esquinas `rounded-2xl`.
+  Hover = cambio suave a segunda imagen.
 - **Componentes:**
-  - Botones rectangulares, sin sombras, borde fino 1px o relleno negro sólido.
-  - Sin degradados, sin sombras marcadas, sin bordes redondeados grandes (máx. `rounded-sm`).
-  - Iconos lineales finos (Lucide, stroke 1.25–1.5).
-- **Animación:** sutil — transiciones 300–500ms (`ease-soft`), fade-in al hacer scroll con el componente `<Reveal>` (usa `motion-safe:` para respetar "reducir movimiento"). Nunca rebotes ni efectos llamativos.
-- **Copy:** breve, en español. Nombres de producto en MAYÚSCULAS, precio debajo en `stone`.
+  - Botones redondeados (`rounded-full`): primario `btn-primary` (degradado deep + texto blanco), secundario `btn-outline`.
+    Definidos en `src/index.css` (@layer components): usar esas clases en vez de repetir utilidades.
+  - Tarjetas y paneles `rounded-2xl`; etiquetas `rounded-full`. Sin sombras marcadas.
+  - Iconos lineales (Lucide, stroke 1.25–1.5).
+- **Animación:** sutil — transiciones 300–500ms (`ease-soft`), fade-in al hacer scroll con `<Reveal>` (usa `motion-safe:`).
+  Carruseles con autoplay: pausa al hover/foco, botón de pausa visible y sin autoplay con "reducir movimiento".
+- **Copy:** breve, en español rioplatense (vos) en la tienda. Nombres de producto en MAYÚSCULAS, precio debajo en `stone`.
+- **Testimonios:** solo reseñas reales con permiso de la clienta. Nunca inventar reseñas (publicidad engañosa).
