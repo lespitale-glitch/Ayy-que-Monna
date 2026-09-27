@@ -15,7 +15,7 @@ Se conservan los productos, textos e imágenes originales de la web anterior.
 - `npm run dev` — servidor de desarrollo
 - `npm run build` — build de producción
 - `npm run lint` — linter (oxlint, viene con la plantilla de Vite)
-- `npm run db:seed` — regenera `supabase/seed.sql` desde `products.json`
+- `npm run db:seed` — regenera `supabase/seed.sql` desde `collections.json` y `products.json`
 
 ## Estructura
 public/
@@ -26,8 +26,8 @@ src/
   pages/         # una carpeta por ruta (Home, Shop, Product, Cart, Admin)
   context/       # ProductsContext (catálogo), SettingsContext (ajustes), CartContext, AuthContext (solo /admin)
   lib/           # supabase.js (cliente; null si faltan las claves)
-  services/      # productsService.js y settingsService.js: ÚNICOS lugares que hablan con Supabase
-  data/          # products.json
+  services/      # productsService, collectionsService, settingsService: ÚNICOS lugares que hablan con Supabase
+  data/          # products.json, collections.json (seed y modo local), selections.js
   hooks/         # hooks propios (useCart…)
 fotos-originales/  # fotos originales pesadas, IGNORADA por Git, solo local
 supabase/          # schema.sql (tabla, RLS, Storage) y seed.sql (generado)
@@ -42,11 +42,11 @@ Solo se consulta como referencia: no copiar código de allí.
 - Peso objetivo por foto: lado mayor ≤ 1600px, idealmente < 300 KB.
 
 ## Datos de producto (`src/data/products.json`)
-`{ id, name, price, category, description, images[], isFeatured, isNew, collection? }`
+`{ id, name, price, category, description, images[], isFeatured, isNew, collections? }`
 - `id`: slug único; `name` en MAYÚSCULAS; `price` en ARS (número).
 - `category`: "aros" | "collares" | "anillos" | "pulseras".
 - `images[0]` es la foto principal; `images[1]` (opcional) se usa en el hover.
-- `collection` (opcional): hoy solo `"marina"`.
+- `collections` (opcional): ids de colecciones (`src/data/collections.json`). En el frontend siempre es un array.
 
 ## Supabase
 - La tabla usa snake_case (`is_featured`); el frontend usa camelCase (`isFeatured`). La conversión vive SOLO en la capa de servicios.
@@ -57,6 +57,13 @@ Solo se consulta como referencia: no copiar código de allí.
 - Sin `.env.local` la tienda usa `products.json` (modo local). Con claves, si Supabase falla se muestra "Reintentar" (no se cae a datos viejos).
 - Los componentes leen el catálogo con `useProducts()`; nunca importan `products.json` ni `supabase` directamente.
 - La consulta pública filtra `is_visible = true` explícitamente (con sesión de admin, RLS dejaría ver los ocultos).
+- Colecciones: tabla `collections` (`id` slug, `name`, `description`, `theme` 'brand' | 'marina', `show_on_home`,
+  `is_visible`, `position`). `products.collections text[]` guarda los ids (un producto puede estar en varias).
+  Integridad por triggers: un producto no puede apuntar a una colección inexistente (23503) y al borrar una
+  colección se quita sola de los productos. Ids reservados: novedades, destacados, dorados, plateados.
+  RPC atómicas: `reorder_collections(ids)` y `set_collection_products(id, product_ids)`.
+- `ProductsContext` carga productos + colecciones juntos (`Promise.all`) y expone `collections`, `selections`
+  (colecciones + selecciones automáticas de `data/selections.js`) y `homeCollections`.
 
 ## Panel /admin
 - Rutas cargadas con `lazy` en `router.jsx`: la tienda nunca descarga código del panel.
@@ -80,8 +87,12 @@ Solo se consulta como referencia: no copiar código de allí.
   usuarios fijos en los componentes (los valores por defecto viven en `DEFAULT_SETTINGS` de `config.js`).
   Los textos usan los valores por defecto mientras cargan; el botón de WhatsApp del carrito espera a
   `status === 'ready'` (nunca manda un pedido a un número viejo). Reglas en `utils/settings.js` (espejo de schema.sql).
-- Menú del panel: `AdminNav` (Productos | Ajustes); Productos abarca también el formulario y el orden.
-- Cambios sin guardar: `useUnsavedChangesGuard(isDirty)` + `<UnsavedChangesDialog>` (formulario, orden y ajustes).
+- Colecciones (`/admin/colecciones`, `/nueva`, `/:id`): lista con Visible, En el inicio, ↑ ↓ (guardan al instante,
+  optimista) y borrar. Formulario con color (tema), dónde se muestra y selector de productos (buscador +
+  "Solo los elegidos", que congela la lista para no perder el foco). Reglas en `utils/collectionForm.js`.
+  En el formulario de producto, casillas `CollectionsField`.
+- Menú del panel: `AdminNav` (Productos | Colecciones | Ajustes); Productos abarca también el formulario y el orden.
+- Cambios sin guardar: `useUnsavedChangesGuard(isDirty)` + `<UnsavedChangesDialog>` (producto, orden, colección y ajustes).
   En el formulario, `isFormDirty` (utils/productForm.js); mientras se guarda no se bloquea la navegación.
 
 ## Reglas de arquitectura
@@ -108,7 +119,8 @@ El producto sigue siendo el protagonista: el color acompaña, no compite.
     (los colores exactos del logo). Degradado de marca: `bg-brand` (mango → fucsia).
   - Marca para TEXTO y botones con texto blanco (pasan AA): `mango-deep` #C2410C, `fucsia-deep` #BE185D.
     Degradado de texto: `text-gradient` (mango-deep → fucsia-deep).
-  - Colección Marina: `marina` (decorativo) y `marina-deep` (texto).
+  - Colecciones: cada una elige un tema, `brand` o `marina` (`COLLECTION_THEMES` en `utils/collections.js`,
+    con las clases escritas completas para que Tailwind las genere). `marina` (decorativo) / `marina-deep` (texto).
   - Regla de contraste: mango, fucsia y marina NUNCA como color de texto ni como fondo de texto blanco (no pasan AA).
 - **Tipografía:**
   - Títulos: `font-display` (Comfortaa, redondeada como el logotipo), peso 400–700.

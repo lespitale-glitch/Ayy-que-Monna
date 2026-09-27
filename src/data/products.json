@@ -58,7 +58,9 @@
     ],
     "isFeatured": false,
     "isNew": true,
-    "collection": "marina"
+    "collections": [
+      "marina"
+    ]
   },
   {
     "id": "collar-tortuga-plateado",
@@ -71,7 +73,9 @@
     ],
     "isFeatured": false,
     "isNew": true,
-    "collection": "marina"
+    "collections": [
+      "marina"
+    ]
   },
   {
     "id": "collar-caballito-de-mar-dorado",
@@ -84,7 +88,9 @@
     ],
     "isFeatured": false,
     "isNew": true,
-    "collection": "marina"
+    "collections": [
+      "marina"
+    ]
   },
   {
     "id": "collar-caballito-de-mar-plateado",
@@ -97,7 +103,9 @@
     ],
     "isFeatured": false,
     "isNew": true,
-    "collection": "marina"
+    "collections": [
+      "marina"
+    ]
   },
   {
     "id": "collar-ballena",
@@ -110,7 +118,9 @@
     ],
     "isFeatured": false,
     "isNew": true,
-    "collection": "marina"
+    "collections": [
+      "marina"
+    ]
   },
   {
     "id": "collar-estrella",
@@ -316,7 +326,9 @@
     ],
     "isFeatured": false,
     "isNew": false,
-    "collection": "marina"
+    "collections": [
+      "marina"
+    ]
   },
   {
     "id": "collar-celeste-plateado",
@@ -329,7 +341,9 @@
     ],
     "isFeatured": false,
     "isNew": false,
-    "collection": "marina"
+    "collections": [
+      "marina"
+    ]
   },
   {
     "id": "anillo-coeur-plateado",
@@ -632,7 +646,9 @@
     ],
     "isFeatured": false,
     "isNew": false,
-    "collection": "marina"
+    "collections": [
+      "marina"
+    ]
   },
   {
     "id": "anillo-bob-esponja",
@@ -753,7 +769,9 @@
     ],
     "isFeatured": false,
     "isNew": false,
-    "collection": "marina"
+    "collections": [
+      "marina"
+    ]
   },
   {
     "id": "pulsera-marina",
@@ -766,7 +784,9 @@
     ],
     "isFeatured": false,
     "isNew": false,
-    "collection": "marina"
+    "collections": [
+      "marina"
+    ]
   },
   {
     "id": "pulsera-caballito-de-mar",
@@ -791,7 +811,9 @@
     ],
     "isFeatured": false,
     "isNew": false,
-    "collection": "marina"
+    "collections": [
+      "marina"
+    ]
   },
   {
     "id": "collar-acuatico-plateado",
@@ -804,7 +826,9 @@
     ],
     "isFeatured": false,
     "isNew": false,
-    "collection": "marina"
+    "collections": [
+      "marina"
+    ]
   },
   {
     "id": "anillo-floral-plateado",
@@ -817,6 +841,8 @@
     ],
     "isFeatured": true,
     "isNew": false,
-    "collection": "marina"
+    "collections": [
+      "marina"
+    ]
   }
 ]

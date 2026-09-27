@@ -7,7 +7,7 @@
 -- Modelo de seguridad (RLS = Row Level Security):
 --   · Cualquier visitante puede LEER los productos visibles.
 --   · Solo la administradora (registrada en public.admins) puede crear, editar,
---     ocultar, borrar y reordenar productos, y subir/borrar fotos del Storage.
+--     ocultar, borrar y reordenar productos y colecciones, y subir/borrar fotos del Storage.
 -- La "anon key" del frontend es pública por diseño: lo que protege los datos son estas políticas.
 -- =============================================================================
 
@@ -29,7 +29,7 @@ create table if not exists public.products (
   images      text[] not null default '{}',
   is_featured boolean not null default false,
   is_new      boolean not null default false,
-  collection  text check (collection in ('marina')),        -- null = sin colección
+  collections text[] not null default '{}',                 -- ids de colecciones (sección 7)
   is_visible  boolean not null default true,                -- false = oculto en la tienda
   position    integer not null default 0,                   -- orden del catálogo (drag & drop)
   created_at  timestamptz not null default now(),
@@ -252,3 +252,188 @@ create policy "Admin: editar ajustes"
   to authenticated
   using ((select public.is_admin()))
   with check ((select public.is_admin()));
+
+
+-- -----------------------------------------------------------------------------
+-- 7. Colecciones (editables desde /admin/colecciones)
+-- -----------------------------------------------------------------------------
+-- Un producto puede estar en varias colecciones: products.collections guarda sus ids.
+create table if not exists public.collections (
+  id           text primary key
+               check (id ~ '^[a-z0-9]+(-[a-z0-9]+)*$'),
+  name         text not null check (length(trim(name)) between 1 and 40),
+  description  text not null default '' check (length(description) <= 300),
+  -- Color de acento: 'brand' (naranja y fucsia) o 'marina' (turquesa)
+  theme        text not null default 'brand' check (theme in ('brand', 'marina')),
+  show_on_home boolean not null default true,   -- sección propia en el inicio
+  is_visible   boolean not null default true,   -- false = oculta en la tienda
+  position     integer not null default 0,
+  created_at   timestamptz not null default now(),
+  updated_at   timestamptz not null default now(),
+  -- Estas direcciones ya las usan las selecciones automáticas (/seleccion/novedades…)
+  constraint collections_reserved_id
+    check (id not in ('novedades', 'destacados', 'dorados', 'plateados'))
+);
+
+drop trigger if exists collections_set_updated_at on public.collections;
+create trigger collections_set_updated_at
+  before update on public.collections
+  for each row execute function public.set_updated_at();
+
+-- Bases creadas con la versión anterior del archivo no tienen esta columna
+alter table public.products add column if not exists collections text[] not null default '{}';
+
+-- Migración desde la versión anterior (columna fija products.collection = 'marina').
+-- Solo hace algo si esa columna todavía existe; después la borra.
+do $$
+begin
+  if exists (
+    select 1 from information_schema.columns
+    where table_schema = 'public' and table_name = 'products' and column_name = 'collection'
+  ) then
+    insert into public.collections (id, name, description, theme)
+    select distinct
+      p.collection,
+      initcap(p.collection),
+      case when p.collection = 'marina'
+        then 'Perlas, conchas y destellos turquesa para llevar el océano con vos.' else '' end,
+      case when p.collection = 'marina' then 'marina' else 'brand' end
+    from public.products as p
+    where p.collection is not null
+    on conflict (id) do nothing;
+
+    update public.products
+    set collections = array[collection]
+    where collection is not null and cardinality(collections) = 0;
+
+    alter table public.products drop column collection;
+  end if;
+end;
+$$;
+
+-- Un producto solo puede apuntar a colecciones que existen
+create or replace function public.check_product_collections()
+returns trigger
+language plpgsql
+set search_path = ''
+as $$
+begin
+  if exists (
+    select 1 from unnest(new.collections) as c (id)
+    where not exists (select 1 from public.collections as col where col.id = c.id)
+  ) then
+    raise exception 'El producto usa una colección que no existe' using errcode = '23503';
+  end if;
+  return new;
+end;
+$$;
+
+drop trigger if exists products_check_collections on public.products;
+create trigger products_check_collections
+  before insert or update of collections on public.products
+  for each row execute function public.check_product_collections();
+
+-- Al borrar una colección, se quita sola de los productos que la tenían
+create or replace function public.remove_deleted_collection()
+returns trigger
+language plpgsql
+set search_path = ''
+as $$
+begin
+  update public.products
+  set collections = array_remove(collections, old.id)
+  where old.id = any (collections);
+  return old;
+end;
+$$;
+
+drop trigger if exists collections_remove_from_products on public.collections;
+create trigger collections_remove_from_products
+  after delete on public.collections
+  for each row execute function public.remove_deleted_collection();
+
+alter table public.collections enable row level security;
+grant select on public.collections to anon, authenticated;
+grant insert, update, delete on public.collections to authenticated;
+
+drop policy if exists "Público: ver colecciones visibles" on public.collections;
+create policy "Público: ver colecciones visibles"
+  on public.collections for select
+  to anon, authenticated
+  using (is_visible);
+
+drop policy if exists "Admin: ver todas las colecciones" on public.collections;
+create policy "Admin: ver todas las colecciones"
+  on public.collections for select
+  to authenticated
+  using ((select public.is_admin()));
+
+drop policy if exists "Admin: crear colecciones" on public.collections;
+create policy "Admin: crear colecciones"
+  on public.collections for insert
+  to authenticated
+  with check ((select public.is_admin()));
+
+drop policy if exists "Admin: editar colecciones" on public.collections;
+create policy "Admin: editar colecciones"
+  on public.collections for update
+  to authenticated
+  using ((select public.is_admin()))
+  with check ((select public.is_admin()));
+
+drop policy if exists "Admin: borrar colecciones" on public.collections;
+create policy "Admin: borrar colecciones"
+  on public.collections for delete
+  to authenticated
+  using ((select public.is_admin()));
+
+-- Guarda el orden de las colecciones (igual que reorder_products)
+create or replace function public.reorder_collections(collection_ids text[])
+returns void
+language plpgsql
+security invoker
+set search_path = ''
+as $$
+begin
+  if not public.is_admin() then
+    raise exception 'No autorizado' using errcode = '42501';
+  end if;
+
+  update public.collections as c
+  set position = o.ord
+  from unnest(collection_ids) with ordinality as o (id, ord)
+  where c.id = o.id;
+end;
+$$;
+
+revoke execute on function public.reorder_collections(text[]) from public, anon;
+grant execute on function public.reorder_collections(text[]) to authenticated;
+
+-- Define QUÉ productos tiene una colección, en una sola operación:
+-- la agrega a los de la lista y la quita de los demás.
+create or replace function public.set_collection_products(collection_id text, product_ids text[])
+returns void
+language plpgsql
+security invoker
+set search_path = ''
+as $$
+begin
+  if not public.is_admin() then
+    raise exception 'No autorizado' using errcode = '42501';
+  end if;
+
+  update public.products
+  set collections = array_remove(collections, collection_id)
+  where collection_id = any (collections) and not (id = any (product_ids));
+
+  update public.products
+  set collections = collections || collection_id
+  where id = any (product_ids) and not (collection_id = any (collections));
+end;
+$$;
+
+revoke execute on function public.set_collection_products(text, text[]) from public, anon;
+grant execute on function public.set_collection_products(text, text[]) to authenticated;
+
+-- Avisa a la API de Supabase que la estructura cambió (columnas nuevas o borradas)
+notify pgrst, 'reload schema';

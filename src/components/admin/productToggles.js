@@ -1,6 +1,6 @@
-// Los 4 interruptores rápidos del panel. "get" lee el estado actual del producto y
-// "toChanges" arma los cambios a guardar. Marina no es un booleano en la base:
-// es collection = 'marina' o null.
+// Los interruptores rápidos del panel. "get" lee el estado actual del producto y
+// "toChanges" arma los cambios a guardar. Las colecciones se eligen en el formulario
+// del producto o desde /admin/colecciones.
 export const PRODUCT_TOGGLES = [
   {
     key: 'visible',
@@ -22,12 +22,5 @@ export const PRODUCT_TOGGLES = [
     get: (p) => p.isNew,
     toChanges: (value) => ({ isNew: value }),
     describe: (value) => (value ? 'se marcó como Nuevo' : 'ya no está marcado como Nuevo'),
-  },
-  {
-    key: 'marina',
-    label: 'Marina',
-    get: (p) => p.collection === 'marina',
-    toChanges: (value) => ({ collection: value ? 'marina' : null }),
-    describe: (value) => (value ? 'se agregó a la Colección Marina' : 'se quitó de la Colección Marina'),
   },
 ]

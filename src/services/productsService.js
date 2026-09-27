@@ -4,7 +4,7 @@ import localProducts from '../data/products.json'
 const STORAGE_BUCKET = 'products'
 
 // Columnas que necesita la tienda (pedir solo lo necesario hace la respuesta más liviana)
-const PUBLIC_COLUMNS = 'id, name, description, price, category, images, is_featured, is_new, collection, position'
+const PUBLIC_COLUMNS = 'id, name, description, price, category, images, is_featured, is_new, collections, position'
 // El panel además necesita saber si el producto está visible
 const ADMIN_COLUMNS = `${PUBLIC_COLUMNS}, is_visible`
 
@@ -18,7 +18,7 @@ const COLUMN_BY_FIELD = {
   images: 'images',
   isFeatured: 'is_featured',
   isNew: 'is_new',
-  collection: 'collection',
+  collections: 'collections',
   isVisible: 'is_visible',
   position: 'position',
 }
@@ -35,8 +35,7 @@ export function fromRow(row) {
     images: row.images ?? [],
     isFeatured: row.is_featured,
     isNew: row.is_new,
-    // Solo agregamos "collection" si tiene valor, igual que en products.json
-    ...(row.collection ? { collection: row.collection } : {}),
+    collections: row.collections ?? [], // ids de colecciones (siempre un array, aunque esté vacío)
     isVisible: row.is_visible ?? true,
     position: row.position,
   }
@@ -48,8 +47,7 @@ export function toRow(changes) {
   for (const [field, value] of Object.entries(changes)) {
     const column = COLUMN_BY_FIELD[field]
     if (!column) throw new Error(`Campo desconocido: ${field}`)
-    // "collection" vacía se guarda como null (sin colección)
-    row[column] = field === 'collection' ? value || null : value
+    row[column] = value
   }
   return row
 }
@@ -67,7 +65,8 @@ function requireSupabase() {
 //   "reintentar" en lugar de productos viejos o que ya se ocultaron.
 export async function fetchCatalog() {
   if (!isSupabaseConfigured) {
-    return { products: localProducts, source: 'local' }
+    // En products.json "collections" es opcional: lo completamos para que siempre sea un array
+    return { products: localProducts.map((p) => ({ ...p, collections: p.collections ?? [] })), source: 'local' }
   }
 
   const { data, error } = await supabase

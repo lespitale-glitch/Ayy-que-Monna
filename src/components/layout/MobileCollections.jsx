@@ -1,11 +1,12 @@
 import { useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import { ChevronDown } from 'lucide-react'
-import { SELECTIONS } from '../../data/selections.js'
+import { useProducts } from '../../hooks/useProducts.js'
 
 // "Colecciones" en el menú del celular: acordeón con la lista de selecciones
 function MobileCollections({ linkClass, onNavigate }) {
   const [isOpen, setIsOpen] = useState(false)
+  const { selections } = useProducts()
 
   return (
     <li>
@@ -21,7 +22,7 @@ function MobileCollections({ linkClass, onNavigate }) {
       </button>
       {isOpen && (
         <ul id="colecciones-movil" className="mt-4 space-y-4 border-l-2 border-fucsia pl-4">
-          {SELECTIONS.map((s) => (
+          {selections.map((s) => (
             <li key={s.slug}>
               <NavLink to={`/seleccion/${s.slug}`} className={linkClass} onClick={onNavigate}>
                 {s.label}

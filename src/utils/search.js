@@ -19,11 +19,11 @@ export const PRICE_RANGES = [
   { id: 'mas-6000', label: 'Más de $ 6.000', min: 6001, max: Infinity },
 ]
 
-export const EMPTY_SEARCH = { query: '', category: '', finish: '', price: '', marina: false }
+export const EMPTY_SEARCH = { query: '', category: '', finish: '', price: '', collection: '' }
 
 // ¿La persona escribió algo o eligió algún filtro?
 export function hasSearchCriteria(criteria) {
-  return Boolean(criteria.query.trim() || criteria.category || criteria.finish || criteria.price || criteria.marina)
+  return Boolean(criteria.query.trim() || criteria.category || criteria.finish || criteria.price || criteria.collection)
 }
 
 // Filtra el catálogo. Cada palabra escrita tiene que aparecer en el nombre:
@@ -38,7 +38,7 @@ export function searchProducts(products, criteria) {
     if (criteria.category && product.category !== criteria.category) return false
     if (criteria.finish && getFinish(product) !== criteria.finish) return false
     if (range && (product.price < range.min || product.price > range.max)) return false
-    if (criteria.marina && product.collection !== 'marina') return false
+    if (criteria.collection && !product.collections.includes(criteria.collection)) return false
     return true
   })
 }

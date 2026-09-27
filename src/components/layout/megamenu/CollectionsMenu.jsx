@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom'
 import { ChevronDown } from 'lucide-react'
 import MegaMenuList from './MegaMenuList.jsx'
 import MegaMenuProducts from './MegaMenuProducts.jsx'
-import { SELECTIONS } from '../../../data/selections.js'
+import { useProducts } from '../../../hooks/useProducts.js'
 
 const CLOSE_DELAY = 150 // ms: margen para mover el mouse del botón al panel sin que se cierre
 
@@ -11,7 +11,10 @@ const CLOSE_DELAY = 150 // ms: margen para mover el mouse del botón al panel si
 // Se abre con hover, clic o teclado; se cierra con Escape, al salir el foco o al navegar.
 function CollectionsMenu({ linkClass }) {
   const [isOpen, setIsOpen] = useState(false)
-  const [activeSlug, setActiveSlug] = useState(SELECTIONS[0].slug)
+  const { selections } = useProducts()
+  // null = ninguna elegida todavía: se muestra la primera (las colecciones llegan después de cargar)
+  const [activeSlug, setActiveSlug] = useState(null)
+  const currentSlug = activeSlug ?? selections[0].slug
   const closeTimer = useRef(null)
   // Si el mouse ya lo abrió, el clic no debe cerrarlo (hover y clic llegan casi juntos)
   const openedByHover = useRef(false)
@@ -85,10 +88,10 @@ function CollectionsMenu({ linkClass }) {
               <p className="mb-4 px-4 text-xs font-medium uppercase tracking-widest text-fucsia-deep">
                 Selección especial
               </p>
-              <MegaMenuList activeSlug={activeSlug} onActivate={setActiveSlug} onNavigate={close} />
+              <MegaMenuList selections={selections} activeSlug={currentSlug} onActivate={setActiveSlug} onNavigate={close} />
             </div>
             <div className="col-span-8">
-              <MegaMenuProducts slug={activeSlug} onNavigate={close} />
+              <MegaMenuProducts selections={selections} slug={currentSlug} onNavigate={close} />
             </div>
           </div>
         </div>

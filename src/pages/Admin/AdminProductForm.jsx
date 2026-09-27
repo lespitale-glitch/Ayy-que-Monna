@@ -25,7 +25,7 @@ function AdminProductForm() {
 
       {editor.status === 'loading' && (
         <p role="status" className="animate-pulse py-24 text-center text-xs uppercase tracking-widest text-stone">
-          Cargando producto…
+          {editor.isNew ? 'Cargando…' : 'Cargando producto…'}
         </p>
       )}
       {editor.status === 'notfound' && (
@@ -44,6 +44,7 @@ function AdminProductForm() {
           key={id ?? 'nuevo'}
           initialValues={editor.product ? valuesFromProduct(editor.product) : EMPTY_VALUES}
           isNew={editor.isNew}
+          collections={editor.collections}
           phase={editor.phase}
           saveError={editor.saveError}
           onSubmit={handleSubmit}

@@ -4,7 +4,6 @@ export const FLAGS = [
   { field: 'isVisible', label: 'Visible en la tienda' },
   { field: 'isFeatured', label: 'Destacado' },
   { field: 'isNew', label: 'Nuevo' },
-  { field: 'isMarina', label: 'Colección Marina' },
 ]
 
 export const FIELD_LABELS = {

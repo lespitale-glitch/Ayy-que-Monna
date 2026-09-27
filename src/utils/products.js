@@ -25,14 +25,25 @@ export function getFeaturedProducts(products) {
   return products.filter((product) => product.isFeatured)
 }
 
-export function getCollectionProducts(products, collection) {
-  return products.filter((product) => product.collection === collection)
+export function getCollectionProducts(products, collectionId) {
+  return products.filter((product) => product.collections.includes(collectionId))
 }
 
-// Novedades que no aparecen ya en Destacados ni en la Colección Marina,
+// Colecciones con sección propia en la Home: marcadas "en el inicio" y con al menos un producto
+export function getHomeCollections(products, collections) {
+  return collections.filter(
+    (collection) => collection.showOnHome && products.some((p) => p.collections.includes(collection.id)),
+  )
+}
+
+// Novedades que no aparecen ya en Destacados ni en las colecciones del inicio,
 // para que la Home no repita los mismos productos en cada sección.
-export function getNewArrivals(products, limit) {
+// excludedCollectionIds: ids de las colecciones que ya tienen sección en la Home.
+export function getNewArrivals(products, limit, excludedCollectionIds = []) {
   return products
-    .filter((product) => product.isNew && !product.isFeatured && !product.collection)
+    .filter(
+      (product) =>
+        product.isNew && !product.isFeatured && !product.collections.some((id) => excludedCollectionIds.includes(id)),
+    )
     .slice(0, limit)
 }

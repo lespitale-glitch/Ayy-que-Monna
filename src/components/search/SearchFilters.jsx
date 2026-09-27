@@ -1,18 +1,26 @@
 import FilterChip from './FilterChip.jsx'
 import { CATEGORIES } from '../../config.js'
 import { FINISHES, PRICE_RANGES } from '../../utils/search.js'
+import { useProducts } from '../../hooks/useProducts.js'
 
 // Cada grupo: su etiqueta, el campo que controla y las opciones ('' = sin filtro)
-const GROUPS = [
+const FIXED_GROUPS = [
   { field: 'category', label: 'Categoría', options: CATEGORIES.map((c) => ({ id: c.slug, label: c.label })) },
   { field: 'finish', label: 'Terminación', options: FINISHES },
   { field: 'price', label: 'Precio', options: PRICE_RANGES },
 ]
 
 function SearchFilters({ criteria, onChange }) {
+  const { collections } = useProducts()
+  // El grupo "Colección" sale de las colecciones cargadas en el panel (si hay alguna)
+  const groups =
+    collections.length > 0
+      ? [...FIXED_GROUPS, { field: 'collection', label: 'Colección', options: collections.map((c) => ({ id: c.id, label: c.name })) }]
+      : FIXED_GROUPS
+
   return (
     <div className="space-y-3">
-      {GROUPS.map(({ field, label, options }) => (
+      {groups.map(({ field, label, options }) => (
         <div key={field} role="group" aria-labelledby={`filtro-${field}`} className="flex items-center gap-3">
           <span
             id={`filtro-${field}`}
@@ -38,12 +46,6 @@ function SearchFilters({ criteria, onChange }) {
           </div>
         </div>
       ))}
-      <div className="flex items-center gap-3">
-        <span className="w-24 shrink-0 text-[10px] font-medium uppercase tracking-widest text-stone">Colección</span>
-        <FilterChip pressed={criteria.marina} onClick={() => onChange('marina', !criteria.marina)}>
-          Marina
-        </FilterChip>
-      </div>
     </div>
   )
 }

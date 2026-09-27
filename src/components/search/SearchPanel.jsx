@@ -17,7 +17,7 @@ function SearchPanel({ onClose }) {
   useEffect(() => inputRef.current?.focus(), [])
 
   const shown = isActive ? results : getFeaturedProducts().slice(0, SUGGESTIONS)
-  const hasFilters = criteria.category || criteria.finish || criteria.price || criteria.marina
+  const hasFilters = criteria.category || criteria.finish || criteria.price || criteria.collection
 
   return (
     <div className="flex h-full flex-col">

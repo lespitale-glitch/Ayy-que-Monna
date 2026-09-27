@@ -71,7 +71,7 @@ Todo con herramientas gratuitas. Decisiones de la dueña:
 - Analítica: Google Analytics 4 + Meta Pixel, con aviso de cookies; el panel no se mide.
 
 - [x] Etapa A: Ajustes (WhatsApp, Instagram, envíos y puntos de retiro) editables desde /admin/ajustes
-- [ ] Etapa B: Colecciones configurables (/admin/colecciones), migración de "marina"
+- [x] Etapa B: Colecciones configurables (/admin/colecciones), migración de "marina"
 - [ ] Etapa C: Bot de preguntas frecuentes + preguntas sin respuesta + página SEO
 - [ ] Etapa D: Inventario (modos de stock) + alertas en panel y email (Resend + función de Supabase)
 - [ ] Etapa E: GA4 + Meta Pixel con aviso de cookies (IDs desde Ajustes)

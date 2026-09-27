@@ -59,7 +59,7 @@ function AdminProductsTable({ products, savingIds, onToggle, onDelete }) {
                 </td>
               ))}
               <td className="py-3 pl-4">
-                <RowActions product={product} onDelete={onDelete} disabled={isSaving} />
+                <RowActions item={product} editTo={`/admin/productos/${product.id}`} onDelete={onDelete} disabled={isSaving} />
               </td>
             </tr>
           )

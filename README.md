@@ -27,7 +27,8 @@ npm run dev                  # http://localhost:5173
 - **Testimonios:** `src/data/testimonials.js`. La sección "Lo que dicen de nosotros" aparece sola
   cuando la lista tiene al menos un testimonio. Solo reseñas reales y con permiso de la clienta.
 - **Diapositivas del inicio:** `src/data/heroSlides.js` (texto, botón y foto de cada una).
-- **Colecciones del menú:** `src/data/selections.js`.
+- **Colecciones:** desde el panel, en **/admin/colecciones**. Las selecciones automáticas del menú
+  (Novedades, Destacados, Dorados, Plateados) están en `src/data/selections.js`.
 - **WhatsApp, Instagram, envíos y puntos de retiro:** desde el panel, en **/admin/ajustes**.
   Sin Supabase (modo local) se usan los valores de `DEFAULT_SETTINGS` en `src/config.js`.
 
@@ -51,7 +52,7 @@ cambiar un poco con el tiempo; si algo no coincide, busca la opción equivalente
 2. Copia **todo** el contenido de [`supabase/schema.sql`](supabase/schema.sql), pégalo y toca **Run**.
    Tiene que decir *Success. No rows returned*.
 3. Otra **New query**: pega **todo** [`supabase/seed.sql`](supabase/seed.sql) y toca **Run**.
-4. Verifica en **Table Editor** → `products` que haya **67 filas**.
+4. Verifica en **Table Editor** → `products` que haya **67 filas** y en `collections`, **1** (Marina).
 5. En **Storage** tiene que aparecer el bucket **`products`**, marcado como *Public*.
 
 > Los dos archivos se pueden volver a ejecutar sin romper nada. El seed **no** pisa
@@ -60,6 +61,8 @@ cambiar un poco con el tiempo; si algo no coincide, busca la opción equivalente
 > **Cuando `schema.sql` cambia** (por ejemplo, al sumar los Ajustes de la tienda): vuelve a pegar
 > el archivo completo en el SQL Editor y toca **Run**. Revisa que el selector de rol (arriba a la
 > derecha del editor) diga **postgres**; con otro rol aparece *permission denied*.
+> Al actualizar a las colecciones configurables, el archivo convierte solo la antigua "Colección Marina"
+> (con sus productos) en una colección normal: no hace falta volver a cargar el seed.
 
 ### 3. Crear la cuenta de administradora
 1. **Authentication** → **Users** → **Add user** → **Create new user**.
@@ -106,7 +109,11 @@ No hay ningún enlace visible en la tienda a propósito. Sin sesión, te lleva a
 |---|---|
 | Ver y buscar productos | `/admin`: búsqueda por nombre o id, filtros por categoría y estado |
 | Ocultar un producto sin borrarlo | Interruptor **Visible** en la lista (vuelve cuando lo enciendes) |
-| Marcar Destacado, Nuevo o Colección Marina | Interruptores de la lista (se guardan al instante) |
+| Marcar Destacado o Nuevo | Interruptores de la lista (se guardan al instante) |
+| Crear una colección | **Colecciones** → **Nueva colección** → nombre, color y productos → **Crear colección** |
+| Agregar o quitar productos de una colección | **Colecciones** → lápiz → marcar o desmarcar productos → **Guardar cambios** (o desde el formulario de cada producto) |
+| Cambiar el orden de las colecciones | **Colecciones** → flechas ↑ ↓ (se guarda al instante) |
+| Mostrar u ocultar una colección en el inicio | **Colecciones** → interruptor **En el inicio** |
 | Crear un producto | **Nuevo producto** → completar datos → agregar fotos → **Crear producto** |
 | Editar precio, nombre, descripción o fotos | Ícono del lápiz → **Guardar cambios** |
 | Cambiar la foto principal | En el formulario: estrella ☆ sobre la foto o flechas ← → |

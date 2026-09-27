@@ -1,12 +1,12 @@
 import { Link } from 'react-router-dom'
-import { SELECTIONS } from '../../../data/selections.js'
+import { getTheme } from '../../../utils/collections.js'
 
 // Columna izquierda: lista de selecciones. Al pasar el mouse o enfocar una,
 // la derecha muestra sus productos; al hacer clic se abre su página.
-function MegaMenuList({ activeSlug, onActivate, onNavigate }) {
+function MegaMenuList({ selections, activeSlug, onActivate, onNavigate }) {
   return (
     <ul className="space-y-1">
-      {SELECTIONS.map((selection) => {
+      {selections.map((selection) => {
         const isActive = selection.slug === activeSlug
         return (
           <li key={selection.slug}>
@@ -21,7 +21,7 @@ function MegaMenuList({ activeSlug, onActivate, onNavigate }) {
             >
               <span
                 aria-hidden="true"
-                className={`h-2 w-2 rounded-full ${isActive ? (selection.slug === 'marina' ? 'bg-marina' : 'bg-brand') : 'bg-line'}`}
+                className={`h-2 w-2 rounded-full ${isActive ? getTheme(selection.theme).swatch : 'bg-line'}`}
               />
               {selection.label}
             </Link>

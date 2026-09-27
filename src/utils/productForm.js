@@ -14,7 +14,7 @@ export const EMPTY_VALUES = {
   isVisible: true,
   isFeatured: false,
   isNew: true,
-  isMarina: false,
+  collections: [], // ids de colecciones
   // Cada foto es { key, url } (ya subida) o { key, blob, previewUrl } (nueva, sin subir)
   images: [],
 }
@@ -30,7 +30,7 @@ export function valuesFromProduct(product) {
     isVisible: product.isVisible,
     isFeatured: product.isFeatured,
     isNew: product.isNew,
-    isMarina: product.collection === 'marina',
+    collections: [...product.collections],
     images: product.images.map((url) => ({ key: url, url })),
   }
 }
@@ -75,15 +75,18 @@ export function toProduct(values, imageUrls) {
     isVisible: values.isVisible,
     isFeatured: values.isFeatured,
     isNew: values.isNew,
-    collection: values.isMarina ? 'marina' : null,
+    collections: values.collections,
   }
 }
 
 // ¿El formulario tiene cambios respecto de cómo se abrió?
 // Las fotos se comparan por su "key" (así se detecta agregar, quitar o reordenar).
 export function isFormDirty(initial, current) {
-  const fields = ['id', 'name', 'price', 'category', 'description', 'isVisible', 'isFeatured', 'isNew', 'isMarina']
+  const fields = ['id', 'name', 'price', 'category', 'description', 'isVisible', 'isFeatured', 'isNew']
   if (fields.some((field) => initial[field] !== current[field])) return true
+  // Las colecciones se comparan sin importar el orden en que se marcaron
+  const ids = (values) => [...values.collections].sort().join('|')
+  if (ids(initial) !== ids(current)) return true
   const keys = (values) => values.images.map((image) => image.key).join('|')
   return keys(initial) !== keys(current)
 }

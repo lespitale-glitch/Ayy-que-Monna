@@ -23,7 +23,7 @@ function AdminProductCards({ products, savingIds, onToggle, onDelete }) {
                   <span className="text-stone"> · {getCategory(product.category)?.label ?? product.category}</span>
                 </p>
               </div>
-              <RowActions product={product} onDelete={onDelete} disabled={isSaving} />
+              <RowActions item={product} editTo={`/admin/productos/${product.id}`} onDelete={onDelete} disabled={isSaving} />
             </div>
 
             <div className="mt-4 grid grid-cols-2 gap-3 border-t border-line pt-4">

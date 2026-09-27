@@ -6,6 +6,12 @@ export function getAdminErrorMessage(error) {
     return 'Un producto visible necesita al menos una foto.'
   }
   // 23505 = ya existe una fila con esa clave (id repetido)
+  if (error?.code === '23505' && text.includes('collections')) return 'Ya existe una colección con ese id. Elige otro.'
+  // 23503 = el producto apunta a una colección que ya no existe (trigger de schema.sql)
+  if (error?.code === '23503') return 'Alguna colección elegida ya no existe. Recarga la página.'
+  if (error?.code === '23514' && text.includes('collections_reserved_id')) {
+    return 'Ese id ya lo usa una selección automática de la tienda. Elige otro.'
+  }
   if (error?.code === '23505') return 'Ya existe un producto con ese id. Elige otro.'
   if (error?.statusCode === '413' || /payload too large|maximum allowed size/i.test(text)) {
     return 'La foto supera el tamaño máximo permitido (5 MB).'

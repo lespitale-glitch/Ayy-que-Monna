@@ -48,7 +48,6 @@ export function useAdminProducts() {
   // rechaza el cambio, volvemos al valor anterior y mostramos el error.
   const updateFields = useCallback(async (product, changes, successText) => {
     const optimistic = { ...product, ...changes }
-    if (!optimistic.collection) delete optimistic.collection
     replaceProduct(optimistic)
     markSaving(product.id, true)
     setFeedback(null)

@@ -1,7 +1,8 @@
 // Interruptor accesible: un <button> con role="switch" y aria-checked,
 // así los lectores de pantalla anuncian "activado / desactivado".
 // Si showLabel es false, la etiqueta solo la leen los lectores de pantalla (útil en la tabla).
-function Switch({ checked, onChange, label, disabled = false, showLabel = true }) {
+// srContext agrega texto solo para lectores de pantalla (ej: el nombre de la fila).
+function Switch({ checked, onChange, label, disabled = false, showLabel = true, srContext = '' }) {
   return (
     <button
       type="button"
@@ -24,7 +25,12 @@ function Switch({ checked, onChange, label, disabled = false, showLabel = true }
           }`}
         />
       </span>
-      {showLabel && <span className="text-xs uppercase tracking-widest">{label}</span>}
+      {showLabel && (
+        <span className="text-xs uppercase tracking-widest">
+          {label}
+          {srContext && <span className="sr-only">: {srContext}</span>}
+        </span>
+      )}
     </button>
   )
 }
