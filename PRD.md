@@ -9,7 +9,7 @@ y sumar gestión de catálogo y newsletter.
 - **Clienta:** navega el catálogo, ve detalle, compra desde el móvil.
 - **Administradora:** gestiona productos y su orden sin tocar código.
 
-## Fase 1 — Setup
+## Fase 1 — Setup ✅ (cerrada)
 - [x] Repositorio Git conectado a GitHub y primer commit en `main`
 - [x] Crear CLAUDE.md y PRD.md
 - [x] Scaffold Vite + React + Tailwind + linter
@@ -17,7 +17,7 @@ y sumar gestión de catálogo y newsletter.
 - [x] `.gitignore` (node_modules, dist, .env, .DS_Store, ._*, temporales, fotos originales)
 - [x] Sitio original respaldado en el repo `Monna_legacy`
 - [x] `products.json` con los 67 productos reales del sitio original
-- [ ] Subir las fotos a `public/products/` (nombres exactos de `products.json`)
+- [x] 67 fotos en `public/products/`, verificadas contra `products.json`
 **Hecho cuando:** `npm run dev` levanta una página con fuentes y colores de marca.
 
 ## Fase 2 — Frontend e-commerce
