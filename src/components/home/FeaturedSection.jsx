@@ -2,11 +2,10 @@ import { Link } from 'react-router-dom'
 import SectionHeading from './SectionHeading.jsx'
 import Reveal from '../Reveal.jsx'
 import ProductCarousel from './ProductCarousel.jsx'
-import { getFeaturedProducts } from '../../utils/products.js'
-
-const featured = getFeaturedProducts()
+import { useProducts } from '../../hooks/useProducts.js'
 
 function FeaturedSection() {
+  const featured = useProducts().getFeaturedProducts()
   return (
     <section className="mx-auto max-w-7xl px-6 py-24">
       <Reveal className="mb-10 flex items-end justify-between gap-6 md:mb-0">

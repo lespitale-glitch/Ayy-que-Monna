@@ -38,7 +38,7 @@ Decisiones: Supabase (PostgreSQL + Auth + Storage), una única cuenta de adminis
 (email/password) en `/admin`, fotos originales en `public/products/` y fotos nuevas en Storage.
 - [x] Paso 1: `supabase/schema.sql` (tabla, RLS, `is_admin`, `reorder_products`, bucket), `seed.sql` (67 productos), guía del Paso 0 en README, `vercel.json`
 - [ ] Paso 0 (dueña): crear proyecto, ejecutar SQL, crear admin, cerrar registro, cargar `.env.local`
-- [ ] Paso 2: cliente Supabase + `productsService` + `ProductsContext`; la tienda lee de Supabase
+- [x] Paso 2: cliente Supabase + `productsService` + `ProductsContext`; la tienda lee de Supabase (fallback a `products.json` sin claves)
 - [ ] Paso 3: `AuthContext`, `/admin/login` y rutas protegidas (carga diferida)
 - [ ] Paso 4: lista de productos con toggles Visible / Destacado / Nuevo / Marina, búsqueda y filtro
 - [ ] Paso 5: crear / editar / eliminar; subida de fotos a Storage (WebP ≤ 1600px)

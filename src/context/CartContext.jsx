@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { CartContext } from './cartContext.js'
-import { getProductById } from '../utils/products.js'
+import { useProducts } from '../hooks/useProducts.js'
 
 const STORAGE_KEY = 'ayyquemonna_cart'
 export const MAX_QUANTITY = 10
@@ -24,6 +24,8 @@ export function CartProvider({ children }) {
   // Pasar una función a useState hace que loadCart() se ejecute solo la primera vez
   const [items, setItems] = useState(loadCart)
   const [isOpen, setIsOpen] = useState(false)
+  // El carrito lee nombre, precio y fotos del catálogo compartido (Supabase o JSON)
+  const { getProductById } = useProducts()
 
   // Cada vez que cambia "items", lo guardamos en localStorage
   useEffect(() => {
@@ -66,7 +68,8 @@ export function CartProvider({ children }) {
 
   // --- Datos calculados (se derivan de "items", no se guardan aparte) ---
 
-  // Unimos cada item con su producto; si un producto ya no existe en el catálogo, se descarta
+  // Unimos cada item con su producto; si un producto ya no existe (o se ocultó), se descarta.
+  // Mientras el catálogo carga, "lines" queda vacío pero "items" se conserva en localStorage.
   const lines = items
     .map((item) => ({ product: getProductById(item.id), quantity: item.quantity }))
     .filter((line) => line.product)

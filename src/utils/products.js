@@ -1,5 +1,7 @@
-import products from '../data/products.json'
 import { CATEGORIES } from '../config.js'
+
+// Funciones "puras": reciben el catálogo como parámetro y devuelven un resultado,
+// sin depender de dónde vienen los datos (Supabase o products.json).
 
 // Busca una categoría por su slug. Devuelve undefined si no existe.
 export function getCategory(slug) {
@@ -7,30 +9,29 @@ export function getCategory(slug) {
 }
 
 // Sin categoría devuelve todo el catálogo; con categoría, solo esos productos.
-// .filter() crea un array nuevo con los elementos que cumplen la condición.
-export function getProductsByCategory(slug) {
+export function getProductsByCategory(products, slug) {
   if (!slug) return products
   return products.filter((product) => product.category === slug)
 }
 
-// Busca un producto por su id. .find() devuelve el primero que coincide, o undefined.
-export function getProductById(id) {
+// .find() devuelve el primer producto que coincide, o undefined.
+export function getProductById(products, id) {
   return products.find((product) => product.id === id)
 }
 
 // --- Selecciones para la Home ---
 
-export function getFeaturedProducts() {
+export function getFeaturedProducts(products) {
   return products.filter((product) => product.isFeatured)
 }
 
-export function getCollectionProducts(collection) {
+export function getCollectionProducts(products, collection) {
   return products.filter((product) => product.collection === collection)
 }
 
 // Novedades que no aparecen ya en Destacados ni en la Colección Marina,
 // para que la Home no repita los mismos productos en cada sección.
-export function getNewArrivals(limit) {
+export function getNewArrivals(products, limit) {
   return products
     .filter((product) => product.isNew && !product.isFeatured && !product.collection)
     .slice(0, limit)

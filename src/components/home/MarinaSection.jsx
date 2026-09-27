@@ -1,13 +1,12 @@
 import SectionHeading from './SectionHeading.jsx'
 import ProductCarousel from './ProductCarousel.jsx'
 import Reveal from '../Reveal.jsx'
-import { getCollectionProducts } from '../../utils/products.js'
-
-const marina = getCollectionProducts('marina')
+import { useProducts } from '../../hooks/useProducts.js'
 
 // Bloque temático con fondo blanco para diferenciarse del resto de la Home.
 // El texto es el original de la sección Marina del sitio anterior.
 function MarinaSection() {
+  const marina = useProducts().getCollectionProducts('marina')
   return (
     <section className="border-y border-line bg-white">
       <div className="mx-auto max-w-7xl px-6 py-24">

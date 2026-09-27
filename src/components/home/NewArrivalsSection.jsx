@@ -3,12 +3,11 @@ import SectionHeading from './SectionHeading.jsx'
 import ProductCard from '../ProductCard.jsx'
 import Reveal from '../Reveal.jsx'
 import editorialImage from '../../assets/nuevo.jpg'
-import { getNewArrivals } from '../../utils/products.js'
-
-const newArrivals = getNewArrivals(4)
+import { useProducts } from '../../hooks/useProducts.js'
 
 // Bloque editorial: una foto grande a un lado y cuatro novedades al otro.
 function NewArrivalsSection() {
+  const newArrivals = useProducts().getNewArrivals(4)
   return (
     <section className="border-t border-line">
       <div className="mx-auto grid max-w-7xl gap-12 px-6 py-24 md:grid-cols-12 md:gap-16">

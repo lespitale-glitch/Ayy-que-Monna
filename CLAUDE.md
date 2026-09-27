@@ -24,7 +24,9 @@ src/
   assets/        # imágenes de la interfaz (logo, banners) importadas desde el código
   components/    # componentes reutilizables (Button, ProductCard, Header…)
   pages/         # una carpeta por ruta (Home, Shop, Product, Cart, Admin)
-  context/       # CartContext, etc.
+  context/       # ProductsContext (catálogo), CartContext
+  lib/           # supabase.js (cliente; null si faltan las claves)
+  services/      # productsService.js: ÚNICO lugar que habla con Supabase
   data/          # products.json
   hooks/         # hooks propios (useCart…)
 fotos-originales/  # fotos originales pesadas, IGNORADA por Git, solo local
@@ -52,6 +54,9 @@ Solo se consulta como referencia: no copiar código de allí.
 - En el frontend solo va la clave pública (anon/publishable) vía `.env.local`. NUNCA la `service_role`.
 - Cambios de esquema: editar `schema.sql` de forma idempotente (`if not exists`, `drop policy if exists`) y volver a ejecutarlo.
 - Fotos nuevas → bucket `products` del Storage; las originales siguen en `public/products/`.
+- Sin `.env.local` la tienda usa `products.json` (modo local). Con claves, si Supabase falla se muestra "Reintentar" (no se cae a datos viejos).
+- Los componentes leen el catálogo con `useProducts()`; nunca importan `products.json` ni `supabase` directamente.
+- La consulta pública filtra `is_visible = true` explícitamente (con sesión de admin, RLS dejaría ver los ocultos).
 
 ## Reglas de arquitectura
 - Componentes funcionales, uno por archivo, nombre en PascalCase.
