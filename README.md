@@ -19,6 +19,15 @@ npm run dev                  # http://localhost:5173
 | `npm run build` | Build de producción en `dist/` |
 | `npm run lint` | Revisa el código con oxlint |
 | `npm run db:seed` | Regenera `supabase/seed.sql` a partir de `src/data/products.json` |
+| `npm run brand:logo` | Genera el logo web (WebP transparente) y los favicons desde `design/` |
+| `npm run brand:hero` | Convierte las fotos del Hero Slider (`design/hero/`) a WebP optimizado |
+
+## Contenido editable sin programar
+
+- **Testimonios:** `src/data/testimonials.js`. La sección "Lo que dicen de nosotros" aparece sola
+  cuando la lista tiene al menos un testimonio. Solo reseñas reales y con permiso de la clienta.
+- **Diapositivas del inicio:** `src/data/heroSlides.js` (texto, botón y foto de cada una).
+- **Colecciones del menú:** `src/data/selections.js`.
 
 ---
 

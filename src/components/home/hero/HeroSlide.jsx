@@ -24,6 +24,8 @@ function HeroSlide({ slide, isActive, position, total, isFirst }) {
         srcSet={image.srcSet}
         sizes="(min-width: 1280px) 1232px, 100vw"
         alt={alt}
+        // Los banners de estampados son decorativos: alt vacío + aria-hidden (regla de CLAUDE.md)
+        aria-hidden={alt ? undefined : true}
         // La primera foto es lo primero que se ve: se carga con prioridad; las demás, cuando haga falta
         fetchPriority={isFirst ? 'high' : 'auto'}
         loading={isFirst ? 'eager' : 'lazy'}

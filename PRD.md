@@ -33,7 +33,7 @@ y sumar gestión de catálogo y newsletter.
 - [x] Pulido: fade-in al scroll (respeta "reducir movimiento"), alt descriptivos, sin desbordes en 320–1280px, 0 errores axe (WCAG 2 AA)
 **Hecho cuando:** se puede navegar y armar un carrito con todos los productos originales.
 
-## Rediseño de identidad (entre Fase 2 y Fase 3)
+## Rediseño de identidad (entre Fase 2 y Fase 3) ✅ (COMPLETADO)
 Recuperar la identidad colorida y jovial de la marca manteniendo el espaciado y la limpieza actuales.
 Decisiones: slider con los banners originales, testimonios armados pero ocultos hasta tener reseñas reales,
 filtro por terminación Dorado/Plateado deducida del nombre, logo.jpg procesado con sharp, paleta en todo el sitio.
@@ -43,7 +43,8 @@ filtro por terminación Dorado/Plateado deducida del nombre, logo.jpg procesado 
 - [x] Paso 3: buscador en modal con filtros (categoría, terminación, precio, Marina)
 - [x] Paso 4: mega-menú "Colecciones" + página `/seleccion/:slug` (Marina, Novedades, Destacados, Dorados, Plateados)
 - [x] Paso 5: sección de testimonios (oculta hasta cargar reseñas reales en `src/data/testimonials.js`)
-- [ ] Paso 6: regresión completa (tienda, carrito, panel) y cierre
+- [x] Paso 6: regresión completa (tienda, carrito, panel) y cierre
+- [ ] Pendiente: cargar testimonios reales en `src/data/testimonials.js`
 
 ## Fase 3 — Panel Admin con Drag & Drop (Supabase)
 Decisiones: Supabase (PostgreSQL + Auth + Storage), una única cuenta de administradora
