@@ -1,14 +1,11 @@
 import { Link } from 'react-router-dom'
+import BrandLogo from './BrandLogo.jsx'
 
-// Logotipo tipográfico: solo texto en serif, sin imagen.
-function Logo({ className = '', onClick }) {
+// Logo del Header: lleva al inicio
+function Logo({ onClick }) {
   return (
-    <Link
-      to="/"
-      onClick={onClick}
-      className={`font-serif text-2xl font-light tracking-wide text-ink md:text-3xl ${className}`}
-    >
-      Ayy Que <span className="italic">Monna</span>
+    <Link to="/" onClick={onClick} aria-label="Ayy Que Monna, ir al inicio" className="inline-flex">
+      <BrandLogo className="h-7 md:h-9" />
     </Link>
   )
 }

@@ -61,11 +61,11 @@ function CartDrawer() {
 
         {lines.length === 0 ? (
           <div className="flex flex-1 flex-col items-center justify-center px-6 text-center">
-            <p className="font-serif text-2xl font-light">Tu carrito está vacío</p>
+            <p className="font-display text-2xl">Tu carrito está vacío</p>
             <Link
               to="/tienda"
               onClick={closeCart}
-              className="mt-8 border border-ink px-8 py-3 text-xs uppercase tracking-widest transition-colors duration-300 ease-soft hover:bg-ink hover:text-bone"
+              className="btn-outline mt-8"
             >
               Ver la tienda
             </Link>
@@ -89,7 +89,7 @@ function CartDrawer() {
                 href={whatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-6 flex h-12 items-center justify-center bg-ink px-3 text-xs uppercase tracking-widest text-bone transition-colors duration-300 ease-soft hover:bg-ink/85"
+                className="btn-primary mt-6 flex h-12 w-full px-3"
               >
                 Finalizar pedido por WhatsApp
               </a>

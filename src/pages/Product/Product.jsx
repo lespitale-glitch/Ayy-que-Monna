@@ -7,13 +7,14 @@ import NotFound from '../NotFound/NotFound.jsx'
 import { MAX_QUANTITY } from '../../context/CartContext.jsx'
 import { useCart } from '../../hooks/useCart.js'
 import { formatPrice } from '../../utils/formatPrice.js'
-import { getCategory, getProductById } from '../../utils/products.js'
+import { useProducts } from '../../hooks/useProducts.js'
+import { getCategory } from '../../utils/products.js'
 
 // El "key" hace que React cree una página nueva al pasar de un producto a otro,
 // así la cantidad y la foto elegida vuelven a empezar de cero.
 function Product() {
   const { id } = useParams()
-  const product = getProductById(id)
+  const product = useProducts().getProductById(id)
 
   if (!product) return <NotFound />
   return <ProductDetail key={product.id} product={product} />
@@ -63,7 +64,7 @@ function ProductDetail({ product }) {
             <button
               type="button"
               onClick={handleAddToCart}
-              className="h-12 flex-1 bg-ink px-3 text-xs uppercase tracking-widest text-bone transition-colors duration-300 ease-soft hover:bg-ink/85"
+              className="btn-primary h-12 flex-1 px-3"
             >
               Agregar al carrito
             </button>

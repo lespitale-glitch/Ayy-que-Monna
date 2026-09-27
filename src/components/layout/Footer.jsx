@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import BrandLogo from './BrandLogo.jsx'
 import { CATEGORIES, INSTAGRAM_URL } from '../../config.js'
 
 function Footer() {
@@ -9,9 +10,7 @@ function Footer() {
     <footer className="mt-24 border-t border-line">
       <div className="mx-auto grid max-w-7xl gap-12 px-6 py-16 md:grid-cols-3">
         <div>
-          <p className="font-serif text-2xl font-light">
-            Ayy Que <span className="italic">Monna</span>
-          </p>
+          <BrandLogo className="h-9" />
           <p className="mt-3 text-sm text-stone">Bijouterie para todos los días.</p>
         </div>
 
@@ -20,7 +19,10 @@ function Footer() {
           <ul className="mt-4 space-y-2 text-sm">
             {CATEGORIES.map((c) => (
               <li key={c.slug}>
-                <Link to={`/tienda/${c.slug}`} className="underline-offset-4 decoration-gold hover:underline">
+                <Link
+                  to={`/tienda/${c.slug}`}
+                  className="decoration-fucsia decoration-2 underline-offset-4 hover:underline"
+                >
                   {c.label}
                 </Link>
               </li>
@@ -34,7 +36,7 @@ function Footer() {
             href={INSTAGRAM_URL}
             target="_blank"
             rel="noreferrer"
-            className="mt-4 inline-block text-sm underline-offset-4 decoration-gold hover:underline"
+            className="mt-4 inline-block text-sm decoration-fucsia decoration-2 underline-offset-4 hover:underline"
           >
             Instagram @ayyquemonna
           </a>

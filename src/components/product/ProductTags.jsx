@@ -6,12 +6,12 @@ function ProductTags({ product }) {
   return (
     <ul className="flex flex-wrap gap-2">
       {product.isNew && (
-        <li className="border border-line px-2 py-1 text-[10px] uppercase tracking-widest text-stone">
+        <li className="rounded-full border border-fucsia px-3 py-1 text-[10px] uppercase tracking-widest text-fucsia-deep">
           Nuevo
         </li>
       )}
       {isMarina && (
-        <li className="border border-gold px-2 py-1 text-[10px] uppercase tracking-widest text-ink">
+        <li className="rounded-full border border-marina px-3 py-1 text-[10px] uppercase tracking-widest text-marina-deep">
           Colección Marina
         </li>
       )}

@@ -9,10 +9,10 @@ function QuantitySelector({ value, onChange, min = 1, max = 10, size = 'md' }) {
   const increase = () => onChange(Math.min(max, value + 1))
 
   const buttonSize = size === 'sm' ? 'h-8 w-8' : 'h-12 w-12'
-  const buttonClass = `${buttonSize} flex items-center justify-center transition-colors duration-300 ease-soft hover:bg-line disabled:cursor-not-allowed disabled:opacity-30`
+  const buttonClass = `${buttonSize} flex items-center rounded-full justify-center transition-colors duration-300 ease-soft hover:bg-line disabled:cursor-not-allowed disabled:opacity-30`
 
   return (
-    <div className="inline-flex items-center border border-line" role="group" aria-label="Cantidad">
+    <div className="inline-flex items-center rounded-full border border-line" role="group" aria-label="Cantidad">
       <button type="button" onClick={decrease} disabled={value <= min} aria-label="Restar uno" className={buttonClass}>
         <Minus size={14} strokeWidth={1.5} />
       </button>

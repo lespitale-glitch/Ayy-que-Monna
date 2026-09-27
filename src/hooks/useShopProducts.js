@@ -1,10 +1,12 @@
 import { useParams } from 'react-router-dom'
-import { getCategory, getProductsByCategory } from '../utils/products.js'
+import { useProducts } from './useProducts.js'
+import { getCategory } from '../utils/products.js'
 
 // Hook propio: junta la lectura de la URL y el filtrado del catálogo,
 // así la página Shop solo se ocupa de dibujar.
 export function useShopProducts() {
   const { categoria } = useParams()
+  const { getProductsByCategory } = useProducts()
   const category = getCategory(categoria)
 
   return {

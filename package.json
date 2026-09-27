@@ -7,9 +7,15 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "oxlint",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "db:seed": "node scripts/generate-seed.mjs",
+    "brand:logo": "node scripts/process-logo.mjs",
+    "brand:hero": "node scripts/process-hero.mjs"
   },
   "dependencies": {
+    "@fontsource-variable/comfortaa": "^5.3.0",
+    "@fontsource-variable/geist": "^5.3.0",
+    "@supabase/supabase-js": "^2.117.2",
     "lucide-react": "^1.48.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
@@ -22,6 +28,7 @@
     "autoprefixer": "^10.6.1",
     "oxlint": "^1.81.0",
     "postcss": "^8.5.28",
+    "sharp": "^0.35.4",
     "tailwindcss": "^3.4.19",
     "vite": "^8.3.0"
   }

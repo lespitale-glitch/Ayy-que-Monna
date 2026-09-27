@@ -19,8 +19,8 @@ function ProductGallery({ images, name }) {
                 onClick={() => setSelected(index)}
                 aria-label={`Ver foto ${index + 1} de ${images.length}`}
                 aria-pressed={selected === index}
-                className={`block aspect-product w-full overflow-hidden bg-white transition-opacity duration-300 ease-soft ${
-                  selected === index ? 'ring-1 ring-ink' : 'opacity-60 hover:opacity-100'
+                className={`block aspect-product w-full overflow-hidden rounded-xl bg-white transition-opacity duration-300 ease-soft ${
+                  selected === index ? 'ring-2 ring-fucsia' : 'opacity-60 hover:opacity-100'
                 }`}
               >
                 <img src={src} alt="" className="h-full w-full object-cover" />
@@ -30,7 +30,7 @@ function ProductGallery({ images, name }) {
         </ul>
       )}
 
-      <div className="aspect-product flex-1 overflow-hidden bg-white">
+      <div className="aspect-product flex-1 overflow-hidden rounded-2xl bg-white">
         {/* Sin loading="lazy": es la imagen principal y queremos que cargue enseguida */}
         <img
           key={images[selected]}
