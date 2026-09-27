@@ -1,0 +1,32 @@
+import { Gem, MapPin, MessageCircle, Truck } from 'lucide-react'
+
+// Información real de la tienda (tomada del sitio original: barra de anuncios y preguntas frecuentes).
+const ITEMS = [
+  { icon: Gem, title: 'Acero quirúrgico', text: 'Todas nuestras piezas son de acero quirúrgico.' },
+  { icon: Truck, title: 'Envíos', text: 'Desde $ 6.000, según tu ubicación.' },
+  { icon: MapPin, title: 'Retiro gratis', text: 'Puntos de retiro en Ballester, Carapachay y Belgrano.' },
+  {
+    icon: MessageCircle,
+    title: 'Atención personalizada',
+    text: 'Coordinamos envío y pago por transferencia directo con vos, por WhatsApp.',
+  },
+]
+
+function TrustSection() {
+  return (
+    <section aria-label="Por qué comprar en Ayy Que Monna" className="mx-auto max-w-7xl px-6 py-24">
+      <ul className="grid gap-12 sm:grid-cols-2 lg:grid-cols-4">
+        {/* "Icon" en mayúscula: así JSX lo trata como componente y lo puede dibujar */}
+        {ITEMS.map(({ icon: Icon, title, text }) => (
+          <li key={title} className="text-center">
+            <Icon size={28} strokeWidth={1.25} className="mx-auto" aria-hidden="true" />
+            <h3 className="mt-5 font-sans text-xs uppercase tracking-widest">{title}</h3>
+            <p className="mx-auto mt-3 max-w-60 text-sm leading-relaxed text-stone">{text}</p>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )
+}
+
+export default TrustSection

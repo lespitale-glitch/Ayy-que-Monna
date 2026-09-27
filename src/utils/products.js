@@ -17,3 +17,21 @@ export function getProductsByCategory(slug) {
 export function getProductById(id) {
   return products.find((product) => product.id === id)
 }
+
+// --- Selecciones para la Home ---
+
+export function getFeaturedProducts() {
+  return products.filter((product) => product.isFeatured)
+}
+
+export function getCollectionProducts(collection) {
+  return products.filter((product) => product.collection === collection)
+}
+
+// Novedades que no aparecen ya en Destacados ni en la Colección Marina,
+// para que la Home no repita los mismos productos en cada sección.
+export function getNewArrivals(limit) {
+  return products
+    .filter((product) => product.isNew && !product.isFeatured && !product.collection)
+    .slice(0, limit)
+}

@@ -23,7 +23,7 @@ y sumar gestión de catálogo y newsletter.
 ## Fase 2 — Frontend e-commerce
 - [x] Rutas (React Router), Layout con Header y Footer, `formatPrice`
 - [x] Icono de carrito con contador en el Header
-- [ ] Home: hero con imagen grande, colecciones destacadas, grid de novedades
+- [x] Home: hero, carrusel de Destacados, Novedades editorial, Colección Marina y bloque de confianza
 - [x] Tienda: ProductCard (4:5, hover, precio ARS) y grid con filtro por categoría
 - [x] Página de producto: galería con miniaturas, precio, descripción, cantidad, etiqueta Marina y 404
 - [x] "Agregar al carrito" conectado al CartContext (abre el panel)
