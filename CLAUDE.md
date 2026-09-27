@@ -63,6 +63,9 @@ Solo se consulta como referencia: no copiar código de allí.
 - `AdminRoot` (AuthProvider + meta noindex) → `/admin/login` | `ProtectedRoute` → `AdminLayout` → páginas.
 - `isAdmin` sale de `supabase.rpc('is_admin')`; una cuenta válida que no es admin se desloguea al instante.
 - Indexación: meta `noindex` + cabecera `X-Robots-Tag` (vercel.json). `/admin` NO se bloquea en robots.txt (si no, el buscador no ve el noindex).
+- Escrituras del panel: `productsService` (`updateProduct`, `deleteProduct`) + hook `useAdminProducts` con actualización optimista y reversión si falla.
+- Errores de Supabase → mensajes en español con `getAdminErrorMessage` (utils/adminErrors.js).
+- Eliminar borra también las fotos del bucket (`getStoragePath`); las de `public/products/` no se tocan.
 
 ## Reglas de arquitectura
 - Componentes funcionales, uno por archivo, nombre en PascalCase.

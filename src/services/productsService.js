@@ -1,11 +1,30 @@
 import { supabase, isSupabaseConfigured } from '../lib/supabase.js'
 import localProducts from '../data/products.json'
 
+const STORAGE_BUCKET = 'products'
+
 // Columnas que necesita la tienda (pedir solo lo necesario hace la respuesta más liviana)
 const PUBLIC_COLUMNS = 'id, name, description, price, category, images, is_featured, is_new, collection, position'
+// El panel además necesita saber si el producto está visible
+const ADMIN_COLUMNS = `${PUBLIC_COLUMNS}, is_visible`
+
+// Nombres en el frontend (camelCase) → columnas de la base (snake_case)
+const COLUMN_BY_FIELD = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  price: 'price',
+  category: 'category',
+  images: 'images',
+  isFeatured: 'is_featured',
+  isNew: 'is_new',
+  collection: 'collection',
+  isVisible: 'is_visible',
+  position: 'position',
+}
 
 // La base usa snake_case (is_featured) y el frontend camelCase (isFeatured).
-// Esta es la ÚNICA función que traduce de un formato al otro.
+// fromRow y toRow son los ÚNICOS lugares que traducen de un formato al otro.
 export function fromRow(row) {
   return {
     id: row.id,
@@ -18,10 +37,31 @@ export function fromRow(row) {
     isNew: row.is_new,
     // Solo agregamos "collection" si tiene valor, igual que en products.json
     ...(row.collection ? { collection: row.collection } : {}),
+    isVisible: row.is_visible ?? true,
+    position: row.position,
   }
 }
 
-// Carga el catálogo público.
+// Convierte cambios parciales del frontend ({ isNew: true }) a columnas ({ is_new: true })
+export function toRow(changes) {
+  const row = {}
+  for (const [field, value] of Object.entries(changes)) {
+    const column = COLUMN_BY_FIELD[field]
+    if (!column) throw new Error(`Campo desconocido: ${field}`)
+    // "collection" vacía se guarda como null (sin colección)
+    row[column] = field === 'collection' ? value || null : value
+  }
+  return row
+}
+
+function requireSupabase() {
+  if (!isSupabaseConfigured) throw new Error('Supabase no está configurado')
+}
+
+// ---------------------------------------------------------------------------
+// Tienda pública
+// ---------------------------------------------------------------------------
+
 // - Sin claves de Supabase → products.json (útil en desarrollo).
 // - Con claves → Supabase. Si falla, se lanza el error para que la tienda muestre
 //   "reintentar" en lugar de productos viejos o que ya se ocultaron.
@@ -40,4 +80,59 @@ export async function fetchCatalog() {
 
   if (error) throw error
   return { products: data.map(fromRow), source: 'supabase' }
+}
+
+// ---------------------------------------------------------------------------
+// Panel de administración (las políticas RLS exigen sesión de administradora)
+// ---------------------------------------------------------------------------
+
+// Todos los productos, visibles y ocultos, en el orden del catálogo
+export async function fetchAdminProducts() {
+  requireSupabase()
+  const { data, error } = await supabase
+    .from('products')
+    .select(ADMIN_COLUMNS)
+    .order('position', { ascending: true })
+
+  if (error) throw error
+  return data.map(fromRow)
+}
+
+// Actualiza solo los campos recibidos y devuelve el producto como quedó en la base
+export async function updateProduct(id, changes) {
+  requireSupabase()
+  const { data, error } = await supabase
+    .from('products')
+    .update(toRow(changes))
+    .eq('id', id)
+    .select(ADMIN_COLUMNS)
+    // .single() da error si no se actualizó ninguna fila (por ejemplo, sin permisos)
+    .single()
+
+  if (error) throw error
+  return fromRow(data)
+}
+
+// Si la foto está en nuestro bucket, devuelve su ruta dentro del bucket; si no, null.
+// Ej: https://x.supabase.co/storage/v1/object/public/products/aros-nube/1.webp → "aros-nube/1.webp"
+export function getStoragePath(imageUrl) {
+  const marker = `/storage/v1/object/public/${STORAGE_BUCKET}/`
+  const index = imageUrl.indexOf(marker)
+  return index === -1 ? null : decodeURIComponent(imageUrl.slice(index + marker.length))
+}
+
+// Borra el producto y sus fotos del Storage (las de public/products/ no se tocan)
+export async function deleteProduct(product) {
+  requireSupabase()
+  const { data, error } = await supabase.from('products').delete().eq('id', product.id).select('id')
+
+  if (error) throw error
+  if (data.length === 0) throw new Error('No se eliminó ningún producto (¿sin permisos?)')
+
+  const storagePaths = product.images.map(getStoragePath).filter(Boolean)
+  if (storagePaths.length > 0) {
+    // Si falla la limpieza de fotos, el producto ya se borró: solo lo avisamos en consola
+    const { error: storageError } = await supabase.storage.from(STORAGE_BUCKET).remove(storagePaths)
+    if (storageError) console.warn('No se pudieron borrar algunas fotos del Storage:', storageError)
+  }
 }

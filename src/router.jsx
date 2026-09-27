@@ -33,7 +33,10 @@ export const router = createBrowserRouter([
         children: [
           {
             lazy: lazyPage(() => import('./components/admin/AdminLayout.jsx')),
-            children: [{ index: true, lazy: lazyPage(() => import('./pages/Admin/AdminDashboard.jsx')) }],
+            children: [
+              { index: true, lazy: lazyPage(() => import('./pages/Admin/AdminProducts.jsx')) },
+              { path: 'productos/:id', lazy: lazyPage(() => import('./pages/Admin/AdminProductEdit.jsx')) },
+            ],
           },
         ],
       },

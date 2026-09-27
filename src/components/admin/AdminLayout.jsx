@@ -20,7 +20,9 @@ function AdminLayout() {
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-6">
           <Link to="/admin" className="whitespace-nowrap font-serif text-xl font-light">
             Ayy Que <span className="italic">Monna</span>
-            <span className="ml-3 hidden font-sans text-[10px] uppercase tracking-widest text-stone sm:inline">Panel</span>
+            <span className="ml-3 hidden font-sans text-[10px] uppercase tracking-widest text-stone sm:inline">
+              Panel
+            </span>
           </Link>
 
           <div className="flex items-center gap-4 sm:gap-6">
