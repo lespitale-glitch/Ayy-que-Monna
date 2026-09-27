@@ -69,6 +69,12 @@ Solo se consulta como referencia: no copiar código de allí.
 - Formulario (`/admin/productos/nuevo` y `/:id`): validación en `utils/productForm.js` (espejo de las reglas de `schema.sql`).
 - Fotos nuevas: se comprimen al elegirlas (`compressImage`, WebP, lado mayor ≤ 1600px) y se SUBEN recién al guardar; si el guardado falla se borran. Nombre de archivo aleatorio (`crypto.randomUUID()`).
 - El id (slug) solo se elige al crear; al editar es de solo lectura (enlaces y carritos dependen de él).
+- Orden del catálogo (`/admin/orden`): dnd-kit (`@dnd-kit/core`, `sortable`, `modifiers`), solo en ese chunk.
+  Se arrastra desde el asa (mouse, dedo con 200 ms de espera, teclado con Espacio + flechas) y SIEMPRE hay
+  botones ↑ ↓ (WCAG 2.2, 2.5.7). Anuncios del lector de pantalla en español (`dndAnnouncements.js`).
+  Los cambios se guardan juntos con "Guardar orden" → `reorderProducts(ids)` → `reorder_products()` (atómico,
+  lista completa incluidos los ocultos). Aviso al salir con cambios sin guardar (`useBlocker` + `beforeunload`).
+  Lógica pura en `utils/reorder.js` (`moveItem`, `hasOrderChanged`, `sortByIds`).
 
 ## Reglas de arquitectura
 - Componentes funcionales, uno por archivo, nombre en PascalCase.

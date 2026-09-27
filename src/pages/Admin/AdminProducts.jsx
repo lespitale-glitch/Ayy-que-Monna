@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
-import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { Plus } from 'lucide-react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import AdminProductCards from '../../components/admin/AdminProductCards.jsx'
+import AdminProductsHeader from '../../components/admin/AdminProductsHeader.jsx'
 import AdminProductsTable from '../../components/admin/AdminProductsTable.jsx'
 import ConfirmDialog from '../../components/admin/ConfirmDialog.jsx'
 import ProductFilters from '../../components/admin/ProductFilters.jsx'
@@ -50,11 +50,7 @@ function AdminProducts() {
     return (
       <div role="alert" className="py-24 text-center">
         <p className="font-display text-2xl">No se pudieron cargar los productos</p>
-        <button
-          type="button"
-          onClick={reload}
-          className="btn-outline mt-6"
-        >
+        <button type="button" onClick={reload} className="btn-outline mt-6">
           Reintentar
         </button>
       </div>
@@ -65,24 +61,7 @@ function AdminProducts() {
 
   return (
     <section>
-      <header className="flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <p className="text-xs uppercase tracking-widest text-stone">Panel de administración</p>
-          <h1 className="mt-3 text-4xl">Productos</h1>
-        </div>
-        <div className="flex flex-wrap items-center gap-6">
-          <p className="text-xs uppercase tracking-widest text-stone">
-            {products.length} en total · {hiddenCount} {hiddenCount === 1 ? 'oculto' : 'ocultos'}
-          </p>
-          <Link
-            to="/admin/productos/nuevo"
-            className="btn-primary px-5"
-          >
-            <Plus size={14} strokeWidth={1.5} aria-hidden="true" />
-            Nuevo producto
-          </Link>
-        </div>
-      </header>
+      <AdminProductsHeader total={products.length} hiddenCount={hiddenCount} />
 
       <div className="mt-10">
         <ProductFilters filters={filters} onChange={setFilters} />

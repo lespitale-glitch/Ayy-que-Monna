@@ -37,6 +37,7 @@ export const router = createBrowserRouter([
             lazy: lazyPage(() => import('./components/admin/AdminLayout.jsx')),
             children: [
               { index: true, lazy: lazyPage(() => import('./pages/Admin/AdminProducts.jsx')) },
+              { path: 'orden', lazy: lazyPage(() => import('./pages/Admin/AdminCatalogOrder.jsx')) },
               // "nuevo" va antes que ":id" para que no se interprete como un id
               { path: 'productos/nuevo', lazy: lazyPage(() => import('./pages/Admin/AdminProductForm.jsx')) },
               { path: 'productos/:id', lazy: lazyPage(() => import('./pages/Admin/AdminProductForm.jsx')) },

@@ -143,6 +143,14 @@ export async function createProduct(product) {
   return fromRow(data)
 }
 
+// Guarda el orden completo del catálogo en UNA sola operación (función reorder_products
+// de schema.sql): o se guardan todas las posiciones, o ninguna.
+export async function reorderProducts(ids) {
+  requireSupabase()
+  const { error } = await supabase.rpc('reorder_products', { product_ids: ids })
+  if (error) throw error
+}
+
 // ---------------------------------------------------------------------------
 // Fotos (Storage)
 // ---------------------------------------------------------------------------
