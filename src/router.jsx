@@ -4,6 +4,7 @@ import Home from './pages/Home/Home.jsx'
 import Shop from './pages/Shop/Shop.jsx'
 import Product from './pages/Product/Product.jsx'
 import NotFound from './pages/NotFound/NotFound.jsx'
+import Selection from './pages/Selection/Selection.jsx'
 
 // "lazy" carga el código del panel solo cuando alguien entra a /admin.
 // import() devuelve una Promesa con el módulo; usamos su export por defecto como componente.
@@ -18,6 +19,7 @@ export const router = createBrowserRouter([
       { path: '/tienda', element: <Shop /> },
       { path: '/tienda/:categoria', element: <Shop /> },
       { path: '/producto/:id', element: <Product /> },
+      { path: '/seleccion/:slug', element: <Selection /> },
       { path: '*', element: <NotFound /> },
     ],
   },

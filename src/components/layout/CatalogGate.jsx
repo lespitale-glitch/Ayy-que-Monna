@@ -15,14 +15,13 @@ function CatalogGate({ children }) {
 
   if (status === 'error') {
     return (
-      <section role="alert" className="mx-auto flex min-h-[60vh] max-w-md flex-col items-center justify-center px-6 text-center">
+      <section
+        role="alert"
+        className="mx-auto flex min-h-[60vh] max-w-md flex-col items-center justify-center px-6 text-center"
+      >
         <h1 className="text-3xl">No pudimos cargar la tienda</h1>
         <p className="mt-4 text-sm text-stone">Revisá tu conexión e intentá de nuevo en unos segundos.</p>
-        <button
-          type="button"
-          onClick={reload}
-          className="btn-outline mt-8"
-        >
+        <button type="button" onClick={reload} className="btn-outline mt-8">
           Reintentar
         </button>
       </section>

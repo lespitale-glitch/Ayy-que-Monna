@@ -41,7 +41,7 @@ filtro por terminación Dorado/Plateado deducida del nombre, logo.jpg procesado 
 - [x] Paso 1: identidad (logo WebP transparente, favicon, paleta, Comfortaa + Geist autoalojadas, botones)
 - [x] Paso 2: Hero Slider accesible con los banners originales (WebP, autoplay con pausa, swipe, reducir movimiento)
 - [x] Paso 3: buscador en modal con filtros (categoría, terminación, precio, Marina)
-- [ ] Paso 4: mega-menú "Colecciones" + página `/seleccion/:slug`
+- [x] Paso 4: mega-menú "Colecciones" + página `/seleccion/:slug` (Marina, Novedades, Destacados, Dorados, Plateados)
 - [ ] Paso 5: sección de testimonios (oculta hasta cargar reseñas reales)
 - [ ] Paso 6: regresión completa (tienda, carrito, panel) y cierre
 

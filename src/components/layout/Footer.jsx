@@ -19,7 +19,10 @@ function Footer() {
           <ul className="mt-4 space-y-2 text-sm">
             {CATEGORIES.map((c) => (
               <li key={c.slug}>
-                <Link to={`/tienda/${c.slug}`} className="decoration-fucsia decoration-2 underline-offset-4 hover:underline">
+                <Link
+                  to={`/tienda/${c.slug}`}
+                  className="decoration-fucsia decoration-2 underline-offset-4 hover:underline"
+                >
                   {c.label}
                 </Link>
               </li>

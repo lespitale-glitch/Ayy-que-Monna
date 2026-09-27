@@ -29,7 +29,7 @@ export const HERO_SLIDES = [
     eyebrow: 'Recién llegados',
     title: 'Lo nuevo de',
     highlight: 'Monna',
-    cta: { label: 'Ver novedades', to: '/tienda' },
+    cta: { label: 'Ver novedades', to: '/seleccion/novedades' },
   },
   {
     id: 'collares',
@@ -74,7 +74,7 @@ export const HERO_SLIDES = [
     eyebrow: 'Selección Monna',
     title: 'Nuestros',
     highlight: 'favoritos',
-    cta: { label: 'Ver la tienda', to: '/tienda' },
+    cta: { label: 'Ver destacados', to: '/seleccion/destacados' },
   },
   {
     id: 'retiro',

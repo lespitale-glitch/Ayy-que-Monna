@@ -3,6 +3,7 @@ import { NavLink } from 'react-router-dom'
 import { Menu, X } from 'lucide-react'
 import Logo from './Logo.jsx'
 import MobileMenu from './MobileMenu.jsx'
+import CollectionsMenu from './megamenu/CollectionsMenu.jsx'
 import CartButton from '../cart/CartButton.jsx'
 import SearchButton from '../search/SearchButton.jsx'
 import SearchModal from '../search/SearchModal.jsx'
@@ -55,10 +56,17 @@ function Header() {
 
         <div className="flex items-center justify-end gap-10">
           <nav aria-label="Principal" className="hidden md:block">
-            <ul className="flex gap-8">
-              {NAV_LINKS.map((link) => (
-                <li key={link.to}>
-                  <NavLink to={link.to} end={link.end} className={linkClass}>
+            <ul className="flex items-center gap-8">
+              <li>
+                <NavLink to={NAV_LINKS[0].to} end className={linkClass}>
+                  {NAV_LINKS[0].label}
+                </NavLink>
+              </li>
+              <CollectionsMenu linkClass={linkClass} />
+              {/* Las categorías se muestran en pantallas grandes; en tablet están en la Tienda */}
+              {NAV_LINKS.slice(1).map((link) => (
+                <li key={link.to} className="hidden lg:block">
+                  <NavLink to={link.to} className={linkClass}>
                     {link.label}
                   </NavLink>
                 </li>
