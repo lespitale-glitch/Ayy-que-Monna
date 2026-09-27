@@ -3,6 +3,7 @@ import QuantitySelector from '../product/QuantitySelector.jsx'
 import { MAX_QUANTITY } from '../../context/CartContext.jsx'
 import { useCart } from '../../hooks/useCart.js'
 import { formatPrice } from '../../utils/formatPrice.js'
+import { toTitleCase } from '../../utils/text.js'
 
 // Una fila del carrito: miniatura, nombre, precio, cantidad y "Eliminar".
 function CartLine({ product, quantity }) {
@@ -11,7 +12,7 @@ function CartLine({ product, quantity }) {
   return (
     <li className="flex gap-4 py-6">
       <Link to={`/producto/${product.id}`} onClick={closeCart} className="w-20 shrink-0">
-        <img src={product.images[0]} alt={product.name} className="aspect-product w-full bg-white object-cover" />
+        <img src={product.images[0]} alt={toTitleCase(product.name)} className="aspect-product w-full bg-white object-cover" />
       </Link>
 
       <div className="flex flex-1 flex-col">

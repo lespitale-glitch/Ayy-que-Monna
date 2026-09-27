@@ -20,7 +20,7 @@ y sumar gestión de catálogo y newsletter.
 - [x] 67 fotos en `public/products/`, verificadas contra `products.json`
 **Hecho cuando:** `npm run dev` levanta una página con fuentes y colores de marca.
 
-## Fase 2 — Frontend e-commerce
+## Fase 2 — Frontend e-commerce ✅ (COMPLETADA)
 - [x] Rutas (React Router), Layout con Header y Footer, `formatPrice`
 - [x] Icono de carrito con contador en el Header
 - [x] Home: hero, carrusel de Destacados, Novedades editorial, Colección Marina y bloque de confianza
@@ -30,7 +30,7 @@ y sumar gestión de catálogo y newsletter.
 - [x] Carrito lateral (drawer) con persistencia en localStorage (`ayyquemonna_cart`)
 - [x] Checkout por WhatsApp (mensaje con detalle y total)
 - [ ] Reemplazar `WHATSAPP_NUMBER` placeholder por el número real antes del deploy
-- [ ] Responsive, accesible y con imágenes optimizadas
+- [x] Pulido: fade-in al scroll (respeta "reducir movimiento"), alt descriptivos, sin desbordes en 320–1280px, 0 errores axe (WCAG 2 AA)
 **Hecho cuando:** se puede navegar y armar un carrito con todos los productos originales.
 
 ## Fase 3 — Panel Admin con Drag & Drop

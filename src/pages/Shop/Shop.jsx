@@ -21,6 +21,8 @@ function Shop() {
         <CategoryFilter />
       </div>
 
+      {/* Título solo para lectores de pantalla: mantiene el orden h1 → h2 → h3 (nombre de cada producto) */}
+      <h2 className="sr-only">Productos</h2>
       <ProductGrid products={products} />
     </section>
   )

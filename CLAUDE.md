@@ -47,7 +47,7 @@ Solo se consulta como referencia: no copiar código de allí.
 - Componentes funcionales, uno por archivo, nombre en PascalCase.
 - Componentes pequeños: si pasa de ~150 líneas, dividir.
 - Nada de lógica de negocio dentro del JSX; va en hooks o utilidades.
-- Imágenes con `loading="lazy"` y `alt` descriptivo.
+- Imágenes con `loading="lazy"` y `alt` descriptivo (nombres con `toTitleCase`, no en mayúsculas). Imágenes decorativas: `alt=""` + `aria-hidden`.
 - Accesibilidad: HTML semántico (`header`, `main`, `nav`, `button`), foco visible, contraste AA.
 - Mobile-first: diseñar primero para 375px.
 - Comentarios breves en español explicando el *porqué* (pensados para aprender JS).
@@ -69,5 +69,5 @@ Solo se consulta como referencia: no copiar código de allí.
   - Botones rectangulares, sin sombras, borde fino 1px o relleno negro sólido.
   - Sin degradados, sin sombras marcadas, sin bordes redondeados grandes (máx. `rounded-sm`).
   - Iconos lineales finos (Lucide, stroke 1.25–1.5).
-- **Animación:** sutil — transiciones 300–500ms (`ease-soft`), fade-in al hacer scroll. Nunca rebotes ni efectos llamativos.
+- **Animación:** sutil — transiciones 300–500ms (`ease-soft`), fade-in al hacer scroll con el componente `<Reveal>` (usa `motion-safe:` para respetar "reducir movimiento"). Nunca rebotes ni efectos llamativos.
 - **Copy:** breve, en español. Nombres de producto en MAYÚSCULAS, precio debajo en `stone`.

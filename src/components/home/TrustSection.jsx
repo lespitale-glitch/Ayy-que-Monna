@@ -1,4 +1,5 @@
 import { Gem, MapPin, MessageCircle, Truck } from 'lucide-react'
+import Reveal from '../Reveal.jsx'
 
 // Información real de la tienda (tomada del sitio original: barra de anuncios y preguntas frecuentes).
 const ITEMS = [
@@ -18,11 +19,11 @@ function TrustSection() {
       <ul className="grid gap-12 sm:grid-cols-2 lg:grid-cols-4">
         {/* "Icon" en mayúscula: así JSX lo trata como componente y lo puede dibujar */}
         {ITEMS.map(({ icon: Icon, title, text }) => (
-          <li key={title} className="text-center">
+          <Reveal as="li" key={title} className="text-center">
             <Icon size={28} strokeWidth={1.25} className="mx-auto" aria-hidden="true" />
             <h3 className="mt-5 font-sans text-xs uppercase tracking-widest">{title}</h3>
             <p className="mx-auto mt-3 max-w-60 text-sm leading-relaxed text-stone">{text}</p>
-          </li>
+          </Reveal>
         ))}
       </ul>
     </section>

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import { Menu, X } from 'lucide-react'
 import Logo from './Logo.jsx'
@@ -22,6 +22,14 @@ function Header() {
   const [isOpen, setIsOpen] = useState(false)
   const closeMenu = () => setIsOpen(false)
 
+  // Con el menú abierto, la tecla Escape lo cierra
+  useEffect(() => {
+    if (!isOpen) return
+    const onKeyDown = (event) => event.key === 'Escape' && setIsOpen(false)
+    document.addEventListener('keydown', onKeyDown)
+    return () => document.removeEventListener('keydown', onKeyDown)
+  }, [isOpen])
+
   return (
     <header className="sticky top-0 z-40 border-b border-line bg-bone/95 backdrop-blur">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6 md:h-20">
@@ -37,7 +45,7 @@ function Header() {
           {isOpen ? <X size={22} strokeWidth={1.25} /> : <Menu size={22} strokeWidth={1.25} />}
         </button>
 
-        <Logo />
+        <Logo onClick={closeMenu} />
 
         <div className="flex items-center gap-10">
           <nav aria-label="Principal" className="hidden md:block">

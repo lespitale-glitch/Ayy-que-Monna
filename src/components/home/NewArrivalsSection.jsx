@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import SectionHeading from './SectionHeading.jsx'
 import ProductCard from '../ProductCard.jsx'
+import Reveal from '../Reveal.jsx'
 import editorialImage from '../../assets/nuevo.jpg'
 import { getNewArrivals } from '../../utils/products.js'
 
@@ -11,7 +12,7 @@ function NewArrivalsSection() {
   return (
     <section className="border-t border-line">
       <div className="mx-auto grid max-w-7xl gap-12 px-6 py-24 md:grid-cols-12 md:gap-16">
-        <div className="md:col-span-5">
+        <Reveal className="md:col-span-5">
           <SectionHeading eyebrow="Recién llegados" title="Novedades">
             <p className="mt-4 max-w-sm text-sm leading-relaxed text-stone">
               Las últimas piezas que sumamos a la tienda.
@@ -23,7 +24,7 @@ function NewArrivalsSection() {
             loading="lazy"
             className="mt-10 aspect-product w-full object-cover"
           />
-        </div>
+        </Reveal>
 
         <div className="md:col-span-7 md:pt-24">
           <ul className="grid grid-cols-2 gap-x-4 gap-y-12 md:gap-x-8">

@@ -1,10 +1,12 @@
 import { useState } from 'react'
+import { toTitleCase } from '../../utils/text.js'
 
 // Galería del detalle: foto grande + miniaturas (solo si hay más de una foto).
 function ProductGallery({ images, name }) {
   // Guardamos el índice (posición en el array) de la foto que se está viendo
   const [selected, setSelected] = useState(0)
   const hasThumbnails = images.length > 1
+  const altName = toTitleCase(name)
 
   return (
     <div className="flex flex-col-reverse gap-4 md:flex-row">
@@ -33,7 +35,7 @@ function ProductGallery({ images, name }) {
         <img
           key={images[selected]}
           src={images[selected]}
-          alt={hasThumbnails ? `${name}, foto ${selected + 1}` : name}
+          alt={hasThumbnails ? `${altName}, foto ${selected + 1}` : altName}
           className="h-full w-full animate-fade-in object-cover"
         />
       </div>
