@@ -1,1 +1,82 @@
-[]
+[
+  {
+    "id": "aros-luna-dorada",
+    "name": "AROS LUNA DORADA",
+    "price": 24500,
+    "category": "aros",
+    "description": "Argollas finas con baño de oro y una media luna colgante. Livianas, para todos los días.",
+    "images": ["src/assets/products/aros-luna-dorada-1.webp", "src/assets/products/aros-luna-dorada-2.webp"],
+    "isFeatured": true,
+    "isNew": true
+  },
+  {
+    "id": "aros-perla-mini",
+    "name": "AROS PERLA MINI",
+    "price": 18900,
+    "category": "aros",
+    "description": "Abridores con perla cultivada de 6 mm sobre base de acero quirúrgico.",
+    "images": ["src/assets/products/aros-perla-mini-1.webp", "src/assets/products/aros-perla-mini-2.webp"],
+    "isFeatured": false,
+    "isNew": false
+  },
+  {
+    "id": "collar-eslabon-fino",
+    "name": "COLLAR ESLABÓN FINO",
+    "price": 32000,
+    "category": "collares",
+    "description": "Cadena de eslabones delicados de 45 cm con baño de oro. Ideal para combinar en capas.",
+    "images": ["src/assets/products/collar-eslabon-fino-1.webp", "src/assets/products/collar-eslabon-fino-2.webp"],
+    "isFeatured": true,
+    "isNew": false
+  },
+  {
+    "id": "collar-medalla-sol",
+    "name": "COLLAR MEDALLA SOL",
+    "price": 38500,
+    "category": "collares",
+    "description": "Medalla texturada con relieve de sol, en cadena de 50 cm ajustable.",
+    "images": ["src/assets/products/collar-medalla-sol-1.webp", "src/assets/products/collar-medalla-sol-2.webp"],
+    "isFeatured": false,
+    "isNew": true
+  },
+  {
+    "id": "anillo-ola",
+    "name": "ANILLO OLA",
+    "price": 21000,
+    "category": "anillos",
+    "description": "Anillo abierto de forma ondulada, ajustable a casi todas las medidas.",
+    "images": ["src/assets/products/anillo-ola-1.webp", "src/assets/products/anillo-ola-2.webp"],
+    "isFeatured": true,
+    "isNew": false
+  },
+  {
+    "id": "anillo-sello-piedra",
+    "name": "ANILLO SELLO PIEDRA",
+    "price": 27500,
+    "category": "anillos",
+    "description": "Sello de acero dorado con piedra natural facetada al centro.",
+    "images": ["src/assets/products/anillo-sello-piedra-1.webp", "src/assets/products/anillo-sello-piedra-2.webp"],
+    "isFeatured": false,
+    "isNew": true
+  },
+  {
+    "id": "pulsera-cadena-doble",
+    "name": "PULSERA CADENA DOBLE",
+    "price": 26000,
+    "category": "pulseras",
+    "description": "Dos cadenas finas unidas en un mismo cierre, con extensor de 3 cm.",
+    "images": ["src/assets/products/pulsera-cadena-doble-1.webp", "src/assets/products/pulsera-cadena-doble-2.webp"],
+    "isFeatured": true,
+    "isNew": false
+  },
+  {
+    "id": "pulsera-esclava-lisa",
+    "name": "PULSERA ESCLAVA LISA",
+    "price": 29900,
+    "category": "pulseras",
+    "description": "Esclava rígida de terminación pulida, minimalista y fácil de combinar.",
+    "images": ["src/assets/products/pulsera-esclava-lisa-1.webp", "src/assets/products/pulsera-esclava-lisa-2.webp"],
+    "isFeatured": false,
+    "isNew": false
+  }
+]

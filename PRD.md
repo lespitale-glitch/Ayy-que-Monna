@@ -15,9 +15,11 @@ y sumar gestión de catálogo y newsletter.
 - [x] Scaffold Vite + React + Tailwind + linter
 - [x] Configurar tokens de diseño (colores, fuentes, espaciados)
 - [x] `.gitignore` para las fotos originales pesadas (~500 MB)
+- [x] Carpeta `legacy/` creada con instrucciones
 - [ ] Copiar la web original (HTML/CSS, sin imágenes pesadas) en `legacy/`
 - [ ] Muestra de imágenes optimizadas (WebP) en `src/assets/`
-- [ ] Inventario: lista de productos (nombre, precio, descripción, categoría, imágenes) → `products.json`
+- [x] `products.json` con 8 productos de MUESTRA y la estructura definitiva
+- [ ] Reemplazar la muestra por el inventario real (nombre, precio, descripción, categoría, imágenes)
 **Hecho cuando:** `npm run dev` levanta una página con fuentes y colores de marca.
 
 ## Fase 2 — Frontend e-commerce
