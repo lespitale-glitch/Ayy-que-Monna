@@ -9,25 +9,28 @@ y sumar gestión de catálogo y newsletter.
 - **Clienta:** navega el catálogo, ve detalle, compra desde el móvil.
 - **Administradora:** gestiona productos y su orden sin tocar código.
 
-## Fase 1 — Setup
+## Fase 1 — Setup ✅ (cerrada)
 - [x] Repositorio Git conectado a GitHub y primer commit en `main`
 - [x] Crear CLAUDE.md y PRD.md
 - [x] Scaffold Vite + React + Tailwind + linter
 - [x] Configurar tokens de diseño (colores, fuentes, espaciados)
-- [x] `.gitignore` para las fotos originales pesadas (~500 MB)
-- [ ] Copiar la web original (HTML/CSS, sin imágenes pesadas) en `legacy/`
-- [ ] Muestra de imágenes optimizadas (WebP) en `src/assets/`
-- [ ] Inventario: lista de productos (nombre, precio, descripción, categoría, imágenes) → `products.json`
+- [x] `.gitignore` (node_modules, dist, .env, .DS_Store, ._*, temporales, fotos originales)
+- [x] Sitio original respaldado en el repo `Monna_legacy`
+- [x] `products.json` con los 67 productos reales del sitio original
+- [x] 67 fotos en `public/products/`, verificadas contra `products.json`
 **Hecho cuando:** `npm run dev` levanta una página con fuentes y colores de marca.
 
-## Fase 2 — Frontend e-commerce
-- [ ] Header minimalista (logo centrado, menú, icono carrito) y footer
-- [ ] Home: hero con imagen grande, colecciones destacadas, grid de novedades
-- [ ] Tienda: grid de productos con filtro por categoría
-- [ ] Página de producto: galería, precio, descripción, "Agregar al carrito"
-- [ ] Carrito lateral (drawer) con persistencia en localStorage
-- [ ] Checkout: por definir (WhatsApp, Mercado Pago, etc.)
-- [ ] Responsive, accesible y con imágenes optimizadas
+## Fase 2 — Frontend e-commerce ✅ (COMPLETADA)
+- [x] Rutas (React Router), Layout con Header y Footer, `formatPrice`
+- [x] Icono de carrito con contador en el Header
+- [x] Home: hero, carrusel de Destacados, Novedades editorial, Colección Marina y bloque de confianza
+- [x] Tienda: ProductCard (4:5, hover, precio ARS) y grid con filtro por categoría
+- [x] Página de producto: galería con miniaturas, precio, descripción, cantidad, etiqueta Marina y 404
+- [x] "Agregar al carrito" conectado al CartContext (abre el panel)
+- [x] Carrito lateral (drawer) con persistencia en localStorage (`ayyquemonna_cart`)
+- [x] Checkout por WhatsApp (mensaje con detalle y total)
+- [ ] Reemplazar `WHATSAPP_NUMBER` placeholder por el número real antes del deploy
+- [x] Pulido: fade-in al scroll (respeta "reducir movimiento"), alt descriptivos, sin desbordes en 320–1280px, 0 errores axe (WCAG 2 AA)
 **Hecho cuando:** se puede navegar y armar un carrito con todos los productos originales.
 
 ## Fase 3 — Panel Admin con Drag & Drop
@@ -47,6 +50,5 @@ y sumar gestión de catálogo y newsletter.
 Multi-idioma, cuentas de cliente, gestión de stock avanzada.
 
 ## Preguntas abiertas
-- Método de pago y de envío
 - Proveedor de backend y de newsletter
 - Dominio y hosting (Vercel/Netlify)

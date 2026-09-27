@@ -1,1 +1,822 @@
-[]
+[
+  {
+    "id": "esclava-simple",
+    "name": "ESCLAVA SIMPLE",
+    "price": 6500,
+    "category": "pulseras",
+    "description": "Consultar color disponible por WhatsApp.",
+    "images": [
+      "/products/esclavasS.jpeg"
+    ],
+    "isFeatured": true,
+    "isNew": true
+  },
+  {
+    "id": "esclava-bamboo",
+    "name": "ESCLAVA BAMBOO",
+    "price": 6500,
+    "category": "pulseras",
+    "description": "Consultar color disponible por WhatsApp.",
+    "images": [
+      "/products/esclavasB.jpeg"
+    ],
+    "isFeatured": true,
+    "isNew": true
+  },
+  {
+    "id": "esclava-flores",
+    "name": "ESCLAVA FLORES",
+    "price": 6500,
+    "category": "pulseras",
+    "description": "Consultar color disponible por WhatsApp.",
+    "images": [
+      "/products/esclavasF.jpeg"
+    ],
+    "isFeatured": true,
+    "isNew": true
+  },
+  {
+    "id": "collar-lili",
+    "name": "COLLAR LILI",
+    "price": 6300,
+    "category": "collares",
+    "description": "",
+    "images": [
+      "/products/collarLili.jpeg"
+    ],
+    "isFeatured": true,
+    "isNew": true
+  },
+  {
+    "id": "collar-tortuga-dorado",
+    "name": "COLLAR TORTUGA DORADO",
+    "price": 6100,
+    "category": "collares",
+    "description": "",
+    "images": [
+      "/products/collarTortugaD.jpeg"
+    ],
+    "isFeatured": false,
+    "isNew": true,
+    "collection": "marina"
+  },
+  {
+    "id": "collar-tortuga-plateado",
+    "name": "COLLAR TORTUGA PLATEADO",
+    "price": 6100,
+    "category": "collares",
+    "description": "",
+    "images": [
+      "/products/collarTortugaP.jpeg"
+    ],
+    "isFeatured": false,
+    "isNew": true,
+    "collection": "marina"
+  },
+  {
+    "id": "collar-caballito-de-mar-dorado",
+    "name": "COLLAR CABALLITO DE MAR DORADO",
+    "price": 7500,
+    "category": "collares",
+    "description": "",
+    "images": [
+      "/products/collarCaballitoD.jpeg"
+    ],
+    "isFeatured": false,
+    "isNew": true,
+    "collection": "marina"
+  },
+  {
+    "id": "collar-caballito-de-mar-plateado",
+    "name": "COLLAR CABALLITO DE MAR PLATEADO",
+    "price": 7500,
+    "category": "collares",
+    "description": "",
+    "images": [
+      "/products/collarCaballito.jpeg"
+    ],
+    "isFeatured": false,
+    "isNew": true,
+    "collection": "marina"
+  },
+  {
+    "id": "collar-ballena",
+    "name": "COLLAR BALLENA",
+    "price": 9500,
+    "category": "collares",
+    "description": "",
+    "images": [
+      "/products/collarBallena.jpeg"
+    ],
+    "isFeatured": false,
+    "isNew": true,
+    "collection": "marina"
+  },
+  {
+    "id": "collar-estrella",
+    "name": "COLLAR ESTRELLA",
+    "price": 5800,
+    "category": "collares",
+    "description": "",
+    "images": [
+      "/products/collarEstrellaP.jpeg"
+    ],
+    "isFeatured": false,
+    "isNew": true
+  },
+  {
+    "id": "aros-pali",
+    "name": "AROS PALI",
+    "price": 6350,
+    "category": "aros",
+    "description": "",
+    "images": [
+      "/products/arosPali.jpeg"
+    ],
+    "isFeatured": true,
+    "isNew": true
+  },
+  {
+    "id": "pulsera-arabe",
+    "name": "PULSERA ARABE",
+    "price": 2500,
+    "category": "pulseras",
+    "description": "",
+    "images": [
+      "/products/pulseraArabe.jpeg"
+    ],
+    "isFeatured": false,
+    "isNew": true
+  },
+  {
+    "id": "pulsera-blues",
+    "name": "PULSERA BLUES",
+    "price": 2500,
+    "category": "pulseras",
+    "description": "",
+    "images": [
+      "/products/pulseraBlues.jpeg"
+    ],
+    "isFeatured": false,
+    "isNew": true
+  },
+  {
+    "id": "pulsera-verde-agua",
+    "name": "PULSERA VERDE AGUA",
+    "price": 2500,
+    "category": "pulseras",
+    "description": "",
+    "images": [
+      "/products/pulseraVerdeAgua.jpeg"
+    ],
+    "isFeatured": false,
+    "isNew": true
+  },
+  {
+    "id": "pulsera-lili",
+    "name": "PULSERA LILI",
+    "price": 2500,
+    "category": "pulseras",
+    "description": "",
+    "images": [
+      "/products/pulseraLili.jpeg"
+    ],
+    "isFeatured": false,
+    "isNew": true
+  },
+  {
+    "id": "anillos-sol-y-luna",
+    "name": "ANILLOS SOL Y LUNA",
+    "price": 6800,
+    "category": "anillos",
+    "description": "",
+    "images": [
+      "/products/anillosSolLuna.jpg"
+    ],
+    "isFeatured": false,
+    "isNew": false
+  },
+  {
+    "id": "collar-cristal",
+    "name": "COLLAR CRISTAL",
+    "price": 4700,
+    "category": "collares",
+    "description": "",
+    "images": [
+      "/products/collarCristal.jpg"
+    ],
+    "isFeatured": false,
+    "isNew": false
+  },
+  {
+    "id": "collar-glow",
+    "name": "COLLAR GLOW",
+    "price": 5300,
+    "category": "collares",
+    "description": "",
+    "images": [
+      "/products/collarGlow.jpg"
+    ],
+    "isFeatured": false,
+    "isNew": false
+  },
+  {
+    "id": "aros-brillantes-dorados",
+    "name": "AROS BRILLANTES DORADOS",
+    "price": 3800,
+    "category": "aros",
+    "description": "",
+    "images": [
+      "/products/arosBrillantes.jpg"
+    ],
+    "isFeatured": false,
+    "isNew": false
+  },
+  {
+    "id": "aros-amor-plateados",
+    "name": "AROS AMOR PLATEADOS",
+    "price": 3100,
+    "category": "aros",
+    "description": "",
+    "images": [
+      "/products/arosAmorP.jpg"
+    ],
+    "isFeatured": false,
+    "isNew": false
+  },
+  {
+    "id": "anillo-primavera-plateado",
+    "name": "ANILLO PRIMAVERA PLATEADO",
+    "price": 4200,
+    "category": "anillos",
+    "description": "",
+    "images": [
+      "/products/AnilloPrimaveraP.jpg"
+    ],
+    "isFeatured": true,
+    "isNew": false
+  },
+  {
+    "id": "collar-serpiente-dorado",
+    "name": "COLLAR SERPIENTE DORADO",
+    "price": 3300,
+    "category": "collares",
+    "description": "",
+    "images": [
+      "/products/cadenaSerpienteDd.jpg",
+      "/products/cadenaSerpienteD.jpg"
+    ],
+    "isFeatured": false,
+    "isNew": false
+  },
+  {
+    "id": "collar-serpiente-plateado",
+    "name": "COLLAR SERPIENTE PLATEADO",
+    "price": 3300,
+    "category": "collares",
+    "description": "",
+    "images": [
+      "/products/cadenaSSS.png"
+    ],
+    "isFeatured": false,
+    "isNew": false
+  },
+  {
+    "id": "aros-brillito-dorados",
+    "name": "AROS BRILLITO DORADOS",
+    "price": 1500,
+    "category": "aros",
+    "description": "",
+    "images": [
+      "/products/aritosBrillitoD.jpg"
+    ],
+    "isFeatured": false,
+    "isNew": false
+  },
+  {
+    "id": "aros-brillito-plateados",
+    "name": "AROS BRILLITO PLATEADOS",
+    "price": 1500,
+    "category": "aros",
+    "description": "",
+    "images": [
+      "/products/aritosBrillitoP.jpg"
+    ],
+    "isFeatured": false,
+    "isNew": false
+  },
+  {
+    "id": "collar-celeste-dorado",
+    "name": "COLLAR CELESTE DORADO",
+    "price": 3500,
+    "category": "collares",
+    "description": "",
+    "images": [
+      "/products/collarCelesteD.jpg"
+    ],
+    "isFeatured": false,
+    "isNew": false,
+    "collection": "marina"
+  },
+  {
+    "id": "collar-celeste-plateado",
+    "name": "COLLAR CELESTE PLATEADO",
+    "price": 3500,
+    "category": "collares",
+    "description": "",
+    "images": [
+      "/products/collarCelesteP.jpg"
+    ],
+    "isFeatured": false,
+    "isNew": false,
+    "collection": "marina"
+  },
+  {
+    "id": "anillo-coeur-plateado",
+    "name": "ANILLO COEUR PLATEADO",
+    "price": 3700,
+    "category": "anillos",
+    "description": "",
+    "images": [
+      "/products/anilloCoeurP.jpg"
+    ],
+    "isFeatured": false,
+    "isNew": false
+  },
+  {
+    "id": "anillo-coeur-dorado",
+    "name": "ANILLO COEUR DORADO",
+    "price": 3700,
+    "category": "anillos",
+    "description": "",
+    "images": [
+      "/products/anilloCoeurD.jpg"
+    ],
+    "isFeatured": false,
+    "isNew": false
+  },
+  {
+    "id": "aros-flora",
+    "name": "AROS FLORA",
+    "price": 5875,
+    "category": "aros",
+    "description": "",
+    "images": [
+      "/products/arosFlora.jpg"
+    ],
+    "isFeatured": true,
+    "isNew": false
+  },
+  {
+    "id": "aros-lumine",
+    "name": "AROS LUMINE",
+    "price": 5100,
+    "category": "aros",
+    "description": "",
+    "images": [
+      "/products/arosLumine.jpg"
+    ],
+    "isFeatured": false,
+    "isNew": false
+  },
+  {
+    "id": "aros-lagoon",
+    "name": "AROS LAGOON",
+    "price": 5100,
+    "category": "aros",
+    "description": "",
+    "images": [
+      "/products/arosLagoon.jpg"
+    ],
+    "isFeatured": false,
+    "isNew": false
+  },
+  {
+    "id": "anillo-enigma",
+    "name": "ANILLO ENIGMA",
+    "price": 3300,
+    "category": "anillos",
+    "description": "",
+    "images": [
+      "/products/anilloEnigma.jpg"
+    ],
+    "isFeatured": false,
+    "isNew": false
+  },
+  {
+    "id": "relicario-lumine",
+    "name": "RELICARIO LUMINE",
+    "price": 7500,
+    "category": "collares",
+    "description": "",
+    "images": [
+      "/products/collarLumine.jpg"
+    ],
+    "isFeatured": false,
+    "isNew": false
+  },
+  {
+    "id": "anillo-inca",
+    "name": "ANILLO INCA",
+    "price": 3100,
+    "category": "anillos",
+    "description": "",
+    "images": [
+      "/products/anilloInca.jpg"
+    ],
+    "isFeatured": false,
+    "isNew": false
+  },
+  {
+    "id": "collar-arte",
+    "name": "COLLAR ARTE",
+    "price": 6000,
+    "category": "collares",
+    "description": "",
+    "images": [
+      "/products/collarArte.jpg"
+    ],
+    "isFeatured": true,
+    "isNew": false
+  },
+  {
+    "id": "collar-margarita",
+    "name": "COLLAR MARGARITA",
+    "price": 6250,
+    "category": "collares",
+    "description": "",
+    "images": [
+      "/products/collarMargarita.jpg"
+    ],
+    "isFeatured": true,
+    "isNew": false
+  },
+  {
+    "id": "anillo-dots-plateado",
+    "name": "ANILLO DOTS PLATEADO",
+    "price": 2700,
+    "category": "anillos",
+    "description": "",
+    "images": [
+      "/products/anilloDotsP.jpg"
+    ],
+    "isFeatured": false,
+    "isNew": false
+  },
+  {
+    "id": "pulsera-azul-dorada",
+    "name": "PULSERA AZUL DORADA",
+    "price": 2000,
+    "category": "pulseras",
+    "description": "",
+    "images": [
+      "/products/pulseraDoradaAzul1.jpg",
+      "/products/pulseraDoradaAzul.jpg"
+    ],
+    "isFeatured": false,
+    "isNew": true
+  },
+  {
+    "id": "pulsera-azul-verde",
+    "name": "PULSERA AZUL VERDE",
+    "price": 2000,
+    "category": "pulseras",
+    "description": "",
+    "images": [
+      "/products/pAzulVerde.jpg"
+    ],
+    "isFeatured": false,
+    "isNew": true
+  },
+  {
+    "id": "pulsera-violeta-rosa-y-azul",
+    "name": "PULSERA VIOLETA, ROSA Y AZUL",
+    "price": 2000,
+    "category": "pulseras",
+    "description": "",
+    "images": [
+      "/products/pVAR.jpg"
+    ],
+    "isFeatured": false,
+    "isNew": true
+  },
+  {
+    "id": "pulsera-violeta",
+    "name": "PULSERA VIOLETA",
+    "price": 2000,
+    "category": "pulseras",
+    "description": "",
+    "images": [
+      "/products/pv.jpg"
+    ],
+    "isFeatured": false,
+    "isNew": true
+  },
+  {
+    "id": "pulsera-princesa",
+    "name": "PULSERA PRINCESA",
+    "price": 2000,
+    "category": "pulseras",
+    "description": "",
+    "images": [
+      "/products/pprin.jpg",
+      "/products/pulseraPrincesa.jpg"
+    ],
+    "isFeatured": false,
+    "isNew": true
+  },
+  {
+    "id": "anillo-dots-dorado",
+    "name": "ANILLO DOTS DORADO",
+    "price": 2700,
+    "category": "anillos",
+    "description": "",
+    "images": [
+      "/products/anilloDotsD.jpg"
+    ],
+    "isFeatured": false,
+    "isNew": false
+  },
+  {
+    "id": "anillo-cherist",
+    "name": "ANILLO CHERIST",
+    "price": 2500,
+    "category": "anillos",
+    "description": "",
+    "images": [
+      "/products/anilloCherist.jpg"
+    ],
+    "isFeatured": false,
+    "isNew": false
+  },
+  {
+    "id": "collar-amor-plateado",
+    "name": "COLLAR AMOR PLATEADO",
+    "price": 3700,
+    "category": "collares",
+    "description": "",
+    "images": [
+      "/products/collarAmorP.jpg"
+    ],
+    "isFeatured": false,
+    "isNew": false
+  },
+  {
+    "id": "collar-amor-dorado",
+    "name": "COLLAR AMOR DORADO",
+    "price": 3700,
+    "category": "collares",
+    "description": "",
+    "images": [
+      "/products/collarAmorD.jpg"
+    ],
+    "isFeatured": false,
+    "isNew": false
+  },
+  {
+    "id": "aros-texturados-dorados",
+    "name": "AROS TEXTURADOS DORADOS",
+    "price": 3000,
+    "category": "aros",
+    "description": "",
+    "images": [
+      "/products/arosTexturados.jpg"
+    ],
+    "isFeatured": false,
+    "isNew": false
+  },
+  {
+    "id": "aros-texturados-plateados",
+    "name": "AROS TEXTURADOS PLATEADOS",
+    "price": 3000,
+    "category": "aros",
+    "description": "",
+    "images": [
+      "/products/arosTexturadosP.jpg"
+    ],
+    "isFeatured": false,
+    "isNew": false
+  },
+  {
+    "id": "collar-tulipan",
+    "name": "COLLAR TULIPAN",
+    "price": 6450,
+    "category": "collares",
+    "description": "",
+    "images": [
+      "/products/collarTulipan.jpg"
+    ],
+    "isFeatured": true,
+    "isNew": false
+  },
+  {
+    "id": "collar-ofelia",
+    "name": "COLLAR OFELIA",
+    "price": 6000,
+    "category": "collares",
+    "description": "",
+    "images": [
+      "/products/collarOfelia.jpg"
+    ],
+    "isFeatured": true,
+    "isNew": false
+  },
+  {
+    "id": "pulsera-medusa",
+    "name": "PULSERA MEDUSA",
+    "price": 6300,
+    "category": "pulseras",
+    "description": "",
+    "images": [
+      "/products/pulseraMedusa1.jpg"
+    ],
+    "isFeatured": false,
+    "isNew": false,
+    "collection": "marina"
+  },
+  {
+    "id": "anillo-bob-esponja",
+    "name": "ANILLO BOB ESPONJA",
+    "price": 2500,
+    "category": "anillos",
+    "description": "",
+    "images": [
+      "/products/anilloBob.jpg"
+    ],
+    "isFeatured": true,
+    "isNew": false
+  },
+  {
+    "id": "anillo-tempestad",
+    "name": "ANILLO TEMPESTAD",
+    "price": 2900,
+    "category": "anillos",
+    "description": "",
+    "images": [
+      "/products/anilloTempestad.jpg"
+    ],
+    "isFeatured": false,
+    "isNew": false
+  },
+  {
+    "id": "anillo-primavera",
+    "name": "ANILLO PRIMAVERA",
+    "price": 4200,
+    "category": "anillos",
+    "description": "",
+    "images": [
+      "/products/AnilloPrimavera.jpg"
+    ],
+    "isFeatured": true,
+    "isNew": false
+  },
+  {
+    "id": "anillo-infinito",
+    "name": "ANILLO INFINITO",
+    "price": 2800,
+    "category": "anillos",
+    "description": "",
+    "images": [
+      "/products/anilloInfinito.jpg"
+    ],
+    "isFeatured": false,
+    "isNew": false
+  },
+  {
+    "id": "anillo-infinito-plateado",
+    "name": "ANILLO INFINITO PLATEADO",
+    "price": 1800,
+    "category": "anillos",
+    "description": "",
+    "images": [
+      "/products/anilloInfinitoP.jpg"
+    ],
+    "isFeatured": false,
+    "isNew": false
+  },
+  {
+    "id": "anillo-bamboo",
+    "name": "ANILLO BAMBOO",
+    "price": 2100,
+    "category": "anillos",
+    "description": "",
+    "images": [
+      "/products/anilloBamboo.jpg"
+    ],
+    "isFeatured": false,
+    "isNew": false
+  },
+  {
+    "id": "anillo-floral",
+    "name": "ANILLO FLORAL",
+    "price": 2300,
+    "category": "anillos",
+    "description": "",
+    "images": [
+      "/products/anilloFloral.jpg"
+    ],
+    "isFeatured": true,
+    "isNew": false
+  },
+  {
+    "id": "anillo-granate",
+    "name": "ANILLO GRANATE",
+    "price": 3000,
+    "category": "anillos",
+    "description": "",
+    "images": [
+      "/products/anilloGranate.jpg"
+    ],
+    "isFeatured": false,
+    "isNew": false
+  },
+  {
+    "id": "anillo-margarita",
+    "name": "ANILLO MARGARITA",
+    "price": 2500,
+    "category": "anillos",
+    "description": "",
+    "images": [
+      "/products/anilloMargarita.jpg"
+    ],
+    "isFeatured": true,
+    "isNew": false
+  },
+  {
+    "id": "anillo-ola",
+    "name": "ANILLO OLA",
+    "price": 1900,
+    "category": "anillos",
+    "description": "",
+    "images": [
+      "/products/anilloOla.jpg"
+    ],
+    "isFeatured": false,
+    "isNew": false,
+    "collection": "marina"
+  },
+  {
+    "id": "pulsera-marina",
+    "name": "PULSERA MARINA",
+    "price": 5000,
+    "category": "pulseras",
+    "description": "",
+    "images": [
+      "/products/pulseraMarina.jpg"
+    ],
+    "isFeatured": false,
+    "isNew": false,
+    "collection": "marina"
+  },
+  {
+    "id": "pulsera-caballito-de-mar",
+    "name": "PULSERA CABALLITO DE MAR",
+    "price": 5800,
+    "category": "pulseras",
+    "description": "",
+    "images": [
+      "/products/pulseraCaballito.jpg"
+    ],
+    "isFeatured": false,
+    "isNew": false
+  },
+  {
+    "id": "collar-acuatico-dorado",
+    "name": "COLLAR ACUATICO DORADO",
+    "price": 5750,
+    "category": "collares",
+    "description": "",
+    "images": [
+      "/products/collarAcuatico.jpg"
+    ],
+    "isFeatured": false,
+    "isNew": false,
+    "collection": "marina"
+  },
+  {
+    "id": "collar-acuatico-plateado",
+    "name": "COLLAR ACUATICO PLATEADO",
+    "price": 5750,
+    "category": "collares",
+    "description": "",
+    "images": [
+      "/products/collarAcuaticoP.jpg"
+    ],
+    "isFeatured": false,
+    "isNew": false,
+    "collection": "marina"
+  },
+  {
+    "id": "anillo-floral-plateado",
+    "name": "ANILLO FLORAL PLATEADO",
+    "price": 2300,
+    "category": "anillos",
+    "description": "",
+    "images": [
+      "/products/anilloFloralP.jpg"
+    ],
+    "isFeatured": true,
+    "isNew": false,
+    "collection": "marina"
+  }
+]

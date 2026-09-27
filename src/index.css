@@ -13,3 +13,13 @@
     @apply font-serif font-light;
   }
 }
+
+@layer utilities {
+  /* Oculta la barra de scroll de los carruseles (se siguen pudiendo deslizar) */
+  .scrollbar-none {
+    scrollbar-width: none;
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+}

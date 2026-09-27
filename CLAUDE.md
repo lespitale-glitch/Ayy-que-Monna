@@ -17,25 +17,37 @@ Se conservan los productos, textos e imágenes originales de la web anterior.
 - `npm run lint` — linter (oxlint, viene con la plantilla de Vite)
 
 ## Estructura
+public/
+  products/      # fotos de producto, servidas tal cual en /products/<archivo>
 src/
-  assets/        # muestra de imágenes OPTIMIZADAS (NO subir originales pesados)
+  assets/        # imágenes de la interfaz (logo, banners) importadas desde el código
   components/    # componentes reutilizables (Button, ProductCard, Header…)
   pages/         # una carpeta por ruta (Home, Shop, Product, Cart, Admin)
   context/       # CartContext, etc.
   data/          # products.json
   hooks/         # hooks propios (useCart…)
-fotos-originales/  # fotos originales (~500 MB), IGNORADA por Git, solo local
-legacy/            # copia de la web HTML/CSS original, solo referencia (sin imágenes pesadas)
+fotos-originales/  # fotos originales pesadas, IGNORADA por Git, solo local
+
+El sitio original (Next.js) está respaldado en el repo aparte `lespitale-glitch/Monna_legacy`.
+Solo se consulta como referencia: no copiar código de allí.
 
 ## Imágenes
+- Fotos de producto en `public/products/`; en `products.json` se referencian como `/products/<archivo>`.
 - Las fotos originales pesadas NO se suben a Git (ver `.gitignore`).
-- En `src/assets/` solo van versiones optimizadas: WebP, lado mayor ≤ 1600px, idealmente < 300 KB.
+- Peso objetivo por foto: lado mayor ≤ 1600px, idealmente < 300 KB.
+
+## Datos de producto (`src/data/products.json`)
+`{ id, name, price, category, description, images[], isFeatured, isNew, collection? }`
+- `id`: slug único; `name` en MAYÚSCULAS; `price` en ARS (número).
+- `category`: "aros" | "collares" | "anillos" | "pulseras".
+- `images[0]` es la foto principal; `images[1]` (opcional) se usa en el hover.
+- `collection` (opcional): hoy solo `"marina"`.
 
 ## Reglas de arquitectura
 - Componentes funcionales, uno por archivo, nombre en PascalCase.
 - Componentes pequeños: si pasa de ~150 líneas, dividir.
 - Nada de lógica de negocio dentro del JSX; va en hooks o utilidades.
-- Imágenes con `loading="lazy"` y `alt` descriptivo.
+- Imágenes con `loading="lazy"` y `alt` descriptivo (nombres con `toTitleCase`, no en mayúsculas). Imágenes decorativas: `alt=""` + `aria-hidden`.
 - Accesibilidad: HTML semántico (`header`, `main`, `nav`, `button`), foco visible, contraste AA.
 - Mobile-first: diseñar primero para 375px.
 - Comentarios breves en español explicando el *porqué* (pensados para aprender JS).
@@ -45,8 +57,8 @@ legacy/            # copia de la web HTML/CSS original, solo referencia (sin im�
 **Filosofía:** el producto es el protagonista. Mucho aire, poco ruido.
 
 - **Color:** paleta neutra (tokens en `tailwind.config.js`, no usar hex sueltos).
-  - Fondo `bone` #FAF8F5 (hueso), texto `ink` #1A1A1A, secundario `stone` #8A8580, bordes `line` #E8E4DF.
-  - Un único acento cálido y discreto: `gold` #B89B72, solo en detalles.
+  - Fondo `bone` #FAF8F5 (hueso), texto `ink` #1A1A1A, secundario `stone` #716C67, bordes `line` #E8E4DF.
+  - Un único acento cálido y discreto: `gold` #B89B72, solo en bordes y líneas finas. Nunca como color de texto (no pasa AA).
 - **Tipografía:**
   - Títulos: serif elegante (Cormorant Garamond), peso ligero.
   - Texto/UI: sans-serif limpia (Inter / Helvetica Neue), 14–16px.
@@ -57,5 +69,5 @@ legacy/            # copia de la web HTML/CSS original, solo referencia (sin im�
   - Botones rectangulares, sin sombras, borde fino 1px o relleno negro sólido.
   - Sin degradados, sin sombras marcadas, sin bordes redondeados grandes (máx. `rounded-sm`).
   - Iconos lineales finos (Lucide, stroke 1.25–1.5).
-- **Animación:** sutil — transiciones 300–500ms (`ease-soft`), fade-in al hacer scroll. Nunca rebotes ni efectos llamativos.
+- **Animación:** sutil — transiciones 300–500ms (`ease-soft`), fade-in al hacer scroll con el componente `<Reveal>` (usa `motion-safe:` para respetar "reducir movimiento"). Nunca rebotes ni efectos llamativos.
 - **Copy:** breve, en español. Nombres de producto en MAYÚSCULAS, precio debajo en `stone`.
