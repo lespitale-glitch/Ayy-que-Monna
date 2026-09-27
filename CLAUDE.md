@@ -75,6 +75,8 @@ Solo se consulta como referencia: no copiar código de allí.
   Los cambios se guardan juntos con "Guardar orden" → `reorderProducts(ids)` → `reorder_products()` (atómico,
   lista completa incluidos los ocultos). Aviso al salir con cambios sin guardar (`useBlocker` + `beforeunload`).
   Lógica pura en `utils/reorder.js` (`moveItem`, `hasOrderChanged`, `sortByIds`).
+- Cambios sin guardar: `useUnsavedChangesGuard(isDirty)` + `<UnsavedChangesDialog>` (formulario y orden).
+  En el formulario, `isFormDirty` (utils/productForm.js); mientras se guarda no se bloquea la navegación.
 
 ## Reglas de arquitectura
 - Componentes funcionales, uno por archivo, nombre en PascalCase.

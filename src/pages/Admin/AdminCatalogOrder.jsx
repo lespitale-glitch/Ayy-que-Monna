@@ -1,25 +1,16 @@
-import { useEffect } from 'react'
-import { Link, useBlocker } from 'react-router-dom'
-import ConfirmDialog from '../../components/admin/ConfirmDialog.jsx'
+import { Link } from 'react-router-dom'
+import UnsavedChangesDialog from '../../components/admin/UnsavedChangesDialog.jsx'
 import ReorderToolbar from '../../components/admin/order/ReorderToolbar.jsx'
 import SortableProductList from '../../components/admin/order/SortableProductList.jsx'
 import { useCatalogOrder } from '../../hooks/useCatalogOrder.js'
+import { useUnsavedChangesGuard } from '../../hooks/useUnsavedChangesGuard.js'
 
 // /admin/orden: reordenar todo el catálogo (incluidos los ocultos) y guardarlo de una vez
 function AdminCatalogOrder() {
   const { status, items, isDirty, isSaving, message, move, save, discard } = useCatalogOrder()
 
-  // Si hay cambios sin guardar, preguntamos antes de salir a otra página del panel…
-  const blocker = useBlocker(
-    ({ currentLocation, nextLocation }) => isDirty && currentLocation.pathname !== nextLocation.pathname,
-  )
-  // …y el navegador avisa si se cierra o recarga la pestaña
-  useEffect(() => {
-    if (!isDirty) return
-    const warn = (event) => event.preventDefault()
-    window.addEventListener('beforeunload', warn)
-    return () => window.removeEventListener('beforeunload', warn)
-  }, [isDirty])
+  // Si hay cambios sin guardar, preguntamos antes de salir (o avisa el navegador al cerrar la pestaña)
+  const blocker = useUnsavedChangesGuard(isDirty)
 
   return (
     <section>
@@ -63,15 +54,9 @@ function AdminCatalogOrder() {
         </div>
       )}
 
-      <ConfirmDialog
-        open={blocker.state === 'blocked'}
-        title="¿Salir sin guardar?"
-        confirmLabel="Salir sin guardar"
-        onConfirm={() => blocker.proceed()}
-        onCancel={() => blocker.reset()}
-      >
-        <p>Cambiaste el orden del catálogo pero todavía no lo guardaste. Si sales ahora, se pierden esos cambios.</p>
-      </ConfirmDialog>
+      <UnsavedChangesDialog blocker={blocker}>
+        Cambiaste el orden del catálogo pero todavía no lo guardaste. Si sales ahora, se pierden esos cambios.
+      </UnsavedChangesDialog>
     </section>
   )
 }

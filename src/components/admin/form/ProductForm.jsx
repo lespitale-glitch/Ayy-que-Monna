@@ -3,26 +3,11 @@ import { Link } from 'react-router-dom'
 import ProductFields from './ProductFields.jsx'
 import ImageUploader from '../ImageUploader.jsx'
 import Switch from '../Switch.jsx'
+import UnsavedChangesDialog from '../UnsavedChangesDialog.jsx'
+import { useUnsavedChangesGuard } from '../../../hooks/useUnsavedChangesGuard.js'
 import { slugify } from '../../../utils/slugify.js'
-import { validateProduct } from '../../../utils/productForm.js'
-
-const FLAGS = [
-  { field: 'isVisible', label: 'Visible en la tienda' },
-  { field: 'isFeatured', label: 'Destacado' },
-  { field: 'isNew', label: 'Nuevo' },
-  { field: 'isMarina', label: 'Colección Marina' },
-]
-
-const FIELD_LABELS = {
-  name: 'Nombre',
-  id: 'Id',
-  price: 'Precio',
-  category: 'Categoría',
-  description: 'Descripción',
-  images: 'Fotos',
-}
-
-const PHASE_LABEL = { uploading: 'Subiendo imágenes…', saving: 'Guardando…' }
+import { isFormDirty, validateProduct } from '../../../utils/productForm.js'
+import { FIELD_LABELS, FLAGS, PHASE_LABEL } from './formConfig.js'
 
 function ProductForm({ initialValues, isNew, phase, saveError, onSubmit, onFieldEdit }) {
   const [values, setValues] = useState(initialValues)
@@ -33,6 +18,8 @@ function ProductForm({ initialValues, isNew, phase, saveError, onSubmit, onField
   const summaryRef = useRef(null)
 
   const isBusy = phase !== 'idle'
+  // Mientras se guarda no bloqueamos: al terminar, el formulario navega solo a la lista
+  const blocker = useUnsavedChangesGuard(isFormDirty(initialValues, values) && !isBusy)
   const errors = submitted ? validateProduct(values) : {}
   if (saveError?.field) errors[saveError.field] = saveError.message
   const errorEntries = Object.entries(errors)
@@ -123,17 +110,19 @@ function ProductForm({ initialValues, isNew, phase, saveError, onSubmit, onField
         <p aria-live="polite" className="mr-auto text-xs uppercase tracking-widest text-stone">
           {PHASE_LABEL[phase] ?? ''}
         </p>
-        <Link to="/admin" className="whitespace-nowrap border border-line px-4 py-3 text-xs uppercase tracking-widest hover:border-ink sm:px-6">
+        <Link
+          to="/admin"
+          className="whitespace-nowrap border border-line px-4 py-3 text-xs uppercase tracking-widest hover:border-ink sm:px-6"
+        >
           Cancelar
         </Link>
-        <button
-          type="submit"
-          disabled={isBusy}
-          className="btn-primary whitespace-nowrap px-4 sm:px-6"
-        >
+        <button type="submit" disabled={isBusy} className="btn-primary whitespace-nowrap px-4 sm:px-6">
           {PHASE_LABEL[phase] ?? (isNew ? 'Crear producto' : 'Guardar cambios')}
         </button>
       </div>
+      <UnsavedChangesDialog blocker={blocker}>
+        Hay cambios en este producto que todavía no guardaste. Si sales ahora, se pierden.
+      </UnsavedChangesDialog>
     </form>
   )
 }
