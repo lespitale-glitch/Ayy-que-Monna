@@ -46,7 +46,7 @@ filtro por terminación Dorado/Plateado deducida del nombre, logo.jpg procesado 
 - [x] Paso 6: regresión completa (tienda, carrito, panel) y cierre
 - [ ] Pendiente: cargar testimonios reales en `src/data/testimonials.js`
 
-## Fase 3 — Panel Admin con Drag & Drop (Supabase)
+## Fase 3 — Panel Admin con Drag & Drop (Supabase) ✅ (COMPLETADA en código; falta probar con el Supabase real)
 Decisiones: Supabase (PostgreSQL + Auth + Storage), una única cuenta de administradora
 (email/password) en `/admin`, fotos originales en `public/products/` y fotos nuevas en Storage.
 - [x] Paso 1: `supabase/schema.sql` (tabla, RLS, `is_admin`, `reorder_products`, bucket), `seed.sql` (67 productos), guía del Paso 0 en README, `vercel.json`
@@ -55,8 +55,9 @@ Decisiones: Supabase (PostgreSQL + Auth + Storage), una única cuenta de adminis
 - [x] Paso 3: `AuthContext`, `/admin/login`, `ProtectedRoute`, cerrar sesión, carga diferida y `noindex`
 - [x] Paso 4: lista de productos (tabla / tarjetas en móvil) con toggles Visible / Destacado / Nuevo / Marina, búsqueda, filtros y eliminar con confirmación
 - [x] Paso 5: formulario crear / editar con validación, slug automático, fotos a Storage (WebP ≤ 1600px), reordenar y quitar fotos
-- [ ] Paso 6: reordenar el catálogo con drag & drop (dnd-kit)
-- [ ] Paso 7: pulido, accesibilidad del panel y documentación
+- [x] Paso 6: reordenar el catálogo en `/admin/orden` (dnd-kit: mouse, táctil, teclado + botones ↑↓) y guardado atómico con `reorder_products()`
+- [x] Paso 7: aviso de cambios sin guardar en el formulario, auditoría de accesibilidad del panel (21 pantallas × 3 anchos, 0 problemas) y guía de uso en el README
+- [ ] Probar el panel completo contra el proyecto real de Supabase
 **Hecho cuando:** la administradora cambia el orden en el panel y se refleja en la tienda.
 
 ## Fase 4 — Newsletter

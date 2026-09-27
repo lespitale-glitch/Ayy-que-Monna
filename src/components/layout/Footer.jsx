@@ -10,7 +10,7 @@ function Footer() {
     <footer className="mt-24 border-t border-line">
       <div className="mx-auto grid max-w-7xl gap-12 px-6 py-16 md:grid-cols-3">
         <div>
-          <BrandLogo className="h-9" />
+          <BrandLogo size="lg" />
           <p className="mt-3 text-sm text-stone">Bijouterie para todos los días.</p>
         </div>
 

@@ -78,3 +78,12 @@ export function toProduct(values, imageUrls) {
     collection: values.isMarina ? 'marina' : null,
   }
 }
+
+// ¿El formulario tiene cambios respecto de cómo se abrió?
+// Las fotos se comparan por su "key" (así se detecta agregar, quitar o reordenar).
+export function isFormDirty(initial, current) {
+  const fields = ['id', 'name', 'price', 'category', 'description', 'isVisible', 'isFeatured', 'isNew', 'isMarina']
+  if (fields.some((field) => initial[field] !== current[field])) return true
+  const keys = (values) => values.images.map((image) => image.key).join('|')
+  return keys(initial) !== keys(current)
+}

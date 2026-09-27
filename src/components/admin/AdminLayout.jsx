@@ -20,7 +20,7 @@ function AdminLayout() {
       <header className="border-b border-line bg-bone">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-6">
           <Link to="/admin" className="flex items-center whitespace-nowrap" aria-label="Ayy Que Monna, panel de administración">
-            <BrandLogo className="h-7" />
+            <BrandLogo size="sm" />
             <span className="ml-3 hidden font-sans text-[10px] uppercase tracking-widest text-stone sm:inline">
               Panel
             </span>

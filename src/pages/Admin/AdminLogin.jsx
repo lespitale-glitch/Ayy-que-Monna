@@ -42,7 +42,7 @@ function AdminLogin() {
     <main className="flex min-h-screen items-center justify-center px-6 py-16">
       <div className="w-full max-w-sm">
         <div className="flex justify-center">
-          <BrandLogo className="h-12" />
+          <BrandLogo size="lg" />
         </div>
         <h1 className="mt-3 text-center font-sans text-xs font-normal uppercase tracking-widest text-stone">
           Panel de administración

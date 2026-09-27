@@ -91,6 +91,40 @@ El panel es para una sola persona: nadie más debería poder crearse una cuenta.
 
 ---
 
+## Usar el panel de administración
+
+Entra a **`/admin`** (en local: `http://localhost:5173/admin`; publicado: `https://tu-dominio/admin`).
+No hay ningún enlace visible en la tienda a propósito. Sin sesión, te lleva a `/admin/login`.
+
+| Quiero… | Dónde |
+|---|---|
+| Ver y buscar productos | `/admin`: búsqueda por nombre o id, filtros por categoría y estado |
+| Ocultar un producto sin borrarlo | Interruptor **Visible** en la lista (vuelve cuando lo enciendes) |
+| Marcar Destacado, Nuevo o Colección Marina | Interruptores de la lista (se guardan al instante) |
+| Crear un producto | **Nuevo producto** → completar datos → agregar fotos → **Crear producto** |
+| Editar precio, nombre, descripción o fotos | Ícono del lápiz → **Guardar cambios** |
+| Cambiar la foto principal | En el formulario: estrella ☆ sobre la foto o flechas ← → |
+| Eliminar para siempre | Ícono de la papelera → confirmar (borra también sus fotos subidas) |
+| Cambiar el orden de la tienda | **Ordenar catálogo** → arrastrar (o flechas ↑ ↓) → **Guardar orden** |
+| Salir | **Cerrar sesión** (arriba a la derecha) |
+
+Notas:
+- Las fotos se comprimen solas (WebP, máx. 1600 px) y se suben recién al guardar.
+- El **id** (la dirección `/producto/…`) se elige al crear y después no se puede cambiar.
+- Si sales de un formulario o del orden con cambios sin guardar, el panel te pregunta antes.
+- La tienda toma los cambios al recargar la página.
+
+**Si no puedes entrar**
+
+| Mensaje | Qué hacer |
+|---|---|
+| "Supabase no está configurado" | Falta `.env.local` o no reiniciaste `npm run dev` |
+| "Email o contraseña incorrectos" | Revisa los datos; la cuenta tiene que estar confirmada en Supabase |
+| "Esta cuenta no tiene acceso al panel" | Falta tu usuario en `admins` (Paso 0.3) |
+| "No se pudo conectar con el servidor" | Revisa internet y la URL de `.env.local` |
+
+---
+
 ## Deploy en Vercel
 
 1. En [vercel.com](https://vercel.com): **Add New… → Project** e importa este repositorio.

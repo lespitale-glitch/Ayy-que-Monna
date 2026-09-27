@@ -8,15 +8,26 @@
 import sharp from 'sharp'
 
 const SOURCES = {
-  wordmark: 'design/logo-original.jpg', // "monna" completo
+  wordmark: 'design/logo-original.jpg', // "Monna" (la M es el símbolo); se recorta la cola final
   symbol: 'design/logo-m-original.jpg', // la "M" sola
 }
 const OUT = 'src/assets/brand'
+// El logotipo original termina con una cola en forma de "s" después de la "a" ("monnaꝭ").
+// La marca es "Monna": recortamos la imagen justo después del palo recto de la "a" (columna 1040
+// del archivo original de 1280 px). Así queda "M" (el logo) + "onna".
+const WORDMARK_CUT_X = 1041
+
 const LOW = 10 // distancia al fondo por debajo de la cual el píxel es 100% transparente
 const HIGH = 70 // distancia a partir de la cual es 100% opaco
 
-async function removeBackground(file) {
-  const { data, info } = await sharp(file).removeAlpha().raw().toBuffer({ resolveWithObject: true })
+async function removeBackground(file, cropWidth) {
+  // Si se pide, primero recortamos el ancho (para quitar la cola del logotipo)
+  let image = sharp(file)
+  if (cropWidth) {
+    const { height } = await image.metadata()
+    image = sharp(await image.extract({ left: 0, top: 0, width: cropWidth, height }).toBuffer())
+  }
+  const { data, info } = await image.removeAlpha().raw().toBuffer({ resolveWithObject: true })
   const { width, height } = info
 
   // Color de fondo = promedio de las 4 esquinas
@@ -40,9 +51,9 @@ async function removeBackground(file) {
 
 async function run() {
   // trim() recorta los bordes transparentes; lo hacemos sobre un PNG intermedio
-  const trimmed = async (file) => sharp(await (await removeBackground(file)).toBuffer()).trim()
+  const trimmed = async (file, cropWidth) => sharp(await (await removeBackground(file, cropWidth)).toBuffer()).trim()
 
-  const wordmark = await trimmed(SOURCES.wordmark)
+  const wordmark = await trimmed(SOURCES.wordmark, WORDMARK_CUT_X)
   await wordmark.clone().resize({ height: 96 }).webp({ quality: 90, alphaQuality: 100 }).toFile(`${OUT}/logo-monna.webp`)
 
   const symbol = await trimmed(SOURCES.symbol)
