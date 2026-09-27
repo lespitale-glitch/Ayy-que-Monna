@@ -57,7 +57,8 @@
       "/products/collarTortugaD.jpeg"
     ],
     "isFeatured": false,
-    "isNew": true
+    "isNew": true,
+    "collection": "marina"
   },
   {
     "id": "collar-tortuga-plateado",
@@ -69,7 +70,8 @@
       "/products/collarTortugaP.jpeg"
     ],
     "isFeatured": false,
-    "isNew": true
+    "isNew": true,
+    "collection": "marina"
   },
   {
     "id": "collar-caballito-de-mar-dorado",
@@ -81,7 +83,8 @@
       "/products/collarCaballitoD.jpeg"
     ],
     "isFeatured": false,
-    "isNew": true
+    "isNew": true,
+    "collection": "marina"
   },
   {
     "id": "collar-caballito-de-mar-plateado",
@@ -93,7 +96,8 @@
       "/products/collarCaballito.jpeg"
     ],
     "isFeatured": false,
-    "isNew": true
+    "isNew": true,
+    "collection": "marina"
   },
   {
     "id": "collar-ballena",
@@ -105,7 +109,8 @@
       "/products/collarBallena.jpeg"
     ],
     "isFeatured": false,
-    "isNew": true
+    "isNew": true,
+    "collection": "marina"
   },
   {
     "id": "collar-estrella",
@@ -258,7 +263,8 @@
     "category": "collares",
     "description": "",
     "images": [
-      "/products/cadenaSerpienteDd.jpg"
+      "/products/cadenaSerpienteDd.jpg",
+      "/products/cadenaSerpienteD.jpg"
     ],
     "isFeatured": false,
     "isNew": false
@@ -309,7 +315,8 @@
       "/products/collarCelesteD.jpg"
     ],
     "isFeatured": false,
-    "isNew": false
+    "isNew": false,
+    "collection": "marina"
   },
   {
     "id": "collar-celeste-plateado",
@@ -321,7 +328,8 @@
       "/products/collarCelesteP.jpg"
     ],
     "isFeatured": false,
-    "isNew": false
+    "isNew": false,
+    "collection": "marina"
   },
   {
     "id": "anillo-coeur-plateado",
@@ -462,7 +470,8 @@
     "category": "pulseras",
     "description": "",
     "images": [
-      "/products/pulseraDoradaAzul1.jpg"
+      "/products/pulseraDoradaAzul1.jpg",
+      "/products/pulseraDoradaAzul.jpg"
     ],
     "isFeatured": false,
     "isNew": true
@@ -510,7 +519,8 @@
     "category": "pulseras",
     "description": "",
     "images": [
-      "/products/pprin.jpg"
+      "/products/pprin.jpg",
+      "/products/pulseraPrincesa.jpg"
     ],
     "isFeatured": false,
     "isNew": true
@@ -621,7 +631,8 @@
       "/products/pulseraMedusa1.jpg"
     ],
     "isFeatured": false,
-    "isNew": false
+    "isNew": false,
+    "collection": "marina"
   },
   {
     "id": "anillo-bob-esponja",
@@ -741,7 +752,8 @@
       "/products/anilloOla.jpg"
     ],
     "isFeatured": false,
-    "isNew": false
+    "isNew": false,
+    "collection": "marina"
   },
   {
     "id": "pulsera-marina",
@@ -753,7 +765,8 @@
       "/products/pulseraMarina.jpg"
     ],
     "isFeatured": false,
-    "isNew": false
+    "isNew": false,
+    "collection": "marina"
   },
   {
     "id": "pulsera-caballito-de-mar",
@@ -777,7 +790,8 @@
       "/products/collarAcuatico.jpg"
     ],
     "isFeatured": false,
-    "isNew": false
+    "isNew": false,
+    "collection": "marina"
   },
   {
     "id": "collar-acuatico-plateado",
@@ -789,7 +803,8 @@
       "/products/collarAcuaticoP.jpg"
     ],
     "isFeatured": false,
-    "isNew": false
+    "isNew": false,
+    "collection": "marina"
   },
   {
     "id": "anillo-floral-plateado",
@@ -801,6 +816,7 @@
       "/products/anilloFloralP.jpg"
     ],
     "isFeatured": true,
-    "isNew": false
+    "isNew": false,
+    "collection": "marina"
   }
 ]

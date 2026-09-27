@@ -37,10 +37,11 @@ Solo se consulta como referencia: no copiar código de allí.
 - Peso objetivo por foto: lado mayor ≤ 1600px, idealmente < 300 KB.
 
 ## Datos de producto (`src/data/products.json`)
-`{ id, name, price, category, description, images[], isFeatured, isNew }`
+`{ id, name, price, category, description, images[], isFeatured, isNew, collection? }`
 - `id`: slug único; `name` en MAYÚSCULAS; `price` en ARS (número).
 - `category`: "aros" | "collares" | "anillos" | "pulseras".
 - `images[0]` es la foto principal; `images[1]` (opcional) se usa en el hover.
+- `collection` (opcional): hoy solo `"marina"`.
 
 ## Reglas de arquitectura
 - Componentes funcionales, uno por archivo, nombre en PascalCase.
