@@ -14,7 +14,10 @@ function SearchPanel({ onClose }) {
   const inputRef = useRef(null)
 
   // El foco va directo al campo de texto para empezar a escribir
-  useEffect(() => inputRef.current?.focus(), [])
+  // Con llaves: el efecto no debe devolver lo que devuelva focus() (solo una función de limpieza)
+  useEffect(() => {
+    inputRef.current?.focus()
+  }, [])
 
   const shown = isActive ? results : getFeaturedProducts().slice(0, SUGGESTIONS)
   const hasFilters = criteria.category || criteria.finish || criteria.price || criteria.collection

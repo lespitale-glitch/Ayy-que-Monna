@@ -6,6 +6,7 @@ import Product from './pages/Product/Product.jsx'
 import NotFound from './pages/NotFound/NotFound.jsx'
 import Selection from './pages/Selection/Selection.jsx'
 import Faq from './pages/Faq/Faq.jsx'
+import RouteError from './components/layout/RouteError.jsx'
 
 // "lazy" carga el código del panel solo cuando alguien entra a /admin.
 // import() devuelve una Promesa con el módulo; usamos su export por defecto como componente.
@@ -15,6 +16,8 @@ export const router = createBrowserRouter([
   // Tienda pública: todas las páginas comparten el Layout (Header + Footer)
   {
     element: <Layout />,
+    // Si algo falla al mostrar una página, se ve RouteError en lugar de un error técnico
+    errorElement: <RouteError />,
     children: [
       { path: '/', element: <Home /> },
       { path: '/tienda', element: <Shop /> },
@@ -29,6 +32,7 @@ export const router = createBrowserRouter([
   {
     path: '/admin',
     lazy: lazyPage(() => import('./pages/Admin/AdminRoot.jsx')),
+    errorElement: <RouteError />,
     children: [
       { path: 'login', lazy: lazyPage(() => import('./pages/Admin/AdminLogin.jsx')) },
       {
