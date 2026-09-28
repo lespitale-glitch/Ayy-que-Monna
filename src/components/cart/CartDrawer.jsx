@@ -39,7 +39,9 @@ function CartDrawer() {
         }`}
       />
 
-      <aside
+      {/* div con role="dialog" (un <aside> no admite ese rol); adentro, divs en lugar de
+          <header>/<footer> para que no se lean como un segundo encabezado o pie de la página */}
+      <div
         role="dialog"
         aria-modal="true"
         aria-labelledby="cart-title"
@@ -47,14 +49,14 @@ function CartDrawer() {
           isOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
-        <header className="flex items-center justify-between border-b border-line px-6 py-5">
+        <div className="flex items-center justify-between border-b border-line px-6 py-5">
           <h2 id="cart-title" className="text-2xl">
             Tu carrito {totalItems > 0 && <span className="font-sans text-sm text-stone">({totalItems})</span>}
           </h2>
           <button ref={closeButtonRef} type="button" onClick={closeCart} aria-label="Cerrar carrito" className="-mr-2 p-2">
             <X size={22} strokeWidth={1.25} />
           </button>
-        </header>
+        </div>
 
         {lines.length === 0 ? (
           <div className="flex flex-1 flex-col items-center justify-center px-6 text-center">
@@ -71,14 +73,14 @@ function CartDrawer() {
           <>
             <ul className="flex-1 divide-y divide-line overflow-y-auto px-6">
               {lines.map((line) => (
-                <CartLine key={line.product.id} product={line.product} quantity={line.quantity} />
+                <CartLine key={line.product.id} product={line.product} quantity={line.quantity} unavailable={line.unavailable} />
               ))}
             </ul>
 
             <CartCheckout />
           </>
         )}
-      </aside>
+      </div>
     </div>
   )
 }

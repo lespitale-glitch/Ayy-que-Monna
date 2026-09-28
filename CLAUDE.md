@@ -31,7 +31,7 @@ src/
   data/          # products.json, collections.json, faqs.json (seed y modo local), selections.js
   hooks/         # hooks propios (useCart…)
 fotos-originales/  # fotos originales pesadas, IGNORADA por Git, solo local
-supabase/          # schema.sql (tabla, RLS, Storage) y seed.sql (generado)
+supabase/          # schema.sql (tablas, RLS, Storage), seed.sql (generado), functions/stock-alert (email)
 scripts/           # generate-seed.mjs, generate-sitemap.mjs
 
 El sitio original (Next.js) está respaldado en el repo aparte `lespitale-glitch/Monna_legacy`.
@@ -44,6 +44,7 @@ Solo se consulta como referencia: no copiar código de allí.
 
 ## Datos de producto (`src/data/products.json`)
 `{ id, name, price, category, description, images[], isFeatured, isNew, collections? }`
+(el stock no está en el JSON: se carga desde el panel; en modo local todo es "sin control")
 - `id`: slug único; `name` en MAYÚSCULAS; `price` en ARS (número).
 - `category`: "aros" | "collares" | "anillos" | "pulseras".
 - `images[0]` es la foto principal; `images[1]` (opcional) se usa en el hover.
@@ -68,6 +69,12 @@ Solo se consulta como referencia: no copiar código de allí.
 - Preguntas sin respuesta: tabla `bot_questions`. Anónimas: SOLO el texto (permiso de insert únicamente sobre la
   columna `question`); el trigger `before_bot_question` junta repetidas (`times_asked`) y frena más de 30/min.
   Solo la admin las lee. El frontend además quita emails/teléfonos (`sanitizeQuestion`) y guarda máx. 5 por visita.
+- Inventario: `products.stock_mode` ('none' | 'tracked' | 'on_demand'), `stock`, `low_stock_threshold`.
+  ±1 SIEMPRE con la RPC atómica `adjust_stock(id, delta)` (nunca baja de 0). El trigger `queue_stock_alert` agrega una fila
+  a `stock_alerts` solo al CRUZAR el límite ('low') o llegar a 0 ('out'); un Database Webhook llama a la Edge Function
+  `supabase/functions/stock-alert` (Resend). Secretos solo en Supabase (RESEND_API_KEY, ALERT_EMAIL_TO, WEBHOOK_SECRET).
+  Disponibilidad en la tienda: `getAvailability` (utils/stock.js); "Últimas unidades" depende de `show_low_stock` (Ajustes).
+  Carrito: tope = stock; los agotados quedan en la lista marcados y NO van en el pedido (`orderLines`).
 - `ProductsContext` carga productos + colecciones juntos (`Promise.all`) y expone `collections`, `selections`
   (colecciones + selecciones automáticas de `data/selections.js`) y `homeCollections`.
 
@@ -99,6 +106,8 @@ Solo se consulta como referencia: no copiar código de allí.
   En el formulario de producto, casillas `CollectionsField`.
 - Preguntas (`/admin/preguntas`, `/nueva`, `/:id`, `/sin-responder`): lista ordenable + "Probar el asistente"
   (usa el mismo motor). Desde "Sin responder" → "Crear respuesta" prellena la pregunta y al guardar la marca resuelta.
+- Stock en la lista de productos: `StockControl` (−/+ con `aria-disabled` en 0 para no perder el foco),
+  `StockAlertBanner` (stock bajo / agotados) y filtro Stock. En el formulario, `StockFields`.
 - Listas ordenables del panel (colecciones, preguntas): hook genérico `useAdminSortableList`.
 - Menú del panel: `AdminNav` (Productos | Colecciones | Preguntas | Ajustes); Productos abarca también el formulario y el orden.
 - Cambios sin guardar: `useUnsavedChangesGuard(isDirty)` + `<UnsavedChangesDialog>` (producto, orden, colección y ajustes).

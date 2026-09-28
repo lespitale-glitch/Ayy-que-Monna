@@ -122,6 +122,10 @@ No hay ningún enlace visible en la tienda a propósito. Sin sesión, te lleva a
 | Editar las preguntas frecuentes | **Preguntas** → lápiz o **Nueva pregunta** (se usan en el asistente y en /preguntas-frecuentes) |
 | Ver qué preguntó la gente y el asistente no supo | **Preguntas** → **Sin responder** → **Crear respuesta** |
 | Probar cómo responde el asistente | **Preguntas** → cuadro **Probar el asistente** |
+| Cargar el stock de un producto | Lápiz → sección **Stock**: *Sin control*, *Con stock* (unidades y "avisar con") o *A pedido* |
+| Descontar una venta de WhatsApp | Columna **Stock** de la lista → botón **−** (y **+** al reponer). Se guarda al instante |
+| Ver qué hay que reponer | Aviso **Revisa el stock** arriba de la lista, o filtro **Stock** → *Stock bajo* / *Agotados* |
+| Mostrar u ocultar "Últimas unidades" | **Ajustes** → **Inventario** |
 | Apagar el asistente | **Ajustes** → **Mostrar el asistente en la tienda** |
 | Cambiar el WhatsApp de pedidos | **Ajustes** → número con código de país → **Probar este número** → **Guardar ajustes** |
 | Cambiar Instagram, envíos o puntos de retiro | **Ajustes** → editar → **Guardar ajustes** |
@@ -141,6 +145,53 @@ Notas:
 | "Email o contraseña incorrectos" | Revisa los datos; la cuenta tiene que estar confirmada en Supabase |
 | "Esta cuenta no tiene acceso al panel" | Falta tu usuario en `admins` (Paso 0.3) |
 | "No se pudo conectar con el servidor" | Revisa internet y la URL de `.env.local` |
+
+---
+
+## Avisos de stock por email (opcional, gratis)
+
+Cuando un producto con stock baja de su límite ("avisar con") o se agota, la base de datos agrega una fila en
+`stock_alerts` y una función de Supabase te manda un email con [Resend](https://resend.com)
+(plan gratis: 3.000 emails por mes). Los avisos del panel funcionan igual sin hacer nada de esto.
+Se configura **una sola vez**; los menús de Supabase pueden cambiar un poco de nombre con el tiempo.
+
+### 1. Resend
+1. Crea una cuenta en [resend.com](https://resend.com) con **el email donde quieres recibir los avisos**.
+2. **API Keys** → **Create API Key** (permiso *Sending access*) → copia la clave (empieza con `re_`).
+   Guárdala en un gestor de contraseñas: no se vuelve a mostrar.
+
+> Con el remitente de prueba de Resend (`onboarding@resend.dev`) solo se puede enviar al email de tu cuenta
+> de Resend. Para una sola administradora alcanza. Si más adelante verificas tu dominio en Resend,
+> puedes usar un remitente propio con el secreto `ALERT_EMAIL_FROM`.
+
+### 2. Secretos de la función
+En Supabase: **Edge Functions** → **Secrets** (o *Manage secrets*) → agrega:
+
+| Nombre | Valor |
+|---|---|
+| `RESEND_API_KEY` | la clave `re_…` de Resend |
+| `ALERT_EMAIL_TO` | el email de tu cuenta de Resend |
+| `WEBHOOK_SECRET` | una contraseña larga inventada (ej: generada por tu gestor de contraseñas) |
+| `SITE_URL` | *(opcional)* tu dominio, para que el email traiga el enlace al producto |
+
+### 3. Crear la función
+1. **Edge Functions** → **Deploy a new function** → **Via Editor**.
+2. Nombre: `stock-alert`. Borra el ejemplo y pega **todo** [`supabase/functions/stock-alert/index.ts`](supabase/functions/stock-alert/index.ts).
+3. **Deploy**.
+
+### 4. Conectar la tabla con la función (Database Webhook)
+1. **Database** → **Webhooks** (si pide activarlos, **Enable webhooks**) → **Create a new hook**.
+2. Nombre: `aviso-stock` · Tabla: `stock_alerts` · Eventos: solo **Insert**.
+3. Tipo: **Supabase Edge Functions** → función `stock-alert` · Método `POST`.
+4. En **HTTP Headers**: toca **Add auth header with service key** y agrega otra cabecera
+   `x-webhook-secret` con el mismo valor que pusiste en `WEBHOOK_SECRET`.
+5. **Create webhook**.
+
+### 5. Probar
+En el panel, pon un producto en **Con stock** con 3 unidades y "avisar con" 2, y toca **−** una vez.
+En un minuto te llega "Stock bajo: …". Si no llega: **Edge Functions** → `stock-alert` → **Logs**.
+
+> 🔒 La clave de Resend vive solo en los secretos de Supabase. Nunca va en el código ni en `.env.local`.
 
 ---
 

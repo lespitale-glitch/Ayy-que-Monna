@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { formatPrice } from '../../utils/formatPrice.js'
 import { toTitleCase } from '../../utils/text.js'
+import { getAvailability } from '../../utils/stock.js'
 
 // Productos sugeridos por el asistente, en una grilla de 2 columnas
 function BotProducts({ products, onNavigate }) {
@@ -18,7 +19,10 @@ function BotProducts({ products, onNavigate }) {
               />
             </div>
             <p className="mt-1.5 text-[10px] uppercase leading-tight tracking-wider">{product.name}</p>
-            <p className="text-xs text-stone">{formatPrice(product.price)}</p>
+            <p className="text-xs text-stone">
+              {formatPrice(product.price)}
+              {getAvailability(product).label && ` · ${getAvailability(product).label}`}
+            </p>
           </Link>
         </li>
       ))}

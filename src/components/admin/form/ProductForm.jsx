@@ -4,6 +4,7 @@ import ProductFields from './ProductFields.jsx'
 import ImageUploader from '../ImageUploader.jsx'
 import Switch from '../Switch.jsx'
 import CollectionsField from './CollectionsField.jsx'
+import StockFields from './StockFields.jsx'
 import UnsavedChangesDialog from '../UnsavedChangesDialog.jsx'
 import { useUnsavedChangesGuard } from '../../../hooks/useUnsavedChangesGuard.js'
 import { slugify } from '../../../utils/slugify.js'
@@ -104,6 +105,8 @@ function ProductForm({ initialValues, isNew, collections, phase, saveError, onSu
               ))}
             </div>
           </fieldset>
+
+          <StockFields values={values} errors={errors} onField={onField} setField={setField} disabled={isBusy} />
 
           <CollectionsField
             collections={collections}

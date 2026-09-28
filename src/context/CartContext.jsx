@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useState } from 'react'
 import { CartContext } from './cartContext.js'
 import { useProducts } from '../hooks/useProducts.js'
+import { getAvailability, MAX_QUANTITY } from '../utils/stock.js'
 
 const STORAGE_KEY = 'ayyquemonna_cart'
-export const MAX_QUANTITY = 10
 
 // Lee el carrito guardado. try/catch porque localStorage puede fallar
 // (modo privado, datos corruptos) y la tienda tiene que seguir funcionando.
@@ -16,7 +16,7 @@ function loadCart() {
   }
 }
 
-const clamp = (quantity) => Math.min(MAX_QUANTITY, Math.max(1, quantity))
+const clamp = (quantity, max = MAX_QUANTITY) => Math.min(max, Math.max(1, quantity))
 
 // En el carrito solo guardamos { id, quantity }. Nombre, precio y foto se leen
 // siempre de products.json, así un cambio de precio se refleja también en carritos viejos.
@@ -39,15 +39,23 @@ export function CartProvider({ children }) {
   // --- Acciones ---
   // Usamos la forma setItems(prev => ...) porque el nuevo estado depende del anterior.
 
+  // Tope de unidades de un producto: el stock disponible (o 10 si no se controla stock)
+  const maxFor = (id) => {
+    const product = getProductById(id)
+    return product ? getAvailability(product).maxQuantity : MAX_QUANTITY
+  }
+
   const addItem = (id, quantity = 1) => {
+    const max = maxFor(id)
+    if (max === 0) return // agotado: no se agrega
     setItems((prev) => {
       const existing = prev.find((item) => item.id === id)
       if (existing) {
         return prev.map((item) =>
-          item.id === id ? { ...item, quantity: clamp(item.quantity + quantity) } : item,
+          item.id === id ? { ...item, quantity: clamp(item.quantity + quantity, max) } : item,
         )
       }
-      return [...prev, { id, quantity: clamp(quantity) }]
+      return [...prev, { id, quantity: clamp(quantity, max) }]
     })
   }
 
@@ -56,7 +64,8 @@ export function CartProvider({ children }) {
   }
 
   const updateQuantity = (id, quantity) => {
-    setItems((prev) => prev.map((item) => (item.id === id ? { ...item, quantity: clamp(quantity) } : item)))
+    const max = maxFor(id)
+    setItems((prev) => prev.map((item) => (item.id === id ? { ...item, quantity: clamp(quantity, max) } : item)))
   }
 
   const clearCart = () => setItems([])
@@ -70,16 +79,26 @@ export function CartProvider({ children }) {
 
   // Unimos cada item con su producto; si un producto ya no existe (o se ocultó), se descarta.
   // Mientras el catálogo carga, "lines" queda vacío pero "items" se conserva en localStorage.
+  // Si el stock bajó desde que se agregó, la cantidad se ajusta; si se agotó, la línea queda
+  // marcada "unavailable": se muestra con un aviso pero no suma ni va en el pedido.
   const lines = items
     .map((item) => ({ product: getProductById(item.id), quantity: item.quantity }))
     .filter((line) => line.product)
+    .map((line) => {
+      const { maxQuantity } = getAvailability(line.product)
+      return maxQuantity === 0
+        ? { ...line, unavailable: true }
+        : { ...line, quantity: Math.min(line.quantity, maxQuantity), unavailable: false }
+    })
+  const orderLines = lines.filter((line) => !line.unavailable)
 
   // .reduce() recorre el array acumulando un valor: aquí, sumas
-  const totalItems = lines.reduce((sum, line) => sum + line.quantity, 0)
-  const subtotal = lines.reduce((sum, line) => sum + line.product.price * line.quantity, 0)
+  const totalItems = orderLines.reduce((sum, line) => sum + line.quantity, 0)
+  const subtotal = orderLines.reduce((sum, line) => sum + line.product.price * line.quantity, 0)
 
   const value = {
     lines,
+    orderLines, // solo lo que se puede pedir (sin agotados)
     totalItems,
     subtotal,
     addItem,

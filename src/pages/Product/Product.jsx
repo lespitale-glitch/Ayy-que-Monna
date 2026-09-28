@@ -5,11 +5,12 @@ import ProductTags from '../../components/product/ProductTags.jsx'
 import QuantitySelector from '../../components/product/QuantitySelector.jsx'
 import ShippingInfo from '../../components/product/ShippingInfo.jsx'
 import NotFound from '../NotFound/NotFound.jsx'
-import { MAX_QUANTITY } from '../../context/CartContext.jsx'
+import StockBadge from '../../components/product/StockBadge.jsx'
 import { useCart } from '../../hooks/useCart.js'
 import { formatPrice } from '../../utils/formatPrice.js'
 import { useProducts } from '../../hooks/useProducts.js'
 import { getCategory } from '../../utils/products.js'
+import { getAvailability } from '../../utils/stock.js'
 
 // El "key" hace que React cree una página nueva al pasar de un producto a otro,
 // así la cantidad y la foto elegida vuelven a empezar de cero.
@@ -25,6 +26,8 @@ function ProductDetail({ product }) {
   const [quantity, setQuantity] = useState(1)
   const { addItem, openCart } = useCart()
   const category = getCategory(product.category)
+  const { status, maxQuantity } = getAvailability(product)
+  const isOut = status === 'out'
 
   // Agrega la cantidad elegida y abre el panel para que se vea el resultado
   const handleAddToCart = () => {
@@ -54,6 +57,9 @@ function ProductDetail({ product }) {
 
           <h1 className="mt-4 text-3xl uppercase tracking-wide md:text-4xl">{product.name}</h1>
           <p className="mt-4 text-xl">{formatPrice(product.price)}</p>
+          <div className="mt-3">
+            <StockBadge product={product} />
+          </div>
 
           {/* Solo mostramos la descripción si el producto tiene una */}
           {product.description && (
@@ -61,16 +67,23 @@ function ProductDetail({ product }) {
           )}
 
           <div className="mt-10 flex gap-4">
-            <QuantitySelector value={quantity} onChange={setQuantity} max={MAX_QUANTITY} />
+            {!isOut && <QuantitySelector value={quantity} onChange={setQuantity} max={maxQuantity} />}
             <button
               type="button"
               onClick={handleAddToCart}
-              className="btn-primary h-12 flex-1 px-3"
+              disabled={isOut}
+              className="btn-primary h-12 flex-1 px-3 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              Agregar al carrito
+              {isOut ? 'Agotado' : 'Agregar al carrito'}
             </button>
           </div>
 
+          {status === 'on_demand' && (
+            <p className="mt-4 text-sm text-stone">Este producto es a pedido: la demora la coordinamos por WhatsApp.</p>
+          )}
+          {isOut && (
+            <p className="mt-4 text-sm text-stone">Por ahora no hay unidades. Escribinos por WhatsApp si querés que te avisemos.</p>
+          )}
           <ShippingInfo />
         </div>
       </div>

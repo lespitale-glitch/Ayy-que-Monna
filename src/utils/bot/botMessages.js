@@ -3,6 +3,7 @@ import { PRICE_RANGES } from '../search.js'
 import { fillAnswer } from '../faqText.js'
 import { buildWhatsAppUrl } from '../whatsapp.js'
 import { GREETING } from './botReply.js'
+import { isOutOfStock } from '../stock.js'
 
 // Convierte las respuestas del motor (botReply.js) en mensajes para la pantalla.
 // Mensaje: { from: 'bot' | 'user', text, title?, products?, link?, suggestions?, chips?, whatsappUrl?, faqLink? }
@@ -87,6 +88,7 @@ export function giftResultsMessage(products, category, rangeId) {
   const range = PRICE_RANGES.find((r) => r.id === rangeId)
   const rank = (p) => (p.isFeatured ? 2 : 0) + (p.isNew ? 1 : 0)
   const found = products
+    .filter((p) => !isOutOfStock(p)) // no sugerimos regalar algo agotado
     .filter((p) => (!category || p.category === category) && (!range || (p.price >= range.min && p.price <= range.max)))
     .sort((a, b) => rank(b) - rank(a))
   if (found.length === 0) {

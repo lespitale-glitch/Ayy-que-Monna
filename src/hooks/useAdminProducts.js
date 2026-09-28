@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useState } from 'react'
-import { deleteProduct, fetchAdminProducts, updateProduct } from '../services/productsService.js'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { adjustStock, deleteProduct, fetchAdminProducts, updateProduct } from '../services/productsService.js'
 import { getAdminErrorMessage } from '../utils/adminErrors.js'
 
 // Estado de la lista del panel: carga, cambios rápidos (toggles) y borrado.
@@ -64,6 +64,28 @@ export function useAdminProducts() {
     }
   }, [])
 
+  // Botones −1 / +1 del stock. Mientras se guarda un cambio de ese producto, los clics
+  // siguientes se ignoran (con un ref, porque el estado dentro de useCallback quedaría viejo).
+  const adjusting = useRef(new Set())
+  const changeStock = useCallback(async (product, delta) => {
+    if (adjusting.current.has(product.id)) return
+    adjusting.current.add(product.id)
+    const optimistic = Math.max(0, product.stock + delta)
+    replaceProduct({ ...product, stock: optimistic })
+    setFeedback(null)
+    try {
+      const stock = await adjustStock(product.id, delta)
+      replaceProduct({ ...product, stock })
+      setFeedback({ type: 'success', text: `${product.name}: ${stock === 1 ? 'queda 1 unidad' : `quedan ${stock} unidades`}.` })
+    } catch (error) {
+      console.error(error)
+      replaceProduct(product) // deshacer
+      setFeedback({ type: 'error', text: `${product.name}: ${getAdminErrorMessage(error)}` })
+    } finally {
+      adjusting.current.delete(product.id)
+    }
+  }, [])
+
   const removeProduct = useCallback(async (product) => {
     markSaving(product.id, true)
     setFeedback(null)
@@ -81,5 +103,5 @@ export function useAdminProducts() {
     }
   }, [])
 
-  return { products, status, reload, savingIds, feedback, updateFields, removeProduct }
+  return { products, status, reload, savingIds, feedback, updateFields, changeStock, removeProduct }
 }

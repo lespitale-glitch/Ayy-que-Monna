@@ -5,14 +5,15 @@ import AdminProductsTable from '../../components/admin/AdminProductsTable.jsx'
 import ConfirmDialog from '../../components/admin/ConfirmDialog.jsx'
 import FeedbackMessage from '../../components/admin/FeedbackMessage.jsx'
 import ProductFilters from '../../components/admin/ProductFilters.jsx'
+import StockAlertBanner from '../../components/admin/StockAlertBanner.jsx'
 import { useAdminProducts } from '../../hooks/useAdminProducts.js'
 import { useFlashMessage } from '../../hooks/useFlashMessage.js'
 import { filterAdminProducts } from '../../utils/adminFilters.js'
 
-const INITIAL_FILTERS = { query: '', category: '', visibility: '' }
+const INITIAL_FILTERS = { query: '', category: '', visibility: '', stock: '' }
 
 function AdminProducts() {
-  const { products, status, reload, savingIds, feedback, updateFields, removeProduct } = useAdminProducts()
+  const { products, status, reload, savingIds, feedback, updateFields, changeStock, removeProduct } = useAdminProducts()
   const [filters, setFilters] = useState(INITIAL_FILTERS)
   // Producto que se está por eliminar (abre el diálogo de confirmación)
   const [toDelete, setToDelete] = useState(null)
@@ -52,11 +53,13 @@ function AdminProducts() {
     )
   }
 
-  const listProps = { products: visibleProducts, savingIds, onToggle: handleToggle, onDelete: setToDelete }
+  const listProps = { products: visibleProducts, savingIds, onToggle: handleToggle, onStockChange: changeStock, onDelete: setToDelete }
 
   return (
     <section>
       <AdminProductsHeader total={products.length} hiddenCount={hiddenCount} />
+
+      <StockAlertBanner products={products} onShow={(stock) => setFilters({ ...INITIAL_FILTERS, stock })} />
 
       <div className="mt-10">
         <ProductFilters filters={filters} onChange={setFilters} />

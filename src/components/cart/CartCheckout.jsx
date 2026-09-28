@@ -5,14 +5,17 @@ import { buildOrderMessage, buildWhatsAppUrl } from '../../utils/whatsapp.js'
 
 // Pie del carrito: subtotal, condiciones de envío y botón para pedir por WhatsApp
 function CartCheckout() {
-  const { lines, subtotal, clearCart } = useCart()
+  const { orderLines, subtotal, clearCart } = useCart()
   const { status, whatsappNumber, shippingEnabled, shippingNote } = useSettings()
 
   // Hasta tener el número confirmado no armamos el enlace (evita mandar el pedido a un número viejo)
-  const whatsappUrl = status === 'ready' ? buildWhatsAppUrl(whatsappNumber, buildOrderMessage(lines, subtotal)) : null
+  // Solo va en el pedido lo que está disponible (los agotados quedan afuera)
+  const canOrder = orderLines.length > 0
+  const whatsappUrl =
+    status === 'ready' && canOrder ? buildWhatsAppUrl(whatsappNumber, buildOrderMessage(orderLines, subtotal)) : null
 
   return (
-    <footer className="border-t border-line px-6 py-6">
+    <div className="border-t border-line px-6 py-6">
       <div className="flex justify-between text-sm uppercase tracking-widest">
         <span>Subtotal</span>
         <span>{formatPrice(subtotal)}</span>
@@ -27,9 +30,9 @@ function CartCheckout() {
       ) : (
         <>
           <button type="button" disabled className="btn-primary mt-6 flex h-12 w-full px-3 opacity-60">
-            {status === 'error' ? 'WhatsApp no disponible' : 'Cargando…'}
+            {!canOrder ? 'Sin productos disponibles' : status === 'error' ? 'WhatsApp no disponible' : 'Cargando…'}
           </button>
-          {status === 'error' && (
+          {canOrder && status === 'error' && (
             <p role="alert" className="mt-2 text-xs text-ink">
               No pudimos cargar el número de WhatsApp. Recargá la página para intentar de nuevo.
             </p>
@@ -43,7 +46,7 @@ function CartCheckout() {
       >
         Vaciar carrito
       </button>
-    </footer>
+    </div>
   )
 }
 

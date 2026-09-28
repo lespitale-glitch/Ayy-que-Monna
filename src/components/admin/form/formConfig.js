@@ -13,6 +13,8 @@ export const FIELD_LABELS = {
   category: 'Categoría',
   description: 'Descripción',
   images: 'Fotos',
+  stock: 'Unidades en stock',
+  lowStockThreshold: 'Aviso de stock bajo',
 }
 
 export const PHASE_LABEL = { uploading: 'Subiendo imágenes…', saving: 'Guardando…' }

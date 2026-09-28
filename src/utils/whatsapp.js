@@ -10,7 +10,7 @@ function needsColor(product) {
 export function buildOrderMessage(lines, total) {
   const detail = lines.map(({ product, quantity }) =>
     [
-      `• *${product.name}*${needsColor(product) ? ' (Indicar color deseado)' : ''}`,
+      `• *${product.name}*${product.stockMode === 'on_demand' ? ' (a pedido)' : ''}${needsColor(product) ? ' (Indicar color deseado)' : ''}`,
       `  Cantidad: ${quantity} × ${formatPrice(product.price)} = ${formatPrice(product.price * quantity)}`,
     ].join('\n'),
   )

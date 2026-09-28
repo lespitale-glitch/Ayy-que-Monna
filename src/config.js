@@ -15,6 +15,7 @@ export const DEFAULT_SETTINGS = {
   shippingFrom: 6000, // "desde $…"; null = no se muestra
   pickupPoints: ['Ballester', 'Carapachay', 'Belgrano'],
   botEnabled: true, // asistente de preguntas frecuentes en la tienda
+  showLowStock: true, // "Últimas unidades" cuando queda poco stock
 }
 
 // Categorías de la tienda: `slug` es lo que aparece en la URL (/tienda/aros)

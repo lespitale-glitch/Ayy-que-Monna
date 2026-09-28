@@ -1,4 +1,5 @@
 import { getFinish } from '../search.js'
+import { isOutOfStock } from '../stock.js'
 import { stem, words } from './botText.js'
 import { CATEGORY_WORDS, CHEAP_WORDS, FINISH_WORDS, STOPWORDS, SYNONYMS } from './lexicon.js'
 import { normalize } from '../text.js'
@@ -42,7 +43,14 @@ export const isProductQuery = (q) => Boolean(q.category || q.finish || q.collect
 
 // Filtra el catálogo con lo que se entendió. Si hay palabras sueltas ("luna", "corazon"),
 // primero van los productos cuyo nombre las contiene.
+// Los agotados van al final (se muestran, pero primero lo que se puede comprar)
+const availableFirst = (list) => [...list].sort((a, b) => Number(isOutOfStock(a)) - Number(isOutOfStock(b)))
+
 export function findProducts(products, q) {
+  return availableFirst(matchProducts(products, q))
+}
+
+function matchProducts(products, q) {
   // Sin filtros ni palabras de producto no hay nada que buscar (no devolvemos todo el catálogo)
   if (!isProductQuery(q) && q.rest.length === 0) return []
   const filtered = products.filter(

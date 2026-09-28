@@ -596,5 +596,114 @@ create policy "Admin: borrar preguntas sin respuesta"
 -- Interruptor del bot en Ajustes
 alter table public.store_settings add column if not exists bot_enabled boolean not null default true;
 
+
+
+-- -----------------------------------------------------------------------------
+-- 10. Inventario y avisos de stock bajo
+-- -----------------------------------------------------------------------------
+-- stock_mode: 'none' = sin control (siempre disponible) · 'tracked' = con stock · 'on_demand' = a pedido
+alter table public.products add column if not exists stock_mode text not null default 'none';
+alter table public.products add column if not exists stock integer not null default 0;
+-- Con stock igual o menor a este número, el producto cuenta como "stock bajo" (aviso por panel y email)
+alter table public.products add column if not exists low_stock_threshold integer not null default 2;
+
+alter table public.products drop constraint if exists products_stock_mode_check;
+alter table public.products add constraint products_stock_mode_check check (stock_mode in ('none', 'tracked', 'on_demand'));
+alter table public.products drop constraint if exists products_stock_check;
+alter table public.products add constraint products_stock_check check (stock between 0 and 100000);
+alter table public.products drop constraint if exists products_low_stock_threshold_check;
+alter table public.products add constraint products_low_stock_threshold_check check (low_stock_threshold between 0 and 1000);
+
+-- Suma o resta unidades en UNA operación (botones −1 / +1 del panel).
+-- Si dos pestañas restan a la vez, ninguna pisa a la otra. Nunca baja de 0.
+create or replace function public.adjust_stock(product_id text, delta integer)
+returns integer
+language plpgsql
+security invoker
+set search_path = ''
+as $$
+declare
+  new_stock integer;
+begin
+  if not public.is_admin() then
+    raise exception 'No autorizado' using errcode = '42501';
+  end if;
+
+  update public.products
+  set stock = greatest(stock + delta, 0)
+  where id = product_id
+  returning stock into new_stock;
+
+  if new_stock is null then
+    raise exception 'No existe el producto %', product_id using errcode = 'P0002';
+  end if;
+  return new_stock;
+end;
+$$;
+
+revoke execute on function public.adjust_stock(text, integer) from public, anon;
+grant execute on function public.adjust_stock(text, integer) to authenticated;
+
+-- Avisos pendientes de enviar por email (los lee la función stock-alert, ver README)
+create table if not exists public.stock_alerts (
+  id           bigint generated always as identity primary key,
+  product_id   text not null,
+  product_name text not null,
+  kind         text not null check (kind in ('low', 'out')),  -- 'low' = stock bajo · 'out' = agotado
+  stock        integer not null,
+  threshold    integer not null,
+  created_at   timestamptz not null default now()
+);
+
+-- Cuando el stock CRUZA el límite (no cada vez que cambia), se agrega un aviso.
+-- Así, restar de a uno por debajo del límite no manda un email por cada unidad.
+create or replace function public.queue_stock_alert()
+returns trigger
+language plpgsql
+security definer  -- escribe en stock_alerts, que nadie más puede modificar
+set search_path = ''
+as $$
+declare
+  was_tracked boolean := tg_op = 'UPDATE' and old.stock_mode = 'tracked';
+begin
+  if new.stock_mode <> 'tracked' then
+    return new;
+  end if;
+
+  if new.stock = 0 and (not was_tracked or old.stock > 0) then
+    insert into public.stock_alerts (product_id, product_name, kind, stock, threshold)
+    values (new.id, new.name, 'out', new.stock, new.low_stock_threshold);
+  elsif new.stock > 0 and new.stock <= new.low_stock_threshold
+    and (not was_tracked or old.stock > old.low_stock_threshold) then
+    insert into public.stock_alerts (product_id, product_name, kind, stock, threshold)
+    values (new.id, new.name, 'low', new.stock, new.low_stock_threshold);
+  end if;
+  return new;
+end;
+$$;
+
+drop trigger if exists products_queue_stock_alert on public.products;
+create trigger products_queue_stock_alert
+  after insert or update of stock, stock_mode, low_stock_threshold on public.products
+  for each row execute function public.queue_stock_alert();
+
+alter table public.stock_alerts enable row level security;
+grant select, delete on public.stock_alerts to authenticated;
+
+drop policy if exists "Admin: ver avisos de stock" on public.stock_alerts;
+create policy "Admin: ver avisos de stock"
+  on public.stock_alerts for select
+  to authenticated
+  using ((select public.is_admin()));
+
+drop policy if exists "Admin: borrar avisos de stock" on public.stock_alerts;
+create policy "Admin: borrar avisos de stock"
+  on public.stock_alerts for delete
+  to authenticated
+  using ((select public.is_admin()));
+
+-- Ajuste de la tienda: mostrar "Últimas unidades" cuando el stock está bajo
+alter table public.store_settings add column if not exists show_low_stock boolean not null default true;
+
 -- Avisa a la API de Supabase que la estructura cambió (columnas nuevas o borradas)
 notify pgrst, 'reload schema';
