@@ -20,13 +20,13 @@ npm run dev                  # http://localhost:5173
 | `npm run lint` | Revisa el código con oxlint |
 | `npm run db:seed` | Regenera `supabase/seed.sql` (colecciones, productos y preguntas frecuentes) |
 | `npm run brand:logo` | Genera el logo web (WebP transparente) y los favicons desde `design/` |
-| `npm run brand:hero` | Convierte las fotos del Hero Slider (`design/hero/`) a WebP optimizado |
+| `npm run brand:hero` | Convierte las fotos originales del carrusel (`design/hero/`) a WebP en `public/hero/` |
 
 ## Contenido editable sin programar
 
 - **Testimonios:** `src/data/testimonials.js`. La sección "Lo que dicen de nosotros" aparece sola
   cuando la lista tiene al menos un testimonio. Solo reseñas reales y con permiso de la clienta.
-- **Diapositivas del inicio:** `src/data/heroSlides.js` (texto, botón y foto de cada una).
+- **Carrusel del inicio:** desde el panel, en **/admin/inicio** (foto, textos, botón y orden).
 - **Colecciones:** desde el panel, en **/admin/colecciones**. Las selecciones automáticas del menú
   (Novedades, Destacados, Dorados, Plateados) están en `src/data/selections.js`.
 - **WhatsApp, Instagram, envíos y puntos de retiro:** desde el panel, en **/admin/ajustes**.
@@ -52,7 +52,7 @@ cambiar un poco con el tiempo; si algo no coincide, busca la opción equivalente
 2. Copia **todo** el contenido de [`supabase/schema.sql`](supabase/schema.sql), pégalo y toca **Run**.
    Tiene que decir *Success. No rows returned*.
 3. Otra **New query**: pega **todo** [`supabase/seed.sql`](supabase/seed.sql) y toca **Run**.
-4. Verifica en **Table Editor** → `products` que haya **67 filas**, en `collections` **1** (Marina) y en `faqs` **5**.
+4. Verifica en **Table Editor** → `products` que haya **67 filas**, en `collections` **1** (Marina), en `faqs` **5** y en `hero_slides` **7**.
 5. En **Storage** tiene que aparecer el bucket **`products`**, marcado como *Public*.
 
 > Los dos archivos se pueden volver a ejecutar sin romper nada. El seed **no** pisa
@@ -128,6 +128,7 @@ No hay ningún enlace visible en la tienda a propósito. Sin sesión, te lleva a
 | Mostrar u ocultar "Últimas unidades" | **Ajustes** → **Inventario** |
 | Activar Google Analytics o Meta Pixel | **Ajustes** → **Analítica** → pegar el ID (ver "Analítica" más abajo) |
 | Apagar el asistente | **Ajustes** → **Mostrar el asistente en la tienda** |
+| Cambiar el carrusel del inicio | **Inicio** → **Nueva diapositiva** o lápiz → foto, textos y a dónde lleva el botón (con vista previa) |
 | Cambiar el WhatsApp de pedidos | **Ajustes** → número con código de país → **Probar este número** → **Guardar ajustes** |
 | Cambiar Instagram, envíos o puntos de retiro | **Ajustes** → editar → **Guardar ajustes** |
 | Salir | **Cerrar sesión** (arriba a la derecha) |

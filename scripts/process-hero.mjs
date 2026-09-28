@@ -5,7 +5,7 @@ import { readdirSync } from 'node:fs'
 import sharp from 'sharp'
 
 const SOURCE = 'design/hero'
-const OUT = 'src/assets/hero'
+const OUT = 'public/hero' // servidas tal cual en /hero/<archivo> (las usa la tabla hero_slides)
 const SIZES = { lg: 1600, sm: 800 }
 
 for (const file of readdirSync(SOURCE).filter((f) => /\.(jpe?g|png)$/i.test(f))) {

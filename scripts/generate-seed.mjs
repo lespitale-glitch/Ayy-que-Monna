@@ -1,4 +1,4 @@
-// Genera supabase/seed.sql a partir de src/data/collections.json, products.json y faqs.json.
+// Genera supabase/seed.sql a partir de src/data/collections.json, products.json, faqs.json y heroSlides.json.
 // Uso: npm run db:seed
 //
 // El seed usa "on conflict do nothing": si un producto ya existe en la base
@@ -9,6 +9,7 @@ const readJson = (file) => JSON.parse(readFileSync(new URL(`../src/data/${file}`
 const products = readJson('products.json')
 const collections = readJson('collections.json')
 const faqs = readJson('faqs.json')
+const heroSlides = readJson('heroSlides.json')
 
 // En SQL las comillas simples se escapan duplicándolas: 'Pulsera D''Ana'
 const text = (value) => `'${String(value).replaceAll("'", "''")}'`
@@ -21,6 +22,10 @@ const collectionRows = collections.map((c, index) =>
 
 const faqRows = faqs.map((f, index) =>
   [`${text(f.id)}::uuid`, text(f.question), text(f.answer), textArray(f.keywords ?? []), index + 1].join(', '),
+)
+
+const heroRows = heroSlides.map((h, index) =>
+  [`${text(h.id)}::uuid`, text(h.image), text(h.imageSmall), text(h.alt), text(h.eyebrow), text(h.title), text(h.highlight), text(h.ctaLabel), text(h.ctaLink), index + 1].join(', '),
 )
 
 const rows = products.map((p, index) =>
@@ -40,15 +45,16 @@ const rows = products.map((p, index) =>
 )
 
 const sql = `-- =============================================================================
--- Ayy Que Monna — Carga inicial de colecciones, productos y preguntas frecuentes
+-- Ayy Que Monna — Carga inicial de colecciones, productos, preguntas frecuentes y carrusel
 -- =============================================================================
 -- ARCHIVO GENERADO por scripts/generate-seed.mjs a partir de src/data/collections.json,
--- products.json y faqs.json. No editar a mano: modificar el JSON y ejecutar "npm run db:seed".
+-- products.json, faqs.json y heroSlides.json. No editar a mano: modificar el JSON y ejecutar "npm run db:seed".
 --
 -- Cómo usarlo: Supabase → SQL Editor → pegar este archivo → Run
 -- (DESPUÉS de haber ejecutado schema.sql).
 -- Es seguro ejecutarlo de nuevo: lo que ya existe no se modifica.
 -- Colecciones: ${collections.length} · Productos: ${products.length} · Preguntas frecuentes: ${faqs.length}
+-- Diapositivas del inicio: ${heroSlides.length}
 -- =============================================================================
 
 insert into public.collections (id, name, description, theme, show_on_home, position)
@@ -66,9 +72,14 @@ insert into public.faqs (id, question, answer, keywords, position)
 values
 ${faqRows.map((row) => `  (${row})`).join(',\n')}
 on conflict (id) do nothing;
+
+insert into public.hero_slides (id, image, image_small, alt, eyebrow, title, highlight, cta_label, cta_link, position)
+values
+${heroRows.map((row) => `  (${row})`).join(',\n')}
+on conflict (id) do nothing;
 `
 
 writeFileSync(new URL('../supabase/seed.sql', import.meta.url), sql)
 console.log(
-  `supabase/seed.sql generado: ${collections.length} colecciones, ${products.length} productos, ${faqs.length} preguntas`,
+  `supabase/seed.sql generado: ${collections.length} colecciones, ${products.length} productos, ${faqs.length} preguntas, ${heroSlides.length} diapositivas`,
 )

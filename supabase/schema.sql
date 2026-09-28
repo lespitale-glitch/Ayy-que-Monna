@@ -722,5 +722,89 @@ alter table public.store_settings drop constraint if exists store_settings_meta_
 alter table public.store_settings add constraint store_settings_meta_pixel_id_check
   check (meta_pixel_id = '' or meta_pixel_id ~ '^[0-9]{5,20}$');
 
+
+
+-- -----------------------------------------------------------------------------
+-- 12. Carrusel del inicio (editable desde /admin/inicio)
+-- -----------------------------------------------------------------------------
+create table if not exists public.hero_slides (
+  id          uuid primary key default gen_random_uuid(),
+  -- Foto grande (hasta 1600 px) y chica (800 px, para celulares). '/hero/…' o URL del Storage.
+  image       text not null check (length(image) between 1 and 500),
+  image_small text check (image_small is null or length(image_small) <= 500),
+  alt         text not null default '' check (length(alt) <= 150),   -- vacío = foto decorativa
+  eyebrow     text not null default '' check (length(eyebrow) <= 40),
+  title       text not null check (length(trim(title)) between 1 and 60),
+  highlight   text not null default '' check (length(highlight) <= 60), -- parte del título con degradado
+  cta_label   text not null check (length(trim(cta_label)) between 1 and 30),
+  -- A dónde lleva el botón: una página de la tienda ("/tienda/aros") o un enlace externo seguro
+  cta_link    text not null check (cta_link ~ '^(/[^/]|/$|https://)' and length(cta_link) <= 300),
+  is_visible  boolean not null default true,
+  position    integer not null default 0,
+  created_at  timestamptz not null default now(),
+  updated_at  timestamptz not null default now()
+);
+
+drop trigger if exists hero_slides_set_updated_at on public.hero_slides;
+create trigger hero_slides_set_updated_at
+  before update on public.hero_slides
+  for each row execute function public.set_updated_at();
+
+alter table public.hero_slides enable row level security;
+grant select on public.hero_slides to anon, authenticated;
+grant insert, update, delete on public.hero_slides to authenticated;
+
+drop policy if exists "Público: ver diapositivas visibles" on public.hero_slides;
+create policy "Público: ver diapositivas visibles"
+  on public.hero_slides for select
+  to anon, authenticated
+  using (is_visible);
+
+drop policy if exists "Admin: ver todas las diapositivas" on public.hero_slides;
+create policy "Admin: ver todas las diapositivas"
+  on public.hero_slides for select
+  to authenticated
+  using ((select public.is_admin()));
+
+drop policy if exists "Admin: crear diapositivas" on public.hero_slides;
+create policy "Admin: crear diapositivas"
+  on public.hero_slides for insert
+  to authenticated
+  with check ((select public.is_admin()));
+
+drop policy if exists "Admin: editar diapositivas" on public.hero_slides;
+create policy "Admin: editar diapositivas"
+  on public.hero_slides for update
+  to authenticated
+  using ((select public.is_admin()))
+  with check ((select public.is_admin()));
+
+drop policy if exists "Admin: borrar diapositivas" on public.hero_slides;
+create policy "Admin: borrar diapositivas"
+  on public.hero_slides for delete
+  to authenticated
+  using ((select public.is_admin()));
+
+create or replace function public.reorder_hero_slides(slide_ids uuid[])
+returns void
+language plpgsql
+security invoker
+set search_path = ''
+as $$
+begin
+  if not public.is_admin() then
+    raise exception 'No autorizado' using errcode = '42501';
+  end if;
+
+  update public.hero_slides as h
+  set position = o.ord
+  from unnest(slide_ids) with ordinality as o (id, ord)
+  where h.id = o.id;
+end;
+$$;
+
+revoke execute on function public.reorder_hero_slides(uuid[]) from public, anon;
+grant execute on function public.reorder_hero_slides(uuid[]) to authenticated;
+
 -- Avisa a la API de Supabase que la estructura cambió (columnas nuevas o borradas)
 notify pgrst, 'reload schema';

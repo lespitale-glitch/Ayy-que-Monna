@@ -22,7 +22,7 @@ const API = {
   load,
   update: updateCollection,
   reorder: reorderCollections,
-  remove: deleteCollection,
+  remove: (collection) => deleteCollection(collection.id),
   label: (collection) => collection.name,
 }
 

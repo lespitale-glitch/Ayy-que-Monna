@@ -1,0 +1,79 @@
+[
+  {
+    "id": "7a1d0c2e-3b4f-4c5d-8e6f-000000000001",
+    "image": "/hero/banner8-lg.webp",
+    "imageSmall": "/hero/banner8-sm.webp",
+    "alt": "Collar con dije de flor esmaltada puesto",
+    "eyebrow": "Bijouterie en acero quirúrgico",
+    "title": "Pequeños brillos para",
+    "highlight": "todos los días",
+    "ctaLabel": "Explorar tienda",
+    "ctaLink": "/tienda"
+  },
+  {
+    "id": "7a1d0c2e-3b4f-4c5d-8e6f-000000000002",
+    "image": "/hero/nuevo-lg.webp",
+    "imageSmall": "/hero/nuevo-sm.webp",
+    "alt": "Collar con dije de flor sobre fondo naranja",
+    "eyebrow": "Recién llegados",
+    "title": "Lo nuevo de",
+    "highlight": "Monna",
+    "ctaLabel": "Ver novedades",
+    "ctaLink": "/seleccion/novedades"
+  },
+  {
+    "id": "7a1d0c2e-3b4f-4c5d-8e6f-000000000003",
+    "image": "/hero/banner4-lg.webp",
+    "imageSmall": "/hero/banner4-sm.webp",
+    "alt": "",
+    "eyebrow": "Collares",
+    "title": "Dijes que",
+    "highlight": "cuentan algo",
+    "ctaLabel": "Ver collares",
+    "ctaLink": "/tienda/collares"
+  },
+  {
+    "id": "7a1d0c2e-3b4f-4c5d-8e6f-000000000004",
+    "image": "/hero/banner3-lg.webp",
+    "imageSmall": "/hero/banner3-sm.webp",
+    "alt": "",
+    "eyebrow": "Aros",
+    "title": "Un toque de",
+    "highlight": "color",
+    "ctaLabel": "Ver aros",
+    "ctaLink": "/tienda/aros"
+  },
+  {
+    "id": "7a1d0c2e-3b4f-4c5d-8e6f-000000000005",
+    "image": "/hero/banner2-lg.webp",
+    "imageSmall": "/hero/banner2-sm.webp",
+    "alt": "",
+    "eyebrow": "Anillos",
+    "title": "Para combinar",
+    "highlight": "a tu manera",
+    "ctaLabel": "Ver anillos",
+    "ctaLink": "/tienda/anillos"
+  },
+  {
+    "id": "7a1d0c2e-3b4f-4c5d-8e6f-000000000006",
+    "image": "/hero/banner5-lg.webp",
+    "imageSmall": "/hero/banner5-sm.webp",
+    "alt": "",
+    "eyebrow": "Pulseras",
+    "title": "Mezclá, sumá,",
+    "highlight": "repetí",
+    "ctaLabel": "Ver pulseras",
+    "ctaLink": "/tienda/pulseras"
+  },
+  {
+    "id": "7a1d0c2e-3b4f-4c5d-8e6f-000000000007",
+    "image": "/hero/banner-lg.webp",
+    "imageSmall": "/hero/banner-sm.webp",
+    "alt": "",
+    "eyebrow": "Selección Monna",
+    "title": "Nuestros",
+    "highlight": "favoritos",
+    "ctaLabel": "Ver destacados",
+    "ctaLink": "/seleccion/destacados"
+  }
+]

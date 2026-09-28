@@ -45,6 +45,9 @@ export const router = createBrowserRouter([
             lazy: lazyPage(() => import('./components/admin/AdminLayout.jsx')),
             children: [
               { index: true, lazy: lazyPage(() => import('./pages/Admin/AdminProducts.jsx')) },
+              { path: 'inicio', lazy: lazyPage(() => import('./pages/Admin/AdminHeroSlides.jsx')) },
+              { path: 'inicio/nueva', lazy: lazyPage(() => import('./pages/Admin/AdminHeroSlideForm.jsx')) },
+              { path: 'inicio/:id', lazy: lazyPage(() => import('./pages/Admin/AdminHeroSlideForm.jsx')) },
               { path: 'colecciones', lazy: lazyPage(() => import('./pages/Admin/AdminCollections.jsx')) },
               // "nueva" va antes que ":id" para que no se interprete como un id
               { path: 'colecciones/nueva', lazy: lazyPage(() => import('./pages/Admin/AdminCollectionForm.jsx')) },
