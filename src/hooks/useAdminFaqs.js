@@ -7,7 +7,7 @@ async function load() {
   return { items, extra: { pending: questions.filter((q) => !q.isResolved).length } }
 }
 
-const API = { load, update: updateFaq, reorder: reorderFaqs, remove: deleteFaq, label: (faq) => `"${faq.question}"` }
+const API = { load, update: updateFaq, reorder: reorderFaqs, remove: (faq) => deleteFaq(faq.id), label: (faq) => `"${faq.question}"` }
 
 export function useAdminFaqs() {
   const list = useAdminSortableList(API)

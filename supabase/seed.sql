@@ -1,13 +1,14 @@
 -- =============================================================================
--- Ayy Que Monna — Carga inicial de colecciones, productos y preguntas frecuentes
+-- Ayy Que Monna — Carga inicial de colecciones, productos, preguntas frecuentes y carrusel
 -- =============================================================================
 -- ARCHIVO GENERADO por scripts/generate-seed.mjs a partir de src/data/collections.json,
--- products.json y faqs.json. No editar a mano: modificar el JSON y ejecutar "npm run db:seed".
+-- products.json, faqs.json y heroSlides.json. No editar a mano: modificar el JSON y ejecutar "npm run db:seed".
 --
 -- Cómo usarlo: Supabase → SQL Editor → pegar este archivo → Run
 -- (DESPUÉS de haber ejecutado schema.sql).
 -- Es seguro ejecutarlo de nuevo: lo que ya existe no se modifica.
 -- Colecciones: 1 · Productos: 67 · Preguntas frecuentes: 5
+-- Diapositivas del inicio: 7
 -- =============================================================================
 
 insert into public.collections (id, name, description, theme, show_on_home, position)
@@ -94,4 +95,15 @@ values
   ('5b0e4a1c-6f1a-4c55-9c0e-0a1f7f3b9a03'::uuid, '¿Cuáles son los medios de pago aceptados?', 'Transferencia bancaria.', array['pago', 'pagar', 'medios de pago', 'transferencia', 'tarjeta', 'efectivo', 'mercado pago', 'cuotas', 'alias', 'cbu', 'debito', 'credito']::text[], 3),
   ('5b0e4a1c-6f1a-4c55-9c0e-0a1f7f3b9a04'::uuid, '¿Cómo debo cuidar mis accesorios para que no pierdan brillo?', 'Te recomendamos evitar el contacto directo con perfumes, cremas o líquidos corrosivos. Guardalos siempre de forma individual, en lugares secos y lejos de la humedad, para mantener su brillo intacto por años.', array['cuidar', 'cuidado', 'cuidados', 'limpiar', 'brillo', 'mojar', 'agua', 'ducha', 'pileta', 'perfume', 'crema', 'guardar', 'humedad', 'pierde el color']::text[], 4),
   ('5b0e4a1c-6f1a-4c55-9c0e-0a1f7f3b9a05'::uuid, '¿Cómo hago un pedido?', 'Agregá los productos que te gusten al carrito y tocá "Finalizar pedido por WhatsApp". Se abre un mensaje con tu pedido listo para enviar, y por ahí coordinamos el pago y el envío.', array['comprar', 'compra', 'pedido', 'pedir', 'carrito', 'como compro', 'encargar', 'hacer un pedido', 'reservar']::text[], 5)
+on conflict (id) do nothing;
+
+insert into public.hero_slides (id, image, image_small, alt, eyebrow, title, highlight, cta_label, cta_link, position)
+values
+  ('7a1d0c2e-3b4f-4c5d-8e6f-000000000001'::uuid, '/hero/banner8-lg.webp', '/hero/banner8-sm.webp', 'Collar con dije de flor esmaltada puesto', 'Bijouterie en acero quirúrgico', 'Pequeños brillos para', 'todos los días', 'Explorar tienda', '/tienda', 1),
+  ('7a1d0c2e-3b4f-4c5d-8e6f-000000000002'::uuid, '/hero/nuevo-lg.webp', '/hero/nuevo-sm.webp', 'Collar con dije de flor sobre fondo naranja', 'Recién llegados', 'Lo nuevo de', 'Monna', 'Ver novedades', '/seleccion/novedades', 2),
+  ('7a1d0c2e-3b4f-4c5d-8e6f-000000000003'::uuid, '/hero/banner4-lg.webp', '/hero/banner4-sm.webp', '', 'Collares', 'Dijes que', 'cuentan algo', 'Ver collares', '/tienda/collares', 3),
+  ('7a1d0c2e-3b4f-4c5d-8e6f-000000000004'::uuid, '/hero/banner3-lg.webp', '/hero/banner3-sm.webp', '', 'Aros', 'Un toque de', 'color', 'Ver aros', '/tienda/aros', 4),
+  ('7a1d0c2e-3b4f-4c5d-8e6f-000000000005'::uuid, '/hero/banner2-lg.webp', '/hero/banner2-sm.webp', '', 'Anillos', 'Para combinar', 'a tu manera', 'Ver anillos', '/tienda/anillos', 5),
+  ('7a1d0c2e-3b4f-4c5d-8e6f-000000000006'::uuid, '/hero/banner5-lg.webp', '/hero/banner5-sm.webp', '', 'Pulseras', 'Mezclá, sumá,', 'repetí', 'Ver pulseras', '/tienda/pulseras', 6),
+  ('7a1d0c2e-3b4f-4c5d-8e6f-000000000007'::uuid, '/hero/banner-lg.webp', '/hero/banner-sm.webp', '', 'Selección Monna', 'Nuestros', 'favoritos', 'Ver destacados', '/seleccion/destacados', 7)
 on conflict (id) do nothing;

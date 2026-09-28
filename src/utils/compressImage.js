@@ -6,7 +6,8 @@ const QUALITY = 0.82
 // canvas.toBlob usa un "callback"; lo envolvemos en una Promesa para poder usar await
 const canvasToBlob = (canvas, type) => new Promise((resolve) => canvas.toBlob(resolve, type, QUALITY))
 
-export async function compressImage(file) {
+// maxSide: lado mayor en px (1600 por defecto; el carrusel también genera una versión de 800 para celulares)
+export async function compressImage(file, maxSide = MAX_SIDE) {
   if (!file.type.startsWith('image/')) {
     throw new Error(`"${file.name}" no es una imagen.`)
   }
@@ -20,7 +21,7 @@ export async function compressImage(file) {
   }
 
   // Math.min(1, …) evita agrandar fotos que ya son chicas
-  const scale = Math.min(1, MAX_SIDE / Math.max(bitmap.width, bitmap.height))
+  const scale = Math.min(1, maxSide / Math.max(bitmap.width, bitmap.height))
   const width = Math.round(bitmap.width * scale)
   const height = Math.round(bitmap.height * scale)
 

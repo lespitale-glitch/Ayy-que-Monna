@@ -75,6 +75,7 @@ Todo con herramientas gratuitas. Decisiones de la dueña:
 - [x] Etapa C: Bot de preguntas frecuentes + preguntas sin respuesta + página SEO
 - [x] Etapa D: Inventario (modos de stock) + alertas en panel y email (Resend + función de Supabase)
 - [x] Etapa E: GA4 + Meta Pixel con aviso de cookies (IDs desde Ajustes)
+- [x] Extra: carrusel del inicio editable desde el panel (/admin/inicio)
 
 ## Fase 4 — Newsletter
 - [ ] Formulario de suscripción en el footer y en un modal discreto

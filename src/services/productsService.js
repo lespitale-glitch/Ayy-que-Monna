@@ -178,10 +178,11 @@ export async function adjustStock(id, delta) {
 
 // Sube una foto ya comprimida y devuelve su URL pública.
 // El nombre es aleatorio (no depende del id del producto, que todavía puede cambiar).
-export async function uploadProductImage(blob) {
+// folder: subcarpeta opcional dentro del bucket (ej: 'hero' para el carrusel del inicio)
+export async function uploadProductImage(blob, folder = '') {
   requireSupabase()
   const extension = blob.type === 'image/webp' ? 'webp' : 'jpg'
-  const path = `${crypto.randomUUID()}.${extension}`
+  const path = `${folder ? `${folder}/` : ''}${crypto.randomUUID()}.${extension}`
 
   const { error } = await supabase.storage.from(STORAGE_BUCKET).upload(path, blob, {
     contentType: blob.type,

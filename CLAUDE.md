@@ -15,20 +15,21 @@ Se conservan los productos, textos e imágenes originales de la web anterior.
 - `npm run dev` — servidor de desarrollo
 - `npm run build` — build de producción
 - `npm run lint` — linter (oxlint, viene con la plantilla de Vite)
-- `npm run db:seed` — regenera `supabase/seed.sql` desde `collections.json`, `products.json` y `faqs.json`
+- `npm run db:seed` — regenera `supabase/seed.sql` desde `collections.json`, `products.json`, `faqs.json` y `heroSlides.json`
 - `postbuild` (automático tras `npm run build`): `dist/sitemap.xml` si existe la variable `SITE_URL`
 
 ## Estructura
 public/
   products/      # fotos de producto, servidas tal cual en /products/<archivo>
+  hero/          # fotos originales del carrusel (npm run brand:hero), servidas en /hero/<archivo>
 src/
   assets/        # imágenes de la interfaz (logo, banners) importadas desde el código
   components/    # componentes reutilizables (Button, ProductCard, Header…)
   pages/         # una carpeta por ruta (Home, Shop, Product, Cart, Admin)
   context/       # ProductsContext, SettingsContext, ConsentContext (cookies), CartContext, AuthContext (solo /admin)
   lib/           # supabase.js (cliente; null si faltan las claves), analytics.js (GA4 + Meta Pixel)
-  services/      # products, collections, settings y faqsService: ÚNICOS lugares que hablan con Supabase
-  data/          # products.json, collections.json, faqs.json (seed y modo local), selections.js
+  services/      # products, collections, settings, faqs y heroSlidesService: ÚNICOS lugares que hablan con Supabase
+  data/          # products.json, collections.json, faqs.json, heroSlides.json (seed y modo local), selections.js
   hooks/         # hooks propios (useCart…)
 fotos-originales/  # fotos originales pesadas, IGNORADA por Git, solo local
 supabase/          # schema.sql (tablas, RLS, Storage), seed.sql (generado), functions/stock-alert (email)
@@ -75,7 +76,10 @@ Solo se consulta como referencia: no copiar código de allí.
   `supabase/functions/stock-alert` (Resend). Secretos solo en Supabase (RESEND_API_KEY, ALERT_EMAIL_TO, WEBHOOK_SECRET).
   Disponibilidad en la tienda: `getAvailability` (utils/stock.js); "Últimas unidades" depende de `show_low_stock` (Ajustes).
   Carrito: tope = stock; los agotados quedan en la lista marcados y NO van en el pedido (`orderLines`).
-- `ProductsContext` carga productos + colecciones juntos (`Promise.all`) y expone `collections`, `selections`
+- Carrusel del inicio: tabla `hero_slides` (`image`, `image_small`, `alt`, `eyebrow`, `title`, `highlight`, `cta_label`,
+  `cta_link` solo '/…' o 'https://…', `is_visible`, `position`; RPC `reorder_hero_slides`). Fotos nuevas en `products/hero/`
+  del bucket (grande 1600 + chica 800). `buildHeroSlides` (utils/heroSlides.js) suma al final retiro e Instagram (Ajustes).
+- `ProductsContext` carga productos + colecciones + carrusel juntos (`Promise.all`) y expone `heroSlides`, `collections`, `selections`
   (colecciones + selecciones automáticas de `data/selections.js`) y `homeCollections`.
 
 ## Panel /admin
@@ -113,7 +117,10 @@ Solo se consulta como referencia: no copiar código de allí.
 - Stock en la lista de productos: `StockControl` (−/+ con `aria-disabled` en 0 para no perder el foco),
   `StockAlertBanner` (stock bajo / agotados) y filtro Stock. En el formulario, `StockFields`.
 - Listas ordenables del panel (colecciones, preguntas): hook genérico `useAdminSortableList`.
-- Menú del panel: `AdminNav` (Productos | Colecciones | Preguntas | Ajustes); Productos abarca también el formulario y el orden.
+- Carrusel (`/admin/inicio`, `/nueva`, `/:id`): lista ordenable; formulario con foto (`HeroPhotoPicker`, se comprime y
+  sube al guardar; al reemplazarla se borra la vieja del Storage), textos, destino del botón (`LinkPicker`) y vista previa
+  en vivo con el mismo `HeroSlide` de la tienda. Reglas en `utils/heroSlideForm.js`.
+- Menú del panel: `AdminNav` (Productos | Inicio | Colecciones | Preguntas | Ajustes); Productos abarca también el formulario y el orden.
 - Cambios sin guardar: `useUnsavedChangesGuard(isDirty)` + `<UnsavedChangesDialog>` (producto, orden, colección y ajustes).
   En el formulario, `isFormDirty` (utils/productForm.js); mientras se guarda no se bloquea la navegación.
 

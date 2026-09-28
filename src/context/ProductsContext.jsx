@@ -2,13 +2,14 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ProductsContext } from './productsContext.js'
 import { fetchCatalog } from '../services/productsService.js'
 import { fetchCollections } from '../services/collectionsService.js'
+import { fetchHeroSlides } from '../services/heroSlidesService.js'
 import * as selectors from '../utils/products.js'
 import { buildSelections } from '../data/selections.js'
 
-// Carga el catálogo (productos + colecciones) UNA vez al abrir la tienda y lo comparte con toda la app.
+// Carga el catálogo (productos + colecciones + carrusel del inicio) UNA vez al abrir la tienda y lo comparte con toda la app.
 export function ProductsProvider({ children }) {
   // status: 'loading' | 'ready' | 'error'
-  const [state, setState] = useState({ status: 'loading', products: [], collections: [], source: null, error: null })
+  const [state, setState] = useState({ status: 'loading', products: [], collections: [], heroSlides: [], source: null, error: null })
   // Cada vez que este número cambia, el efecto de abajo vuelve a pedir los datos
   const [attempt, setAttempt] = useState(0)
 
@@ -17,16 +18,16 @@ export function ProductsProvider({ children }) {
     // de que llegara (por ejemplo, en el modo estricto de desarrollo de React).
     let ignore = false
 
-    // Promise.all pide las dos cosas en paralelo y espera a que lleguen ambas:
+    // Promise.all pide todo en paralelo y espera a que llegue cada parte:
     // .then() corre cuando llegan los datos, .catch() si falla cualquiera de las dos.
-    Promise.all([fetchCatalog(), fetchCollections()])
-      .then(([{ products, source }, collections]) => {
-        if (!ignore) setState({ status: 'ready', products, collections, source, error: null })
+    Promise.all([fetchCatalog(), fetchCollections(), fetchHeroSlides()])
+      .then(([{ products, source }, collections, heroSlides]) => {
+        if (!ignore) setState({ status: 'ready', products, collections, heroSlides, source, error: null })
       })
       .catch((error) => {
         if (ignore) return // ya se salió de la página: no es un error real
         console.error('No se pudo cargar el catálogo:', error)
-        setState({ status: 'error', products: [], collections: [], source: null, error })
+        setState({ status: 'error', products: [], collections: [], heroSlides: [], source: null, error })
       })
 
     return () => {

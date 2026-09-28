@@ -4,7 +4,7 @@ import { moveItem } from '../utils/reorder.js'
 
 // Lista ordenable del panel (colecciones, preguntas frecuentes…): carga, interruptores,
 // ↑ ↓ y borrar. Los cambios se ven al instante y se deshacen si Supabase falla.
-// api = { load, update(id, cambios), reorder(ids), remove(id), label(item) }
+// api = { load, update(id, cambios), reorder(ids), remove(item), label(item) }
 // load() devuelve { items, extra } ("extra": datos adicionales, como la cantidad de productos).
 export function useAdminSortableList(api) {
   const [status, setStatus] = useState('loading') // 'loading' | 'ready' | 'error'
@@ -64,7 +64,7 @@ export function useAdminSortableList(api) {
   }
 
   const remove = (item, successText) =>
-    run(items, items.filter((i) => i.id !== item.id), () => api.remove(item.id), successText)
+    run(items, items.filter((i) => i.id !== item.id), () => api.remove(item), successText)
 
   return { status, items, extra, isBusy, feedback, toggle, move, remove }
 }

@@ -2,9 +2,10 @@ import { Link, useLocation } from 'react-router-dom'
 
 // Secciones del panel. "match" decide qué pestaña queda marcada según la dirección actual:
 // Productos también abarca el formulario (/admin/productos/…) y el orden (/admin/orden).
-const OTHER_SECTIONS = ['/admin/colecciones', '/admin/preguntas', '/admin/ajustes']
+const OTHER_SECTIONS = ['/admin/inicio', '/admin/colecciones', '/admin/preguntas', '/admin/ajustes']
 const SECTIONS = [
   { to: '/admin', label: 'Productos', match: (path) => !OTHER_SECTIONS.some((s) => path.startsWith(s)) },
+  { to: '/admin/inicio', label: 'Inicio', match: (path) => path.startsWith('/admin/inicio') },
   { to: '/admin/colecciones', label: 'Colecciones', match: (path) => path.startsWith('/admin/colecciones') },
   { to: '/admin/preguntas', label: 'Preguntas', match: (path) => path.startsWith('/admin/preguntas') },
   { to: '/admin/ajustes', label: 'Ajustes', match: (path) => path.startsWith('/admin/ajustes') },
