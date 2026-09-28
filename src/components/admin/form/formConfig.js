@@ -4,7 +4,6 @@ export const FLAGS = [
   { field: 'isVisible', label: 'Visible en la tienda' },
   { field: 'isFeatured', label: 'Destacado' },
   { field: 'isNew', label: 'Nuevo' },
-  { field: 'isMarina', label: 'Colección Marina' },
 ]
 
 export const FIELD_LABELS = {
@@ -14,6 +13,8 @@ export const FIELD_LABELS = {
   category: 'Categoría',
   description: 'Descripción',
   images: 'Fotos',
+  stock: 'Unidades en stock',
+  lowStockThreshold: 'Aviso de stock bajo',
 }
 
 export const PHASE_LABEL = { uploading: 'Subiendo imágenes…', saving: 'Guardando…' }

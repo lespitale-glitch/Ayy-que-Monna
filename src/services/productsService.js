@@ -4,7 +4,7 @@ import localProducts from '../data/products.json'
 const STORAGE_BUCKET = 'products'
 
 // Columnas que necesita la tienda (pedir solo lo necesario hace la respuesta más liviana)
-const PUBLIC_COLUMNS = 'id, name, description, price, category, images, is_featured, is_new, collection, position'
+const PUBLIC_COLUMNS = 'id, name, description, price, category, images, is_featured, is_new, collections, position, stock_mode, stock, low_stock_threshold'
 // El panel además necesita saber si el producto está visible
 const ADMIN_COLUMNS = `${PUBLIC_COLUMNS}, is_visible`
 
@@ -18,7 +18,10 @@ const COLUMN_BY_FIELD = {
   images: 'images',
   isFeatured: 'is_featured',
   isNew: 'is_new',
-  collection: 'collection',
+  collections: 'collections',
+  stockMode: 'stock_mode',
+  stock: 'stock',
+  lowStockThreshold: 'low_stock_threshold',
   isVisible: 'is_visible',
   position: 'position',
 }
@@ -35,8 +38,10 @@ export function fromRow(row) {
     images: row.images ?? [],
     isFeatured: row.is_featured,
     isNew: row.is_new,
-    // Solo agregamos "collection" si tiene valor, igual que en products.json
-    ...(row.collection ? { collection: row.collection } : {}),
+    collections: row.collections ?? [], // ids de colecciones (siempre un array, aunque esté vacío)
+    stockMode: row.stock_mode ?? 'none',
+    stock: row.stock ?? 0,
+    lowStockThreshold: row.low_stock_threshold ?? 2,
     isVisible: row.is_visible ?? true,
     position: row.position,
   }
@@ -48,8 +53,7 @@ export function toRow(changes) {
   for (const [field, value] of Object.entries(changes)) {
     const column = COLUMN_BY_FIELD[field]
     if (!column) throw new Error(`Campo desconocido: ${field}`)
-    // "collection" vacía se guarda como null (sin colección)
-    row[column] = field === 'collection' ? value || null : value
+    row[column] = value
   }
   return row
 }
@@ -67,7 +71,15 @@ function requireSupabase() {
 //   "reintentar" en lugar de productos viejos o que ya se ocultaron.
 export async function fetchCatalog() {
   if (!isSupabaseConfigured) {
-    return { products: localProducts, source: 'local' }
+    // products.json no tiene colecciones en todos ni datos de stock: completamos los valores por defecto
+    const products = localProducts.map((p) => ({
+      stockMode: 'none',
+      stock: 0,
+      lowStockThreshold: 2,
+      ...p,
+      collections: p.collections ?? [],
+    }))
+    return { products, source: 'local' }
   }
 
   const { data, error } = await supabase
@@ -149,6 +161,15 @@ export async function reorderProducts(ids) {
   requireSupabase()
   const { error } = await supabase.rpc('reorder_products', { product_ids: ids })
   if (error) throw error
+}
+
+// Suma o resta unidades en una sola operación (función adjust_stock de schema.sql).
+// Devuelve el stock nuevo; nunca baja de 0.
+export async function adjustStock(id, delta) {
+  requireSupabase()
+  const { data, error } = await supabase.rpc('adjust_stock', { product_id: id, delta })
+  if (error) throw error
+  return data
 }
 
 // ---------------------------------------------------------------------------

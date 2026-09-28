@@ -15,7 +15,8 @@ Se conservan los productos, textos e imágenes originales de la web anterior.
 - `npm run dev` — servidor de desarrollo
 - `npm run build` — build de producción
 - `npm run lint` — linter (oxlint, viene con la plantilla de Vite)
-- `npm run db:seed` — regenera `supabase/seed.sql` desde `products.json`
+- `npm run db:seed` — regenera `supabase/seed.sql` desde `collections.json`, `products.json` y `faqs.json`
+- `postbuild` (automático tras `npm run build`): `dist/sitemap.xml` si existe la variable `SITE_URL`
 
 ## Estructura
 public/
@@ -24,14 +25,14 @@ src/
   assets/        # imágenes de la interfaz (logo, banners) importadas desde el código
   components/    # componentes reutilizables (Button, ProductCard, Header…)
   pages/         # una carpeta por ruta (Home, Shop, Product, Cart, Admin)
-  context/       # ProductsContext (catálogo), CartContext, AuthContext (solo /admin)
-  lib/           # supabase.js (cliente; null si faltan las claves)
-  services/      # productsService.js: ÚNICO lugar que habla con Supabase
-  data/          # products.json
+  context/       # ProductsContext, SettingsContext, ConsentContext (cookies), CartContext, AuthContext (solo /admin)
+  lib/           # supabase.js (cliente; null si faltan las claves), analytics.js (GA4 + Meta Pixel)
+  services/      # products, collections, settings y faqsService: ÚNICOS lugares que hablan con Supabase
+  data/          # products.json, collections.json, faqs.json (seed y modo local), selections.js
   hooks/         # hooks propios (useCart…)
 fotos-originales/  # fotos originales pesadas, IGNORADA por Git, solo local
-supabase/          # schema.sql (tabla, RLS, Storage) y seed.sql (generado)
-scripts/           # generate-seed.mjs
+supabase/          # schema.sql (tablas, RLS, Storage), seed.sql (generado), functions/stock-alert (email)
+scripts/           # generate-seed.mjs, generate-sitemap.mjs
 
 El sitio original (Next.js) está respaldado en el repo aparte `lespitale-glitch/Monna_legacy`.
 Solo se consulta como referencia: no copiar código de allí.
@@ -42,11 +43,12 @@ Solo se consulta como referencia: no copiar código de allí.
 - Peso objetivo por foto: lado mayor ≤ 1600px, idealmente < 300 KB.
 
 ## Datos de producto (`src/data/products.json`)
-`{ id, name, price, category, description, images[], isFeatured, isNew, collection? }`
+`{ id, name, price, category, description, images[], isFeatured, isNew, collections? }`
+(el stock no está en el JSON: se carga desde el panel; en modo local todo es "sin control")
 - `id`: slug único; `name` en MAYÚSCULAS; `price` en ARS (número).
 - `category`: "aros" | "collares" | "anillos" | "pulseras".
 - `images[0]` es la foto principal; `images[1]` (opcional) se usa en el hover.
-- `collection` (opcional): hoy solo `"marina"`.
+- `collections` (opcional): ids de colecciones (`src/data/collections.json`). En el frontend siempre es un array.
 
 ## Supabase
 - La tabla usa snake_case (`is_featured`); el frontend usa camelCase (`isFeatured`). La conversión vive SOLO en la capa de servicios.
@@ -57,6 +59,24 @@ Solo se consulta como referencia: no copiar código de allí.
 - Sin `.env.local` la tienda usa `products.json` (modo local). Con claves, si Supabase falla se muestra "Reintentar" (no se cae a datos viejos).
 - Los componentes leen el catálogo con `useProducts()`; nunca importan `products.json` ni `supabase` directamente.
 - La consulta pública filtra `is_visible = true` explícitamente (con sesión de admin, RLS dejaría ver los ocultos).
+- Colecciones: tabla `collections` (`id` slug, `name`, `description`, `theme` 'brand' | 'marina', `show_on_home`,
+  `is_visible`, `position`). `products.collections text[]` guarda los ids (un producto puede estar en varias).
+  Integridad por triggers: un producto no puede apuntar a una colección inexistente (23503) y al borrar una
+  colección se quita sola de los productos. Ids reservados: novedades, destacados, dorados, plateados.
+  RPC atómicas: `reorder_collections(ids)` y `set_collection_products(id, product_ids)`.
+- Preguntas frecuentes: tabla `faqs` (`question`, `answer`, `keywords text[]`, `is_visible`, `position`; RPC `reorder_faqs`).
+  Las respuestas aceptan comodines `{envios}`, `{retiro}`, `{instagram}` (`fillAnswer`, utils/faqText.js).
+- Preguntas sin respuesta: tabla `bot_questions`. Anónimas: SOLO el texto (permiso de insert únicamente sobre la
+  columna `question`); el trigger `before_bot_question` junta repetidas (`times_asked`) y frena más de 30/min.
+  Solo la admin las lee. El frontend además quita emails/teléfonos (`sanitizeQuestion`) y guarda máx. 5 por visita.
+- Inventario: `products.stock_mode` ('none' | 'tracked' | 'on_demand'), `stock`, `low_stock_threshold`.
+  ±1 SIEMPRE con la RPC atómica `adjust_stock(id, delta)` (nunca baja de 0). El trigger `queue_stock_alert` agrega una fila
+  a `stock_alerts` solo al CRUZAR el límite ('low') o llegar a 0 ('out'); un Database Webhook llama a la Edge Function
+  `supabase/functions/stock-alert` (Resend). Secretos solo en Supabase (RESEND_API_KEY, ALERT_EMAIL_TO, WEBHOOK_SECRET).
+  Disponibilidad en la tienda: `getAvailability` (utils/stock.js); "Últimas unidades" depende de `show_low_stock` (Ajustes).
+  Carrito: tope = stock; los agotados quedan en la lista marcados y NO van en el pedido (`orderLines`).
+- `ProductsContext` carga productos + colecciones juntos (`Promise.all`) y expone `collections`, `selections`
+  (colecciones + selecciones automáticas de `data/selections.js`) y `homeCollections`.
 
 ## Panel /admin
 - Rutas cargadas con `lazy` en `router.jsx`: la tienda nunca descarga código del panel.
@@ -75,8 +95,46 @@ Solo se consulta como referencia: no copiar código de allí.
   Los cambios se guardan juntos con "Guardar orden" → `reorderProducts(ids)` → `reorder_products()` (atómico,
   lista completa incluidos los ocultos). Aviso al salir con cambios sin guardar (`useBlocker` + `beforeunload`).
   Lógica pura en `utils/reorder.js` (`moveItem`, `hasOrderChanged`, `sortByIds`).
-- Cambios sin guardar: `useUnsavedChangesGuard(isDirty)` + `<UnsavedChangesDialog>` (formulario y orden).
+- Ajustes de la tienda (`/admin/ajustes`): tabla `store_settings` (una sola fila, id = 1) con WhatsApp, Instagram,
+  envíos (texto, costo "desde") y puntos de retiro. La tienda los lee con `useSettings()`; NADA de números o
+  usuarios fijos en los componentes (los valores por defecto viven en `DEFAULT_SETTINGS` de `config.js`).
+  Los textos usan los valores por defecto mientras cargan; el botón de WhatsApp del carrito espera a
+  `status === 'ready'` (nunca manda un pedido a un número viejo). Reglas en `utils/settings.js` (espejo de schema.sql).
+- Colecciones (`/admin/colecciones`, `/nueva`, `/:id`): lista con Visible, En el inicio, ↑ ↓ (guardan al instante,
+  optimista) y borrar. Formulario con color (tema), dónde se muestra y selector de productos (buscador +
+  "Solo los elegidos", que congela la lista para no perder el foco). Reglas en `utils/collectionForm.js`.
+  En el formulario de producto, casillas `CollectionsField`.
+- Preguntas (`/admin/preguntas`, `/nueva`, `/:id`, `/sin-responder`): lista ordenable + "Probar el asistente"
+  (usa el mismo motor). Desde "Sin responder" → "Crear respuesta" prellena la pregunta y al guardar la marca resuelta.
+- Stock en la lista de productos: `StockControl` (−/+ con `aria-disabled` en 0 para no perder el foco),
+  `StockAlertBanner` (stock bajo / agotados) y filtro Stock. En el formulario, `StockFields`.
+- Listas ordenables del panel (colecciones, preguntas): hook genérico `useAdminSortableList`.
+- Menú del panel: `AdminNav` (Productos | Colecciones | Preguntas | Ajustes); Productos abarca también el formulario y el orden.
+- Cambios sin guardar: `useUnsavedChangesGuard(isDirty)` + `<UnsavedChangesDialog>` (producto, orden, colección y ajustes).
   En el formulario, `isFormDirty` (utils/productForm.js); mientras se guarda no se bloquea la navegación.
+
+## Asistente (bot) de la tienda
+- Sin IA y gratis: todo corre en el navegador. Motor en `utils/bot/` (funciones puras, probadas con un corpus de preguntas reales):
+  `lexicon.js` (palabras vacías, sinónimos, categorías), `botText.js` (normalizar, raíz del plural, errores de tipeo con
+  Damerau-Levenshtein), `faqMatcher.js` (puntaje por pesos + IDF; umbrales SURE/MAYBE), `productFinder.js` (categoría,
+  terminación, precio, colección y nombres), `intents.js` (saludo, gracias, hablar con una persona), `botReply.js` (decide
+  la respuesta) y `botMessages.js` (respuesta → mensajes, regalo, WhatsApp con la consulta).
+- Nunca responder con seguridad algo dudoso: si no hay coincidencia clara → "¿Quisiste preguntar…?"; si no sabe → lo dice,
+  ofrece WhatsApp y guarda la pregunta. Al cambiar el motor, correr el corpus y sumar los casos nuevos.
+- UI: `BotLauncher` (botón "Ayuda", se apaga desde Ajustes con `bot_enabled`) carga `BotPanel` con `lazy` al abrirse.
+  Panel no modal (`role="dialog"`), mensajes en `role="log"` (envolviendo la `<ol>`), Escape cierra y devuelve el foco.
+- `/preguntas-frecuentes`: `<details>`, datos estructurados FAQPage (`utils/faqSchema.js`), enlace en el footer.
+
+## Analítica (GA4 + Meta Pixel)
+- IDs en Ajustes (`store_settings.ga4_id`, `meta_pixel_id`; vacíos = no se mide). Sin IDs no hay aviso de cookies.
+- NADA se carga sin consentimiento: `CookieBanner` (Aceptar / Rechazar del mismo tamaño) guarda la elección en
+  localStorage (`utils/consent.js`, con VERSION para volver a preguntar si cambia lo que se mide). "Preferencias de
+  cookies" en el footer reabre el aviso.
+- `AnalyticsManager` (solo en el Layout de la tienda) llama a `enableAnalytics` / `disableAnalytics` (lib/analytics.js).
+  Al entrar al panel se desmonta y la medición se pausa (`ga-disable-ID`, `fbq('consent','revoke')`): /admin nunca se mide.
+- Páginas vistas: GA4 las registra sola (medición mejorada); Meta a mano (`disablePushState`, `autoConfig` apagado).
+- Eventos: `trackEvent(nombre, lines)` con nombres de GA4 (view_item, add_to_cart, begin_checkout, contact) que se
+  traducen a Meta (ViewContent, AddToCart, InitiateCheckout, Contact). Si no está activa, no hace nada.
 
 ## Reglas de arquitectura
 - Componentes funcionales, uno por archivo, nombre en PascalCase.
@@ -102,7 +160,8 @@ El producto sigue siendo el protagonista: el color acompaña, no compite.
     (los colores exactos del logo). Degradado de marca: `bg-brand` (mango → fucsia).
   - Marca para TEXTO y botones con texto blanco (pasan AA): `mango-deep` #C2410C, `fucsia-deep` #BE185D.
     Degradado de texto: `text-gradient` (mango-deep → fucsia-deep).
-  - Colección Marina: `marina` (decorativo) y `marina-deep` (texto).
+  - Colecciones: cada una elige un tema, `brand` o `marina` (`COLLECTION_THEMES` en `utils/collections.js`,
+    con las clases escritas completas para que Tailwind las genere). `marina` (decorativo) / `marina-deep` (texto).
   - Regla de contraste: mango, fucsia y marina NUNCA como color de texto ni como fondo de texto blanco (no pasan AA).
 - **Tipografía:**
   - Títulos: `font-display` (Comfortaa, redondeada como el logotipo), peso 400–700.

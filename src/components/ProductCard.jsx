@@ -1,5 +1,7 @@
 import { Link } from 'react-router-dom'
 import Reveal from './Reveal.jsx'
+import StockBadge from './product/StockBadge.jsx'
+import { isOutOfStock } from '../utils/stock.js'
 import { formatPrice } from '../utils/formatPrice.js'
 import { toTitleCase } from '../utils/text.js'
 
@@ -19,7 +21,7 @@ function ProductCard({ product }) {
             decoding="async"
             className={`h-full w-full object-cover transition duration-500 ease-soft ${
               hoverImage ? '' : 'group-hover:scale-[1.03]'
-            }`}
+            } ${isOutOfStock(product) ? 'opacity-60' : ''}`}
           />
           {hoverImage && (
             // La segunda foto está encima, invisible, y aparece con un fundido al pasar el mouse
@@ -32,11 +34,15 @@ function ProductCard({ product }) {
               className="absolute inset-0 h-full w-full object-cover opacity-0 transition-opacity duration-500 ease-soft group-hover:opacity-100 group-focus-visible:opacity-100"
             />
           )}
-          {product.isNew && (
-            <span className="absolute left-3 top-3 rounded-full bg-brand-deep px-3 py-1 text-[10px] font-medium uppercase tracking-widest text-white">
-              Nuevo
-            </span>
-          )}
+          {/* Etiquetas apiladas: en tarjetas angostas (celular) no entran una al lado de la otra */}
+          <div className="absolute inset-x-3 top-3 flex flex-col items-start gap-1.5">
+            {product.isNew && (
+              <span className="rounded-full bg-brand-deep px-3 py-1 text-[10px] font-medium uppercase tracking-widest text-white">
+                Nuevo
+              </span>
+            )}
+            <StockBadge product={product} />
+          </div>
         </div>
 
         <h3 className="mt-4 font-sans text-xs font-normal uppercase tracking-widest">{product.name}</h3>

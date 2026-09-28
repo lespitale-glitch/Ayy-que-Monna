@@ -1,7 +1,8 @@
 import { toTitleCase } from '../../utils/text.js'
 
-// Miniatura del producto; si no tiene fotos, un recuadro vacío
-function ProductThumb({ product, className = 'w-14' }) {
+// Miniatura del producto; si no tiene fotos, un recuadro vacío.
+// decorative: cuando el nombre ya está escrito al lado (evita que el lector lo lea dos veces).
+function ProductThumb({ product, className = 'w-14', decorative = false }) {
   const src = product.images[0]
   return (
     <div
@@ -11,7 +12,7 @@ function ProductThumb({ product, className = 'w-14' }) {
         // Los productos ocultos se ven atenuados (solo la foto, así el texto mantiene su contraste)
         <img
           src={src}
-          alt={toTitleCase(product.name)}
+          alt={decorative ? '' : toTitleCase(product.name)}
           loading="lazy"
           className={`h-full w-full object-cover ${product.isVisible ? '' : 'opacity-50'}`}
         />

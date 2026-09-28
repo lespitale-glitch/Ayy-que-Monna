@@ -1,12 +1,13 @@
 import ProductThumb from './ProductThumb.jsx'
 import RowActions from './RowActions.jsx'
 import Switch from './Switch.jsx'
+import StockControl from './StockControl.jsx'
 import { PRODUCT_TOGGLES } from './productToggles.js'
 import { getCategory } from '../../utils/products.js'
 import { formatPrice } from '../../utils/formatPrice.js'
 
 // Vista de tarjetas para móvil y tablet: misma información que la tabla, apilada
-function AdminProductCards({ products, savingIds, onToggle, onDelete }) {
+function AdminProductCards({ products, savingIds, onToggle, onStockChange, onDelete }) {
   return (
     <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2">
       {products.map((product) => {
@@ -23,7 +24,12 @@ function AdminProductCards({ products, savingIds, onToggle, onDelete }) {
                   <span className="text-stone"> · {getCategory(product.category)?.label ?? product.category}</span>
                 </p>
               </div>
-              <RowActions product={product} onDelete={onDelete} disabled={isSaving} />
+              <RowActions item={product} editTo={`/admin/productos/${product.id}`} onDelete={onDelete} disabled={isSaving} />
+            </div>
+
+            <div className="mt-4 flex items-center justify-between gap-3 border-t border-line pt-4">
+              <span className="text-xs uppercase tracking-widest text-stone">Stock</span>
+              <StockControl product={product} onChange={onStockChange} />
             </div>
 
             <div className="mt-4 grid grid-cols-2 gap-3 border-t border-line pt-4">

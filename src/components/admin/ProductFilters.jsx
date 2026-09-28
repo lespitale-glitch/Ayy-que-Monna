@@ -1,5 +1,6 @@
 import { Search } from 'lucide-react'
 import { CATEGORIES } from '../../config.js'
+import { STOCK_FILTERS } from '../../utils/adminFilters.js'
 
 const fieldClass =
   'h-11 w-full border border-line bg-white px-3 text-sm outline-none transition-colors duration-300 ease-soft focus:border-ink'
@@ -10,7 +11,7 @@ function ProductFilters({ filters, onChange }) {
   const update = (field) => (event) => onChange({ ...filters, [field]: event.target.value })
 
   return (
-    <div role="search" className="grid gap-4 sm:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr]">
+    <div role="search" className="grid gap-4 sm:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr_1fr]">
       <div className="sm:col-span-2 lg:col-span-1">
         <label htmlFor="admin-search" className="text-xs uppercase tracking-widest">
           Buscar
@@ -65,6 +66,20 @@ function ProductFilters({ filters, onChange }) {
           <option value="">Todos</option>
           <option value="visible">Visibles</option>
           <option value="hidden">Ocultos</option>
+        </select>
+      </div>
+
+      <div>
+        <label htmlFor="admin-stock" className="text-xs uppercase tracking-widest">
+          Stock
+        </label>
+        <select id="admin-stock" value={filters.stock} onChange={update('stock')} className={`${fieldClass} mt-2`}>
+          <option value="">Todos</option>
+          {STOCK_FILTERS.map((f) => (
+            <option key={f.id} value={f.id}>
+              {f.label}
+            </option>
+          ))}
         </select>
       </div>
     </div>

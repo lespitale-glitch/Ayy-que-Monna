@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { getSelection, getSelectionProducts } from '../../../data/selections.js'
+import { findSelection, getSelectionProducts } from '../../../data/selections.js'
 import { useProducts } from '../../../hooks/useProducts.js'
 import { formatPrice } from '../../../utils/formatPrice.js'
 import { toTitleCase } from '../../../utils/text.js'
@@ -7,10 +7,10 @@ import { toTitleCase } from '../../../utils/text.js'
 const PREVIEW_COUNT = 4
 
 // Columna derecha: algunos productos de la selección activa
-function MegaMenuProducts({ slug, onNavigate }) {
+function MegaMenuProducts({ selections, slug, onNavigate }) {
   const { products } = useProducts()
-  const selection = getSelection(slug)
-  const items = getSelectionProducts(products, slug)
+  const selection = findSelection(selections, slug) ?? selections[0]
+  const items = getSelectionProducts(products, selection)
 
   return (
     <div>
@@ -20,7 +20,7 @@ function MegaMenuProducts({ slug, onNavigate }) {
           <p className="mt-1 text-sm text-stone">{selection.description}</p>
         </div>
         <Link
-          to={`/seleccion/${slug}`}
+          to={`/seleccion/${selection.slug}`}
           onClick={onNavigate}
           className="shrink-0 text-xs uppercase tracking-widest underline decoration-fucsia decoration-2 underline-offset-8"
         >

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, Outlet } from 'react-router-dom'
 import { ExternalLink, LogOut } from 'lucide-react'
 import BrandLogo from '../layout/BrandLogo.jsx'
+import AdminNav from './AdminNav.jsx'
 import { useAuth } from '../../hooks/useAuth.js'
 
 // Estructura común de las páginas protegidas del panel
@@ -51,6 +52,7 @@ function AdminLayout() {
           </div>
         </div>
       </header>
+      <AdminNav />
 
       <main className="mx-auto max-w-7xl px-6 py-12">
         <Outlet />

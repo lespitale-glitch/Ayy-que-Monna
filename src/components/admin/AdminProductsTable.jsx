@@ -1,12 +1,13 @@
 import ProductThumb from './ProductThumb.jsx'
 import RowActions from './RowActions.jsx'
 import Switch from './Switch.jsx'
+import StockControl from './StockControl.jsx'
 import { PRODUCT_TOGGLES } from './productToggles.js'
 import { getCategory } from '../../utils/products.js'
 import { formatPrice } from '../../utils/formatPrice.js'
 
 // Vista de tabla para pantallas grandes (en móvil se usa AdminProductCards)
-function AdminProductsTable({ products, savingIds, onToggle, onDelete }) {
+function AdminProductsTable({ products, savingIds, onToggle, onStockChange, onDelete }) {
   return (
     <table className="w-full border-collapse text-left text-sm">
       <caption className="sr-only">Productos del catálogo</caption>
@@ -20,6 +21,9 @@ function AdminProductsTable({ products, savingIds, onToggle, onDelete }) {
           </th>
           <th scope="col" className="px-4 py-3 text-right font-normal">
             Precio
+          </th>
+          <th scope="col" className="px-4 py-3 font-normal">
+            Stock
           </th>
           {PRODUCT_TOGGLES.map((t) => (
             <th key={t.key} scope="col" className="px-3 py-3 text-center font-normal">
@@ -47,6 +51,9 @@ function AdminProductsTable({ products, savingIds, onToggle, onDelete }) {
               </th>
               <td className="px-4 py-3">{getCategory(product.category)?.label ?? product.category}</td>
               <td className="px-4 py-3 text-right tabular-nums">{formatPrice(product.price)}</td>
+              <td className="px-4 py-3">
+                <StockControl product={product} onChange={onStockChange} />
+              </td>
               {PRODUCT_TOGGLES.map((t) => (
                 <td key={t.key} className="px-3 py-3 text-center">
                   <Switch
@@ -59,7 +66,7 @@ function AdminProductsTable({ products, savingIds, onToggle, onDelete }) {
                 </td>
               ))}
               <td className="py-3 pl-4">
-                <RowActions product={product} onDelete={onDelete} disabled={isSaving} />
+                <RowActions item={product} editTo={`/admin/productos/${product.id}`} onDelete={onDelete} disabled={isSaving} />
               </td>
             </tr>
           )

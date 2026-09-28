@@ -1,30 +1,26 @@
-import { useEffect, useState } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useState } from 'react'
 import AdminProductCards from '../../components/admin/AdminProductCards.jsx'
 import AdminProductsHeader from '../../components/admin/AdminProductsHeader.jsx'
 import AdminProductsTable from '../../components/admin/AdminProductsTable.jsx'
 import ConfirmDialog from '../../components/admin/ConfirmDialog.jsx'
+import FeedbackMessage from '../../components/admin/FeedbackMessage.jsx'
 import ProductFilters from '../../components/admin/ProductFilters.jsx'
+import StockAlertBanner from '../../components/admin/StockAlertBanner.jsx'
 import { useAdminProducts } from '../../hooks/useAdminProducts.js'
+import { useFlashMessage } from '../../hooks/useFlashMessage.js'
 import { filterAdminProducts } from '../../utils/adminFilters.js'
 
-const INITIAL_FILTERS = { query: '', category: '', visibility: '' }
+const INITIAL_FILTERS = { query: '', category: '', visibility: '', stock: '' }
 
 function AdminProducts() {
-  const { products, status, reload, savingIds, feedback, updateFields, removeProduct } = useAdminProducts()
+  const { products, status, reload, savingIds, feedback, updateFields, changeStock, removeProduct } = useAdminProducts()
   const [filters, setFilters] = useState(INITIAL_FILTERS)
   // Producto que se está por eliminar (abre el diálogo de confirmación)
   const [toDelete, setToDelete] = useState(null)
 
-  // Mensaje que deja el formulario al guardar (navigate con state). Lo leemos una vez
-  // y lo borramos del historial para que no vuelva a aparecer al recargar.
-  const location = useLocation()
-  const navigate = useNavigate()
-  const [flash] = useState(location.state?.flash ?? null)
-  useEffect(() => {
-    if (location.state?.flash) navigate(location.pathname, { replace: true, state: null })
-  }, [location, navigate])
-  const message = feedback ?? (flash ? { type: 'success', text: flash } : null)
+  // Mensaje que deja el formulario al guardar ("Se guardó correctamente…")
+  const flash = useFlashMessage()
+  const message = feedback ?? flash
 
   const visibleProducts = filterAdminProducts(products, filters)
   const hiddenCount = products.filter((p) => !p.isVisible).length
@@ -57,27 +53,19 @@ function AdminProducts() {
     )
   }
 
-  const listProps = { products: visibleProducts, savingIds, onToggle: handleToggle, onDelete: setToDelete }
+  const listProps = { products: visibleProducts, savingIds, onToggle: handleToggle, onStockChange: changeStock, onDelete: setToDelete }
 
   return (
     <section>
       <AdminProductsHeader total={products.length} hiddenCount={hiddenCount} />
 
+      <StockAlertBanner products={products} onShow={(stock) => setFilters({ ...INITIAL_FILTERS, stock })} />
+
       <div className="mt-10">
         <ProductFilters filters={filters} onChange={setFilters} />
       </div>
 
-      {/* aria-live: los lectores de pantalla anuncian cada resultado sin mover el foco */}
-      <div aria-live="polite" className="mt-6 min-h-6">
-        {message && (
-          <p
-            role={message.type === 'error' ? 'alert' : undefined}
-            className={`border-l-2 px-4 py-2 text-sm ${message.type === 'error' ? 'border-ink bg-white' : 'border-fucsia'}`}
-          >
-            {message.text}
-          </p>
-        )}
-      </div>
+      <FeedbackMessage message={message} />
 
       <p className="mb-4 mt-6 text-xs uppercase tracking-widest text-stone">
         Mostrando {visibleProducts.length} de {products.length}

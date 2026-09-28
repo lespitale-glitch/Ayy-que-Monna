@@ -3,13 +3,15 @@ import { Link } from 'react-router-dom'
 import ProductFields from './ProductFields.jsx'
 import ImageUploader from '../ImageUploader.jsx'
 import Switch from '../Switch.jsx'
+import CollectionsField from './CollectionsField.jsx'
+import StockFields from './StockFields.jsx'
 import UnsavedChangesDialog from '../UnsavedChangesDialog.jsx'
 import { useUnsavedChangesGuard } from '../../../hooks/useUnsavedChangesGuard.js'
 import { slugify } from '../../../utils/slugify.js'
 import { isFormDirty, validateProduct } from '../../../utils/productForm.js'
 import { FIELD_LABELS, FLAGS, PHASE_LABEL } from './formConfig.js'
 
-function ProductForm({ initialValues, isNew, phase, saveError, onSubmit, onFieldEdit }) {
+function ProductForm({ initialValues, isNew, collections, phase, saveError, onSubmit, onFieldEdit }) {
   const [values, setValues] = useState(initialValues)
   // Mientras no se edite el id a mano, se sigue generando a partir del nombre
   const [idTouched, setIdTouched] = useState(!isNew)
@@ -103,6 +105,15 @@ function ProductForm({ initialValues, isNew, phase, saveError, onSubmit, onField
               ))}
             </div>
           </fieldset>
+
+          <StockFields values={values} errors={errors} onField={onField} setField={setField} disabled={isBusy} />
+
+          <CollectionsField
+            collections={collections}
+            selected={values.collections}
+            onChange={(ids) => setField('collections', ids)}
+            disabled={isBusy}
+          />
         </div>
       </div>
 

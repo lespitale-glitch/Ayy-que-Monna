@@ -7,7 +7,7 @@
 -- Modelo de seguridad (RLS = Row Level Security):
 --   · Cualquier visitante puede LEER los productos visibles.
 --   · Solo la administradora (registrada en public.admins) puede crear, editar,
---     ocultar, borrar y reordenar productos, y subir/borrar fotos del Storage.
+--     ocultar, borrar y reordenar productos y colecciones, y subir/borrar fotos del Storage.
 -- La "anon key" del frontend es pública por diseño: lo que protege los datos son estas políticas.
 -- =============================================================================
 
@@ -29,7 +29,7 @@ create table if not exists public.products (
   images      text[] not null default '{}',
   is_featured boolean not null default false,
   is_new      boolean not null default false,
-  collection  text check (collection in ('marina')),        -- null = sin colección
+  collections text[] not null default '{}',                 -- ids de colecciones (sección 7)
   is_visible  boolean not null default true,                -- false = oculto en la tienda
   position    integer not null default 0,                   -- orden del catálogo (drag & drop)
   created_at  timestamptz not null default now(),
@@ -198,3 +198,529 @@ create policy "Admin: borrar fotos"
   on storage.objects for delete
   to authenticated
   using (bucket_id = 'products' and (select public.is_admin()));
+
+
+-- -----------------------------------------------------------------------------
+-- 6. Ajustes de la tienda (una sola fila, editable desde /admin/ajustes)
+-- -----------------------------------------------------------------------------
+create table if not exists public.store_settings (
+  -- Siempre id = 1: la tabla tiene exactamente una fila
+  id               smallint primary key default 1 check (id = 1),
+  -- Código de país + área + número, sin "+" ni espacios (ej. 5491112345678)
+  whatsapp_number  text not null check (whatsapp_number ~ '^[0-9]{10,15}$'),
+  -- Usuario de Instagram sin "@"
+  instagram_handle text not null default '' check (instagram_handle ~ '^[A-Za-z0-9._]{0,30}$'),
+  shipping_enabled boolean not null default true,         -- ¿se hacen envíos?
+  shipping_note    text not null default '' check (length(shipping_note) <= 300),
+  shipping_from    integer check (shipping_from is null or shipping_from >= 0), -- "desde $…" (opcional)
+  pickup_points    text[] not null default '{}'           -- puntos de retiro gratis
+                   check (cardinality(pickup_points) <= 10),
+  updated_at       timestamptz not null default now()
+);
+
+drop trigger if exists store_settings_set_updated_at on public.store_settings;
+create trigger store_settings_set_updated_at
+  before update on public.store_settings
+  for each row execute function public.set_updated_at();
+
+-- Valores iniciales (los del sitio original). "on conflict do nothing": no pisa lo que se
+-- haya cambiado desde el panel si este archivo se vuelve a ejecutar.
+insert into public.store_settings (id, whatsapp_number, instagram_handle, shipping_note, shipping_from, pickup_points)
+values (
+  1,
+  '5491112345678', -- ⚠️ número de prueba: cambiarlo desde /admin/ajustes
+  'ayyquemonna',
+  'Enviamos a todo el país. El costo del envío está a cargo de quien compra y varía según la ubicación.',
+  6000,
+  array['Ballester', 'Carapachay', 'Belgrano']
+)
+on conflict (id) do nothing;
+
+alter table public.store_settings enable row level security;
+grant select on public.store_settings to anon, authenticated;
+grant update on public.store_settings to authenticated;
+
+drop policy if exists "Público: ver ajustes" on public.store_settings;
+create policy "Público: ver ajustes"
+  on public.store_settings for select
+  to anon, authenticated
+  using (true);
+
+drop policy if exists "Admin: editar ajustes" on public.store_settings;
+create policy "Admin: editar ajustes"
+  on public.store_settings for update
+  to authenticated
+  using ((select public.is_admin()))
+  with check ((select public.is_admin()));
+
+
+-- -----------------------------------------------------------------------------
+-- 7. Colecciones (editables desde /admin/colecciones)
+-- -----------------------------------------------------------------------------
+-- Un producto puede estar en varias colecciones: products.collections guarda sus ids.
+create table if not exists public.collections (
+  id           text primary key
+               check (id ~ '^[a-z0-9]+(-[a-z0-9]+)*$'),
+  name         text not null check (length(trim(name)) between 1 and 40),
+  description  text not null default '' check (length(description) <= 300),
+  -- Color de acento: 'brand' (naranja y fucsia) o 'marina' (turquesa)
+  theme        text not null default 'brand' check (theme in ('brand', 'marina')),
+  show_on_home boolean not null default true,   -- sección propia en el inicio
+  is_visible   boolean not null default true,   -- false = oculta en la tienda
+  position     integer not null default 0,
+  created_at   timestamptz not null default now(),
+  updated_at   timestamptz not null default now(),
+  -- Estas direcciones ya las usan las selecciones automáticas (/seleccion/novedades…)
+  constraint collections_reserved_id
+    check (id not in ('novedades', 'destacados', 'dorados', 'plateados'))
+);
+
+drop trigger if exists collections_set_updated_at on public.collections;
+create trigger collections_set_updated_at
+  before update on public.collections
+  for each row execute function public.set_updated_at();
+
+-- Bases creadas con la versión anterior del archivo no tienen esta columna
+alter table public.products add column if not exists collections text[] not null default '{}';
+
+-- Migración desde la versión anterior (columna fija products.collection = 'marina').
+-- Solo hace algo si esa columna todavía existe; después la borra.
+do $$
+begin
+  if exists (
+    select 1 from information_schema.columns
+    where table_schema = 'public' and table_name = 'products' and column_name = 'collection'
+  ) then
+    insert into public.collections (id, name, description, theme)
+    select distinct
+      p.collection,
+      initcap(p.collection),
+      case when p.collection = 'marina'
+        then 'Perlas, conchas y destellos turquesa para llevar el océano con vos.' else '' end,
+      case when p.collection = 'marina' then 'marina' else 'brand' end
+    from public.products as p
+    where p.collection is not null
+    on conflict (id) do nothing;
+
+    update public.products
+    set collections = array[collection]
+    where collection is not null and cardinality(collections) = 0;
+
+    alter table public.products drop column collection;
+  end if;
+end;
+$$;
+
+-- Un producto solo puede apuntar a colecciones que existen
+create or replace function public.check_product_collections()
+returns trigger
+language plpgsql
+set search_path = ''
+as $$
+begin
+  if exists (
+    select 1 from unnest(new.collections) as c (id)
+    where not exists (select 1 from public.collections as col where col.id = c.id)
+  ) then
+    raise exception 'El producto usa una colección que no existe' using errcode = '23503';
+  end if;
+  return new;
+end;
+$$;
+
+drop trigger if exists products_check_collections on public.products;
+create trigger products_check_collections
+  before insert or update of collections on public.products
+  for each row execute function public.check_product_collections();
+
+-- Al borrar una colección, se quita sola de los productos que la tenían
+create or replace function public.remove_deleted_collection()
+returns trigger
+language plpgsql
+set search_path = ''
+as $$
+begin
+  update public.products
+  set collections = array_remove(collections, old.id)
+  where old.id = any (collections);
+  return old;
+end;
+$$;
+
+drop trigger if exists collections_remove_from_products on public.collections;
+create trigger collections_remove_from_products
+  after delete on public.collections
+  for each row execute function public.remove_deleted_collection();
+
+alter table public.collections enable row level security;
+grant select on public.collections to anon, authenticated;
+grant insert, update, delete on public.collections to authenticated;
+
+drop policy if exists "Público: ver colecciones visibles" on public.collections;
+create policy "Público: ver colecciones visibles"
+  on public.collections for select
+  to anon, authenticated
+  using (is_visible);
+
+drop policy if exists "Admin: ver todas las colecciones" on public.collections;
+create policy "Admin: ver todas las colecciones"
+  on public.collections for select
+  to authenticated
+  using ((select public.is_admin()));
+
+drop policy if exists "Admin: crear colecciones" on public.collections;
+create policy "Admin: crear colecciones"
+  on public.collections for insert
+  to authenticated
+  with check ((select public.is_admin()));
+
+drop policy if exists "Admin: editar colecciones" on public.collections;
+create policy "Admin: editar colecciones"
+  on public.collections for update
+  to authenticated
+  using ((select public.is_admin()))
+  with check ((select public.is_admin()));
+
+drop policy if exists "Admin: borrar colecciones" on public.collections;
+create policy "Admin: borrar colecciones"
+  on public.collections for delete
+  to authenticated
+  using ((select public.is_admin()));
+
+-- Guarda el orden de las colecciones (igual que reorder_products)
+create or replace function public.reorder_collections(collection_ids text[])
+returns void
+language plpgsql
+security invoker
+set search_path = ''
+as $$
+begin
+  if not public.is_admin() then
+    raise exception 'No autorizado' using errcode = '42501';
+  end if;
+
+  update public.collections as c
+  set position = o.ord
+  from unnest(collection_ids) with ordinality as o (id, ord)
+  where c.id = o.id;
+end;
+$$;
+
+revoke execute on function public.reorder_collections(text[]) from public, anon;
+grant execute on function public.reorder_collections(text[]) to authenticated;
+
+-- Define QUÉ productos tiene una colección, en una sola operación:
+-- la agrega a los de la lista y la quita de los demás.
+create or replace function public.set_collection_products(collection_id text, product_ids text[])
+returns void
+language plpgsql
+security invoker
+set search_path = ''
+as $$
+begin
+  if not public.is_admin() then
+    raise exception 'No autorizado' using errcode = '42501';
+  end if;
+
+  update public.products
+  set collections = array_remove(collections, collection_id)
+  where collection_id = any (collections) and not (id = any (product_ids));
+
+  update public.products
+  set collections = collections || collection_id
+  where id = any (product_ids) and not (collection_id = any (collections));
+end;
+$$;
+
+revoke execute on function public.set_collection_products(text, text[]) from public, anon;
+grant execute on function public.set_collection_products(text, text[]) to authenticated;
+
+
+
+-- -----------------------------------------------------------------------------
+-- 8. Preguntas frecuentes (bot y página /preguntas-frecuentes)
+-- -----------------------------------------------------------------------------
+create table if not exists public.faqs (
+  id         uuid primary key default gen_random_uuid(),
+  question   text not null check (length(trim(question)) between 3 and 200),
+  -- Puede incluir {envios}, {retiro} e {instagram}: la tienda los completa con los Ajustes
+  answer     text not null check (length(trim(answer)) between 1 and 1000),
+  -- Palabras o frases con las que la gente suele preguntar esto (ayudan al bot a encontrarla)
+  keywords   text[] not null default '{}' check (cardinality(keywords) <= 30),
+  is_visible boolean not null default true,
+  position   integer not null default 0,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+drop trigger if exists faqs_set_updated_at on public.faqs;
+create trigger faqs_set_updated_at
+  before update on public.faqs
+  for each row execute function public.set_updated_at();
+
+alter table public.faqs enable row level security;
+grant select on public.faqs to anon, authenticated;
+grant insert, update, delete on public.faqs to authenticated;
+
+drop policy if exists "Público: ver preguntas visibles" on public.faqs;
+create policy "Público: ver preguntas visibles"
+  on public.faqs for select
+  to anon, authenticated
+  using (is_visible);
+
+drop policy if exists "Admin: ver todas las preguntas" on public.faqs;
+create policy "Admin: ver todas las preguntas"
+  on public.faqs for select
+  to authenticated
+  using ((select public.is_admin()));
+
+drop policy if exists "Admin: crear preguntas" on public.faqs;
+create policy "Admin: crear preguntas"
+  on public.faqs for insert
+  to authenticated
+  with check ((select public.is_admin()));
+
+drop policy if exists "Admin: editar preguntas" on public.faqs;
+create policy "Admin: editar preguntas"
+  on public.faqs for update
+  to authenticated
+  using ((select public.is_admin()))
+  with check ((select public.is_admin()));
+
+drop policy if exists "Admin: borrar preguntas" on public.faqs;
+create policy "Admin: borrar preguntas"
+  on public.faqs for delete
+  to authenticated
+  using ((select public.is_admin()));
+
+create or replace function public.reorder_faqs(faq_ids uuid[])
+returns void
+language plpgsql
+security invoker
+set search_path = ''
+as $$
+begin
+  if not public.is_admin() then
+    raise exception 'No autorizado' using errcode = '42501';
+  end if;
+
+  update public.faqs as f
+  set position = o.ord
+  from unnest(faq_ids) with ordinality as o (id, ord)
+  where f.id = o.id;
+end;
+$$;
+
+revoke execute on function public.reorder_faqs(uuid[]) from public, anon;
+grant execute on function public.reorder_faqs(uuid[]) to authenticated;
+
+
+-- -----------------------------------------------------------------------------
+-- 9. Preguntas que el bot no supo responder (anónimas)
+-- -----------------------------------------------------------------------------
+-- Solo se guarda el texto de la pregunta y la fecha: nada que identifique a la persona
+-- (ni usuario, ni IP). Cualquiera puede AGREGAR; solo la administradora puede verlas.
+create table if not exists public.bot_questions (
+  id          bigint generated always as identity primary key,
+  question    text not null check (length(question) between 2 and 300),
+  times_asked integer not null default 1 check (times_asked >= 1),
+  is_resolved boolean not null default false,
+  created_at  timestamptz not null default now(),
+  last_asked  timestamptz not null default now()
+);
+
+-- Antes de guardar: frena abusos y junta las preguntas repetidas.
+-- "security definer" le permite contar y actualizar filas que el visitante no puede ver.
+create or replace function public.before_bot_question()
+returns trigger
+language plpgsql
+security definer
+set search_path = ''
+as $$
+begin
+  -- Límite general contra el spam: como máximo 30 preguntas nuevas por minuto
+  if (select count(*) from public.bot_questions where last_asked > now() - interval '1 minute') >= 30 then
+    raise exception 'Demasiadas preguntas seguidas' using errcode = '54000';
+  end if;
+
+  -- Si la misma pregunta ya está pendiente, sumamos una vez más en lugar de repetirla
+  update public.bot_questions
+  set times_asked = times_asked + 1, last_asked = now()
+  where not is_resolved and lower(trim(question)) = lower(trim(new.question));
+  if found then
+    return null; -- null = no insertar la fila nueva
+  end if;
+
+  new.question := trim(new.question);
+  new.times_asked := 1;
+  new.is_resolved := false;
+  return new;
+end;
+$$;
+
+drop trigger if exists bot_questions_before_insert on public.bot_questions;
+create trigger bot_questions_before_insert
+  before insert on public.bot_questions
+  for each row execute function public.before_bot_question();
+
+alter table public.bot_questions enable row level security;
+-- Solo se da permiso sobre la columna "question": el resto lo completa la base
+grant insert (question) on public.bot_questions to anon, authenticated;
+grant select, update, delete on public.bot_questions to authenticated;
+
+drop policy if exists "Público: enviar preguntas sin respuesta" on public.bot_questions;
+create policy "Público: enviar preguntas sin respuesta"
+  on public.bot_questions for insert
+  to anon, authenticated
+  with check (true);
+
+drop policy if exists "Admin: ver preguntas sin respuesta" on public.bot_questions;
+create policy "Admin: ver preguntas sin respuesta"
+  on public.bot_questions for select
+  to authenticated
+  using ((select public.is_admin()));
+
+drop policy if exists "Admin: editar preguntas sin respuesta" on public.bot_questions;
+create policy "Admin: editar preguntas sin respuesta"
+  on public.bot_questions for update
+  to authenticated
+  using ((select public.is_admin()))
+  with check ((select public.is_admin()));
+
+drop policy if exists "Admin: borrar preguntas sin respuesta" on public.bot_questions;
+create policy "Admin: borrar preguntas sin respuesta"
+  on public.bot_questions for delete
+  to authenticated
+  using ((select public.is_admin()));
+
+-- Interruptor del bot en Ajustes
+alter table public.store_settings add column if not exists bot_enabled boolean not null default true;
+
+
+
+-- -----------------------------------------------------------------------------
+-- 10. Inventario y avisos de stock bajo
+-- -----------------------------------------------------------------------------
+-- stock_mode: 'none' = sin control (siempre disponible) · 'tracked' = con stock · 'on_demand' = a pedido
+alter table public.products add column if not exists stock_mode text not null default 'none';
+alter table public.products add column if not exists stock integer not null default 0;
+-- Con stock igual o menor a este número, el producto cuenta como "stock bajo" (aviso por panel y email)
+alter table public.products add column if not exists low_stock_threshold integer not null default 2;
+
+alter table public.products drop constraint if exists products_stock_mode_check;
+alter table public.products add constraint products_stock_mode_check check (stock_mode in ('none', 'tracked', 'on_demand'));
+alter table public.products drop constraint if exists products_stock_check;
+alter table public.products add constraint products_stock_check check (stock between 0 and 100000);
+alter table public.products drop constraint if exists products_low_stock_threshold_check;
+alter table public.products add constraint products_low_stock_threshold_check check (low_stock_threshold between 0 and 1000);
+
+-- Suma o resta unidades en UNA operación (botones −1 / +1 del panel).
+-- Si dos pestañas restan a la vez, ninguna pisa a la otra. Nunca baja de 0.
+create or replace function public.adjust_stock(product_id text, delta integer)
+returns integer
+language plpgsql
+security invoker
+set search_path = ''
+as $$
+declare
+  new_stock integer;
+begin
+  if not public.is_admin() then
+    raise exception 'No autorizado' using errcode = '42501';
+  end if;
+
+  update public.products
+  set stock = greatest(stock + delta, 0)
+  where id = product_id
+  returning stock into new_stock;
+
+  if new_stock is null then
+    raise exception 'No existe el producto %', product_id using errcode = 'P0002';
+  end if;
+  return new_stock;
+end;
+$$;
+
+revoke execute on function public.adjust_stock(text, integer) from public, anon;
+grant execute on function public.adjust_stock(text, integer) to authenticated;
+
+-- Avisos pendientes de enviar por email (los lee la función stock-alert, ver README)
+create table if not exists public.stock_alerts (
+  id           bigint generated always as identity primary key,
+  product_id   text not null,
+  product_name text not null,
+  kind         text not null check (kind in ('low', 'out')),  -- 'low' = stock bajo · 'out' = agotado
+  stock        integer not null,
+  threshold    integer not null,
+  created_at   timestamptz not null default now()
+);
+
+-- Cuando el stock CRUZA el límite (no cada vez que cambia), se agrega un aviso.
+-- Así, restar de a uno por debajo del límite no manda un email por cada unidad.
+create or replace function public.queue_stock_alert()
+returns trigger
+language plpgsql
+security definer  -- escribe en stock_alerts, que nadie más puede modificar
+set search_path = ''
+as $$
+declare
+  was_tracked boolean := tg_op = 'UPDATE' and old.stock_mode = 'tracked';
+begin
+  if new.stock_mode <> 'tracked' then
+    return new;
+  end if;
+
+  if new.stock = 0 and (not was_tracked or old.stock > 0) then
+    insert into public.stock_alerts (product_id, product_name, kind, stock, threshold)
+    values (new.id, new.name, 'out', new.stock, new.low_stock_threshold);
+  elsif new.stock > 0 and new.stock <= new.low_stock_threshold
+    and (not was_tracked or old.stock > old.low_stock_threshold) then
+    insert into public.stock_alerts (product_id, product_name, kind, stock, threshold)
+    values (new.id, new.name, 'low', new.stock, new.low_stock_threshold);
+  end if;
+  return new;
+end;
+$$;
+
+drop trigger if exists products_queue_stock_alert on public.products;
+create trigger products_queue_stock_alert
+  after insert or update of stock, stock_mode, low_stock_threshold on public.products
+  for each row execute function public.queue_stock_alert();
+
+alter table public.stock_alerts enable row level security;
+grant select, delete on public.stock_alerts to authenticated;
+
+drop policy if exists "Admin: ver avisos de stock" on public.stock_alerts;
+create policy "Admin: ver avisos de stock"
+  on public.stock_alerts for select
+  to authenticated
+  using ((select public.is_admin()));
+
+drop policy if exists "Admin: borrar avisos de stock" on public.stock_alerts;
+create policy "Admin: borrar avisos de stock"
+  on public.stock_alerts for delete
+  to authenticated
+  using ((select public.is_admin()));
+
+-- Ajuste de la tienda: mostrar "Últimas unidades" cuando el stock está bajo
+alter table public.store_settings add column if not exists show_low_stock boolean not null default true;
+
+
+
+-- -----------------------------------------------------------------------------
+-- 11. Analítica (Google Analytics 4 y Meta Pixel), editable desde /admin/ajustes
+-- -----------------------------------------------------------------------------
+-- Son identificadores públicos (igual aparecen en el código de cualquier página que los usa).
+-- Vacío = no se usa. Los scripts solo se cargan si la visita acepta las cookies.
+alter table public.store_settings add column if not exists ga4_id text not null default '';
+alter table public.store_settings add column if not exists meta_pixel_id text not null default '';
+
+alter table public.store_settings drop constraint if exists store_settings_ga4_id_check;
+alter table public.store_settings add constraint store_settings_ga4_id_check
+  check (ga4_id = '' or ga4_id ~ '^G-[A-Z0-9]{4,20}$');
+alter table public.store_settings drop constraint if exists store_settings_meta_pixel_id_check;
+alter table public.store_settings add constraint store_settings_meta_pixel_id_check
+  check (meta_pixel_id = '' or meta_pixel_id ~ '^[0-9]{5,20}$');
+
+-- Avisa a la API de Supabase que la estructura cambió (columnas nuevas o borradas)
+notify pgrst, 'reload schema';

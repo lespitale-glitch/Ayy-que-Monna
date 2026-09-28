@@ -1,4 +1,3 @@
-import { WHATSAPP_NUMBER } from '../config.js'
 import { formatPrice } from './formatPrice.js'
 
 // Las esclavas (y cualquier producto cuya descripción hable de "color") se venden
@@ -11,7 +10,7 @@ function needsColor(product) {
 export function buildOrderMessage(lines, total) {
   const detail = lines.map(({ product, quantity }) =>
     [
-      `• *${product.name}*${needsColor(product) ? ' (Indicar color deseado)' : ''}`,
+      `• *${product.name}*${product.stockMode === 'on_demand' ? ' (a pedido)' : ''}${needsColor(product) ? ' (Indicar color deseado)' : ''}`,
       `  Cantidad: ${quantity} × ${formatPrice(product.price)} = ${formatPrice(product.price * quantity)}`,
     ].join('\n'),
   )
@@ -27,8 +26,10 @@ export function buildOrderMessage(lines, total) {
   ].join('\n')
 }
 
+// El número llega de los ajustes de la tienda (useSettings), editables desde el panel.
 // encodeURIComponent convierte espacios, saltos de línea y acentos
 // en un formato seguro para usar dentro de una URL.
-export function buildWhatsAppUrl(message) {
-  return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`
+export function buildWhatsAppUrl(number, message) {
+  const base = `https://wa.me/${number}`
+  return message ? `${base}?text=${encodeURIComponent(message)}` : base
 }

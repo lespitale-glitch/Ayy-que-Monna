@@ -1,5 +1,6 @@
 // Diapositivas del Hero Slider. Las fotos son los banners originales de la marca,
 // optimizados con `npm run brand:hero` (design/hero → src/assets/hero).
+import { instagramUrl, joinList } from '../utils/settings.js'
 
 // import.meta.glob (de Vite) importa todos los archivos que coinciden con el patrón.
 // Devuelve un objeto { ruta: url }, que convertimos a { 'banner8-lg': url, ... }.
@@ -12,7 +13,8 @@ const photo = (name) => ({
   srcSet: `${images[`${name}-sm`]} 800w, ${images[`${name}-lg`]} 1600w`,
 })
 
-export const HERO_SLIDES = [
+// Diapositivas fijas. Las de retiro e Instagram dependen de los ajustes (ver buildHeroSlides).
+const BASE_SLIDES = [
   {
     id: 'inicio',
     image: photo('banner8'),
@@ -76,22 +78,33 @@ export const HERO_SLIDES = [
     highlight: 'favoritos',
     cta: { label: 'Ver destacados', to: '/seleccion/destacados' },
   },
-  {
-    id: 'retiro',
-    image: photo('banner7'),
-    alt: '',
-    eyebrow: 'Envíos y retiro',
-    title: 'Retiro gratis en',
-    highlight: 'Ballester, Carapachay y Belgrano',
-    cta: { label: 'Elegí tu favorito', to: '/tienda' },
-  },
-  {
-    id: 'instagram',
-    image: photo('banner6'),
-    alt: '',
-    eyebrow: '@ayyquemonna',
-    title: 'Ayy, qué',
-    highlight: 'monna',
-    cta: { label: 'Seguinos en Instagram', href: 'https://www.instagram.com/ayyquemonna' },
-  },
 ]
+
+// Agrega al final las diapositivas que dependen de los ajustes de la tienda.
+// Si no hay puntos de retiro o usuario de Instagram, esa diapositiva no aparece.
+export function buildHeroSlides({ pickupPoints, instagramHandle }) {
+  const slides = [...BASE_SLIDES]
+  if (pickupPoints.length > 0) {
+    slides.push({
+      id: 'retiro',
+      image: photo('banner7'),
+      alt: '',
+      eyebrow: 'Envíos y retiro',
+      title: 'Retiro gratis en',
+      highlight: joinList(pickupPoints),
+      cta: { label: 'Elegí tu favorito', to: '/tienda' },
+    })
+  }
+  if (instagramHandle) {
+    slides.push({
+      id: 'instagram',
+      image: photo('banner6'),
+      alt: '',
+      eyebrow: `@${instagramHandle}`,
+      title: 'Ayy, qué',
+      highlight: 'monna',
+      cta: { label: 'Seguinos en Instagram', href: instagramUrl(instagramHandle) },
+    })
+  }
+  return slides
+}

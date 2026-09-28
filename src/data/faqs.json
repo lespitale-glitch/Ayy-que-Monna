@@ -1,0 +1,32 @@
+[
+  {
+    "id": "5b0e4a1c-6f1a-4c55-9c0e-0a1f7f3b9a01",
+    "question": "¿De qué materiales son los accesorios?",
+    "answer": "Por ahora, únicamente acero quirúrgico.",
+    "keywords": ["material", "materiales", "acero", "quirurgico", "alergia", "hipoalergenico", "se oxida", "se pone negro", "plata", "oro", "baño", "de que estan hechos"]
+  },
+  {
+    "id": "5b0e4a1c-6f1a-4c55-9c0e-0a1f7f3b9a02",
+    "question": "¿Cómo se realizan los envíos?",
+    "answer": "El envío lo charlamos al confirmar la compra, para ofrecerte la opción más cómoda para vos: hacemos envíos con un costo agregado y también tenemos puntos de retiro gratuitos en {retiro}.",
+    "keywords": ["envio", "envios", "enviar", "mandan", "correo", "llega", "demora", "cuanto tarda", "costo de envio", "domicilio", "interior", "provincia", "retiro", "retirar", "punto de retiro", "zona"]
+  },
+  {
+    "id": "5b0e4a1c-6f1a-4c55-9c0e-0a1f7f3b9a03",
+    "question": "¿Cuáles son los medios de pago aceptados?",
+    "answer": "Transferencia bancaria.",
+    "keywords": ["pago", "pagar", "medios de pago", "transferencia", "tarjeta", "efectivo", "mercado pago", "cuotas", "alias", "cbu", "debito", "credito"]
+  },
+  {
+    "id": "5b0e4a1c-6f1a-4c55-9c0e-0a1f7f3b9a04",
+    "question": "¿Cómo debo cuidar mis accesorios para que no pierdan brillo?",
+    "answer": "Te recomendamos evitar el contacto directo con perfumes, cremas o líquidos corrosivos. Guardalos siempre de forma individual, en lugares secos y lejos de la humedad, para mantener su brillo intacto por años.",
+    "keywords": ["cuidar", "cuidado", "cuidados", "limpiar", "brillo", "mojar", "agua", "ducha", "pileta", "perfume", "crema", "guardar", "humedad", "pierde el color"]
+  },
+  {
+    "id": "5b0e4a1c-6f1a-4c55-9c0e-0a1f7f3b9a05",
+    "question": "¿Cómo hago un pedido?",
+    "answer": "Agregá los productos que te gusten al carrito y tocá \"Finalizar pedido por WhatsApp\". Se abre un mensaje con tu pedido listo para enviar, y por ahí coordinamos el pago y el envío.",
+    "keywords": ["comprar", "compra", "pedido", "pedir", "carrito", "como compro", "encargar", "hacer un pedido", "reservar"]
+  }
+]

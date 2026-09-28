@@ -6,29 +6,31 @@ import {
   updateProduct,
   uploadProductImage,
 } from '../services/productsService.js'
+import { fetchAdminCollections } from '../services/collectionsService.js'
 import { getAdminErrorMessage } from '../utils/adminErrors.js'
 import { toProduct } from '../utils/productForm.js'
 
-// Carga (si se edita) y guarda un producto.
+// Carga el producto (si se edita) y la lista de colecciones, y guarda.
 // id === undefined → producto nuevo.
 export function useProductEditor(id) {
   const isNew = id === undefined
   // status: 'loading' | 'ready' | 'notfound' | 'error'
-  const [load, setLoad] = useState({ status: isNew ? 'ready' : 'loading', product: null })
+  const [load, setLoad] = useState({ status: 'loading', product: null, collections: [] })
   // phase: 'idle' | 'uploading' | 'saving'
   const [phase, setPhase] = useState('idle')
   const [saveError, setSaveError] = useState(null) // { message, field? }
 
   useEffect(() => {
-    if (isNew) return
     let ignore = false
-    fetchAdminProduct(id)
-      .then((product) => {
-        if (!ignore) setLoad({ status: product ? 'ready' : 'notfound', product })
+    // Las colecciones hacen falta también para un producto nuevo (casillas del formulario)
+    Promise.all([isNew ? null : fetchAdminProduct(id), fetchAdminCollections()])
+      .then(([product, collections]) => {
+        if (!ignore) setLoad({ status: isNew || product ? 'ready' : 'notfound', product, collections })
       })
       .catch((error) => {
+        if (ignore) return // ya se salió de la página: no es un error real
         console.error(error)
-        if (!ignore) setLoad({ status: 'error', product: null })
+        setLoad({ status: 'error', product: null, collections: [] })
       })
     return () => {
       ignore = true
@@ -86,5 +88,5 @@ export function useProductEditor(id) {
 
   const clearFieldError = () => setSaveError((prev) => (prev?.field ? null : prev))
 
-  return { isNew, status: load.status, product: load.product, phase, saveError, save, clearFieldError }
+  return { isNew, status: load.status, product: load.product, collections: load.collections, phase, saveError, save, clearFieldError }
 }

@@ -22,8 +22,9 @@ export function useCatalogOrder() {
         setStatus('ready')
       })
       .catch((error) => {
+        if (ignore) return // ya se salió de la página: no es un error real
         console.error(error)
-        if (!ignore) setStatus('error')
+        setStatus('error')
       })
     return () => {
       ignore = true

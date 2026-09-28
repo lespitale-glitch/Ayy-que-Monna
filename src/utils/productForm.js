@@ -3,6 +3,8 @@ import { SLUG_PATTERN } from './slugify.js'
 
 export const NAME_MAX = 80
 export const DESCRIPTION_MAX = 500
+export const STOCK_MAX = 100000
+export const THRESHOLD_MAX = 1000
 
 // Valores del formulario vacío (producto nuevo)
 export const EMPTY_VALUES = {
@@ -14,7 +16,10 @@ export const EMPTY_VALUES = {
   isVisible: true,
   isFeatured: false,
   isNew: true,
-  isMarina: false,
+  collections: [], // ids de colecciones
+  stockMode: 'none', // ver utils/stock.js
+  stock: '0',
+  lowStockThreshold: '2',
   // Cada foto es { key, url } (ya subida) o { key, blob, previewUrl } (nueva, sin subir)
   images: [],
 }
@@ -30,7 +35,10 @@ export function valuesFromProduct(product) {
     isVisible: product.isVisible,
     isFeatured: product.isFeatured,
     isNew: product.isNew,
-    isMarina: product.collection === 'marina',
+    collections: [...product.collections],
+    stockMode: product.stockMode ?? 'none',
+    stock: String(product.stock ?? 0),
+    lowStockThreshold: String(product.lowStockThreshold ?? 2),
     images: product.images.map((url) => ({ key: url, url })),
   }
 }
@@ -55,6 +63,14 @@ export function validateProduct(values) {
 
   if (values.description.length > DESCRIPTION_MAX) errors.description = `Máximo ${DESCRIPTION_MAX} caracteres.`
 
+  // Mismas reglas que products_stock_check y products_low_stock_threshold_check
+  const isWholeNumber = (text, max) => /^\d+$/.test(String(text).trim()) && Number(text) <= max
+  if (values.stockMode === 'tracked') {
+    if (!isWholeNumber(values.stock, STOCK_MAX)) errors.stock = 'Número entero, de 0 en adelante.'
+    if (!isWholeNumber(values.lowStockThreshold, THRESHOLD_MAX))
+      errors.lowStockThreshold = `Número entero, entre 0 y ${THRESHOLD_MAX}.`
+  }
+
   // Misma regla que la base de datos (constraint products_visible_needs_image)
   if (values.isVisible && values.images.length === 0) {
     errors.images = 'Un producto visible necesita al menos una foto (o desactiva "Visible" para guardarlo como borrador).'
@@ -75,15 +91,22 @@ export function toProduct(values, imageUrls) {
     isVisible: values.isVisible,
     isFeatured: values.isFeatured,
     isNew: values.isNew,
-    collection: values.isMarina ? 'marina' : null,
+    collections: values.collections,
+    stockMode: values.stockMode,
+    // Aunque el modo no sea "con stock", guardamos los números: si se vuelve a activar, siguen ahí
+    stock: Number(values.stock),
+    lowStockThreshold: Number(values.lowStockThreshold),
   }
 }
 
 // ¿El formulario tiene cambios respecto de cómo se abrió?
 // Las fotos se comparan por su "key" (así se detecta agregar, quitar o reordenar).
 export function isFormDirty(initial, current) {
-  const fields = ['id', 'name', 'price', 'category', 'description', 'isVisible', 'isFeatured', 'isNew', 'isMarina']
+  const fields = ['id', 'name', 'price', 'category', 'description', 'isVisible', 'isFeatured', 'isNew', 'stockMode', 'stock', 'lowStockThreshold']
   if (fields.some((field) => initial[field] !== current[field])) return true
+  // Las colecciones se comparan sin importar el orden en que se marcaron
+  const ids = (values) => [...values.collections].sort().join('|')
+  if (ids(initial) !== ids(current)) return true
   const keys = (values) => values.images.map((image) => image.key).join('|')
   return keys(initial) !== keys(current)
 }

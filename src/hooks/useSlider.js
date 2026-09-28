@@ -28,7 +28,8 @@ export function useSlider(total, { interval = 6000 } = {}) {
   }, [isPlaying, next, interval])
 
   return {
-    index,
+    // Si la cantidad de diapositivas baja (por ejemplo, al cargar los ajustes), no nos pasamos del final
+    index: Math.min(index, Math.max(total - 1, 0)),
     goTo,
     next,
     prev,
