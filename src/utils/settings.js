@@ -51,6 +51,7 @@ export function valuesFromSettings(settings) {
     shippingNote: settings.shippingNote,
     shippingFrom: settings.shippingFrom === null ? '' : String(settings.shippingFrom),
     pickupPoints: settings.pickupPoints.map((name) => newPickupPoint(name)),
+    botEnabled: settings.botEnabled,
   }
 }
 
@@ -64,6 +65,7 @@ export function toSettings(values) {
     shippingFrom: values.shippingFrom === '' ? null : Number(values.shippingFrom),
     // Se descartan los puntos vacíos
     pickupPoints: values.pickupPoints.map((p) => p.name.trim()).filter(Boolean),
+    botEnabled: values.botEnabled,
   }
 }
 

@@ -435,5 +435,166 @@ $$;
 revoke execute on function public.set_collection_products(text, text[]) from public, anon;
 grant execute on function public.set_collection_products(text, text[]) to authenticated;
 
+
+
+-- -----------------------------------------------------------------------------
+-- 8. Preguntas frecuentes (bot y página /preguntas-frecuentes)
+-- -----------------------------------------------------------------------------
+create table if not exists public.faqs (
+  id         uuid primary key default gen_random_uuid(),
+  question   text not null check (length(trim(question)) between 3 and 200),
+  -- Puede incluir {envios}, {retiro} e {instagram}: la tienda los completa con los Ajustes
+  answer     text not null check (length(trim(answer)) between 1 and 1000),
+  -- Palabras o frases con las que la gente suele preguntar esto (ayudan al bot a encontrarla)
+  keywords   text[] not null default '{}' check (cardinality(keywords) <= 30),
+  is_visible boolean not null default true,
+  position   integer not null default 0,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+drop trigger if exists faqs_set_updated_at on public.faqs;
+create trigger faqs_set_updated_at
+  before update on public.faqs
+  for each row execute function public.set_updated_at();
+
+alter table public.faqs enable row level security;
+grant select on public.faqs to anon, authenticated;
+grant insert, update, delete on public.faqs to authenticated;
+
+drop policy if exists "Público: ver preguntas visibles" on public.faqs;
+create policy "Público: ver preguntas visibles"
+  on public.faqs for select
+  to anon, authenticated
+  using (is_visible);
+
+drop policy if exists "Admin: ver todas las preguntas" on public.faqs;
+create policy "Admin: ver todas las preguntas"
+  on public.faqs for select
+  to authenticated
+  using ((select public.is_admin()));
+
+drop policy if exists "Admin: crear preguntas" on public.faqs;
+create policy "Admin: crear preguntas"
+  on public.faqs for insert
+  to authenticated
+  with check ((select public.is_admin()));
+
+drop policy if exists "Admin: editar preguntas" on public.faqs;
+create policy "Admin: editar preguntas"
+  on public.faqs for update
+  to authenticated
+  using ((select public.is_admin()))
+  with check ((select public.is_admin()));
+
+drop policy if exists "Admin: borrar preguntas" on public.faqs;
+create policy "Admin: borrar preguntas"
+  on public.faqs for delete
+  to authenticated
+  using ((select public.is_admin()));
+
+create or replace function public.reorder_faqs(faq_ids uuid[])
+returns void
+language plpgsql
+security invoker
+set search_path = ''
+as $$
+begin
+  if not public.is_admin() then
+    raise exception 'No autorizado' using errcode = '42501';
+  end if;
+
+  update public.faqs as f
+  set position = o.ord
+  from unnest(faq_ids) with ordinality as o (id, ord)
+  where f.id = o.id;
+end;
+$$;
+
+revoke execute on function public.reorder_faqs(uuid[]) from public, anon;
+grant execute on function public.reorder_faqs(uuid[]) to authenticated;
+
+
+-- -----------------------------------------------------------------------------
+-- 9. Preguntas que el bot no supo responder (anónimas)
+-- -----------------------------------------------------------------------------
+-- Solo se guarda el texto de la pregunta y la fecha: nada que identifique a la persona
+-- (ni usuario, ni IP). Cualquiera puede AGREGAR; solo la administradora puede verlas.
+create table if not exists public.bot_questions (
+  id          bigint generated always as identity primary key,
+  question    text not null check (length(question) between 2 and 300),
+  times_asked integer not null default 1 check (times_asked >= 1),
+  is_resolved boolean not null default false,
+  created_at  timestamptz not null default now(),
+  last_asked  timestamptz not null default now()
+);
+
+-- Antes de guardar: frena abusos y junta las preguntas repetidas.
+-- "security definer" le permite contar y actualizar filas que el visitante no puede ver.
+create or replace function public.before_bot_question()
+returns trigger
+language plpgsql
+security definer
+set search_path = ''
+as $$
+begin
+  -- Límite general contra el spam: como máximo 30 preguntas nuevas por minuto
+  if (select count(*) from public.bot_questions where last_asked > now() - interval '1 minute') >= 30 then
+    raise exception 'Demasiadas preguntas seguidas' using errcode = '54000';
+  end if;
+
+  -- Si la misma pregunta ya está pendiente, sumamos una vez más en lugar de repetirla
+  update public.bot_questions
+  set times_asked = times_asked + 1, last_asked = now()
+  where not is_resolved and lower(trim(question)) = lower(trim(new.question));
+  if found then
+    return null; -- null = no insertar la fila nueva
+  end if;
+
+  new.question := trim(new.question);
+  new.times_asked := 1;
+  new.is_resolved := false;
+  return new;
+end;
+$$;
+
+drop trigger if exists bot_questions_before_insert on public.bot_questions;
+create trigger bot_questions_before_insert
+  before insert on public.bot_questions
+  for each row execute function public.before_bot_question();
+
+alter table public.bot_questions enable row level security;
+-- Solo se da permiso sobre la columna "question": el resto lo completa la base
+grant insert (question) on public.bot_questions to anon, authenticated;
+grant select, update, delete on public.bot_questions to authenticated;
+
+drop policy if exists "Público: enviar preguntas sin respuesta" on public.bot_questions;
+create policy "Público: enviar preguntas sin respuesta"
+  on public.bot_questions for insert
+  to anon, authenticated
+  with check (true);
+
+drop policy if exists "Admin: ver preguntas sin respuesta" on public.bot_questions;
+create policy "Admin: ver preguntas sin respuesta"
+  on public.bot_questions for select
+  to authenticated
+  using ((select public.is_admin()));
+
+drop policy if exists "Admin: editar preguntas sin respuesta" on public.bot_questions;
+create policy "Admin: editar preguntas sin respuesta"
+  on public.bot_questions for update
+  to authenticated
+  using ((select public.is_admin()))
+  with check ((select public.is_admin()));
+
+drop policy if exists "Admin: borrar preguntas sin respuesta" on public.bot_questions;
+create policy "Admin: borrar preguntas sin respuesta"
+  on public.bot_questions for delete
+  to authenticated
+  using ((select public.is_admin()));
+
+-- Interruptor del bot en Ajustes
+alter table public.store_settings add column if not exists bot_enabled boolean not null default true;
+
 -- Avisa a la API de Supabase que la estructura cambió (columnas nuevas o borradas)
 notify pgrst, 'reload schema';

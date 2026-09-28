@@ -1,13 +1,13 @@
 -- =============================================================================
--- Ayy Que Monna — Carga inicial de colecciones y productos
+-- Ayy Que Monna — Carga inicial de colecciones, productos y preguntas frecuentes
 -- =============================================================================
--- ARCHIVO GENERADO por scripts/generate-seed.mjs a partir de src/data/collections.json
--- y src/data/products.json. No editar a mano: modificar el JSON y ejecutar "npm run db:seed".
+-- ARCHIVO GENERADO por scripts/generate-seed.mjs a partir de src/data/collections.json,
+-- products.json y faqs.json. No editar a mano: modificar el JSON y ejecutar "npm run db:seed".
 --
 -- Cómo usarlo: Supabase → SQL Editor → pegar este archivo → Run
 -- (DESPUÉS de haber ejecutado schema.sql).
 -- Es seguro ejecutarlo de nuevo: lo que ya existe no se modifica.
--- Colecciones: 1 · Productos: 67
+-- Colecciones: 1 · Productos: 67 · Preguntas frecuentes: 5
 -- =============================================================================
 
 insert into public.collections (id, name, description, theme, show_on_home, position)
@@ -85,4 +85,13 @@ values
   ('collar-acuatico-dorado', 'COLLAR ACUATICO DORADO', '', 5750, 'collares', array['/products/collarAcuatico.jpg']::text[], false, false, array['marina']::text[], true, 65),
   ('collar-acuatico-plateado', 'COLLAR ACUATICO PLATEADO', '', 5750, 'collares', array['/products/collarAcuaticoP.jpg']::text[], false, false, array['marina']::text[], true, 66),
   ('anillo-floral-plateado', 'ANILLO FLORAL PLATEADO', '', 2300, 'anillos', array['/products/anilloFloralP.jpg']::text[], true, false, array['marina']::text[], true, 67)
+on conflict (id) do nothing;
+
+insert into public.faqs (id, question, answer, keywords, position)
+values
+  ('5b0e4a1c-6f1a-4c55-9c0e-0a1f7f3b9a01'::uuid, '¿De qué materiales son los accesorios?', 'Por ahora, únicamente acero quirúrgico.', array['material', 'materiales', 'acero', 'quirurgico', 'alergia', 'hipoalergenico', 'se oxida', 'se pone negro', 'plata', 'oro', 'baño', 'de que estan hechos']::text[], 1),
+  ('5b0e4a1c-6f1a-4c55-9c0e-0a1f7f3b9a02'::uuid, '¿Cómo se realizan los envíos?', 'El envío lo charlamos al confirmar la compra, para ofrecerte la opción más cómoda para vos: hacemos envíos con un costo agregado y también tenemos puntos de retiro gratuitos en {retiro}.', array['envio', 'envios', 'enviar', 'mandan', 'correo', 'llega', 'demora', 'cuanto tarda', 'costo de envio', 'domicilio', 'interior', 'provincia', 'retiro', 'retirar', 'punto de retiro', 'zona']::text[], 2),
+  ('5b0e4a1c-6f1a-4c55-9c0e-0a1f7f3b9a03'::uuid, '¿Cuáles son los medios de pago aceptados?', 'Transferencia bancaria.', array['pago', 'pagar', 'medios de pago', 'transferencia', 'tarjeta', 'efectivo', 'mercado pago', 'cuotas', 'alias', 'cbu', 'debito', 'credito']::text[], 3),
+  ('5b0e4a1c-6f1a-4c55-9c0e-0a1f7f3b9a04'::uuid, '¿Cómo debo cuidar mis accesorios para que no pierdan brillo?', 'Te recomendamos evitar el contacto directo con perfumes, cremas o líquidos corrosivos. Guardalos siempre de forma individual, en lugares secos y lejos de la humedad, para mantener su brillo intacto por años.', array['cuidar', 'cuidado', 'cuidados', 'limpiar', 'brillo', 'mojar', 'agua', 'ducha', 'pileta', 'perfume', 'crema', 'guardar', 'humedad', 'pierde el color']::text[], 4),
+  ('5b0e4a1c-6f1a-4c55-9c0e-0a1f7f3b9a05'::uuid, '¿Cómo hago un pedido?', 'Agregá los productos que te gusten al carrito y tocá "Finalizar pedido por WhatsApp". Se abre un mensaje con tu pedido listo para enviar, y por ahí coordinamos el pago y el envío.', array['comprar', 'compra', 'pedido', 'pedir', 'carrito', 'como compro', 'encargar', 'hacer un pedido', 'reservar']::text[], 5)
 on conflict (id) do nothing;

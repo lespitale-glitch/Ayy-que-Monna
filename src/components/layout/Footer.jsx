@@ -11,7 +11,7 @@ function Footer() {
 
   return (
     <footer className="mt-24 border-t border-line">
-      <div className="mx-auto grid max-w-7xl gap-12 px-6 py-16 md:grid-cols-3">
+      <div className="mx-auto grid max-w-7xl gap-12 px-6 py-16 md:grid-cols-4">
         <div>
           <BrandLogo size="lg" />
           <p className="mt-3 text-sm text-stone">Bijouterie para todos los días.</p>
@@ -30,6 +30,20 @@ function Footer() {
                 </Link>
               </li>
             ))}
+          </ul>
+        </nav>
+
+        <nav aria-label="Ayuda">
+          <h2 className="font-sans text-xs uppercase tracking-widest text-stone">Ayuda</h2>
+          <ul className="mt-4 space-y-2 text-sm">
+            <li>
+              <Link
+                to="/preguntas-frecuentes"
+                className="decoration-fucsia decoration-2 underline-offset-4 hover:underline"
+              >
+                Preguntas frecuentes
+              </Link>
+            </li>
           </ul>
         </nav>
 

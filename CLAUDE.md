@@ -15,7 +15,8 @@ Se conservan los productos, textos e imágenes originales de la web anterior.
 - `npm run dev` — servidor de desarrollo
 - `npm run build` — build de producción
 - `npm run lint` — linter (oxlint, viene con la plantilla de Vite)
-- `npm run db:seed` — regenera `supabase/seed.sql` desde `collections.json` y `products.json`
+- `npm run db:seed` — regenera `supabase/seed.sql` desde `collections.json`, `products.json` y `faqs.json`
+- `postbuild` (automático tras `npm run build`): `dist/sitemap.xml` si existe la variable `SITE_URL`
 
 ## Estructura
 public/
@@ -26,12 +27,12 @@ src/
   pages/         # una carpeta por ruta (Home, Shop, Product, Cart, Admin)
   context/       # ProductsContext (catálogo), SettingsContext (ajustes), CartContext, AuthContext (solo /admin)
   lib/           # supabase.js (cliente; null si faltan las claves)
-  services/      # productsService, collectionsService, settingsService: ÚNICOS lugares que hablan con Supabase
-  data/          # products.json, collections.json (seed y modo local), selections.js
+  services/      # products, collections, settings y faqsService: ÚNICOS lugares que hablan con Supabase
+  data/          # products.json, collections.json, faqs.json (seed y modo local), selections.js
   hooks/         # hooks propios (useCart…)
 fotos-originales/  # fotos originales pesadas, IGNORADA por Git, solo local
 supabase/          # schema.sql (tabla, RLS, Storage) y seed.sql (generado)
-scripts/           # generate-seed.mjs
+scripts/           # generate-seed.mjs, generate-sitemap.mjs
 
 El sitio original (Next.js) está respaldado en el repo aparte `lespitale-glitch/Monna_legacy`.
 Solo se consulta como referencia: no copiar código de allí.
@@ -62,6 +63,11 @@ Solo se consulta como referencia: no copiar código de allí.
   Integridad por triggers: un producto no puede apuntar a una colección inexistente (23503) y al borrar una
   colección se quita sola de los productos. Ids reservados: novedades, destacados, dorados, plateados.
   RPC atómicas: `reorder_collections(ids)` y `set_collection_products(id, product_ids)`.
+- Preguntas frecuentes: tabla `faqs` (`question`, `answer`, `keywords text[]`, `is_visible`, `position`; RPC `reorder_faqs`).
+  Las respuestas aceptan comodines `{envios}`, `{retiro}`, `{instagram}` (`fillAnswer`, utils/faqText.js).
+- Preguntas sin respuesta: tabla `bot_questions`. Anónimas: SOLO el texto (permiso de insert únicamente sobre la
+  columna `question`); el trigger `before_bot_question` junta repetidas (`times_asked`) y frena más de 30/min.
+  Solo la admin las lee. El frontend además quita emails/teléfonos (`sanitizeQuestion`) y guarda máx. 5 por visita.
 - `ProductsContext` carga productos + colecciones juntos (`Promise.all`) y expone `collections`, `selections`
   (colecciones + selecciones automáticas de `data/selections.js`) y `homeCollections`.
 
@@ -91,9 +97,24 @@ Solo se consulta como referencia: no copiar código de allí.
   optimista) y borrar. Formulario con color (tema), dónde se muestra y selector de productos (buscador +
   "Solo los elegidos", que congela la lista para no perder el foco). Reglas en `utils/collectionForm.js`.
   En el formulario de producto, casillas `CollectionsField`.
-- Menú del panel: `AdminNav` (Productos | Colecciones | Ajustes); Productos abarca también el formulario y el orden.
+- Preguntas (`/admin/preguntas`, `/nueva`, `/:id`, `/sin-responder`): lista ordenable + "Probar el asistente"
+  (usa el mismo motor). Desde "Sin responder" → "Crear respuesta" prellena la pregunta y al guardar la marca resuelta.
+- Listas ordenables del panel (colecciones, preguntas): hook genérico `useAdminSortableList`.
+- Menú del panel: `AdminNav` (Productos | Colecciones | Preguntas | Ajustes); Productos abarca también el formulario y el orden.
 - Cambios sin guardar: `useUnsavedChangesGuard(isDirty)` + `<UnsavedChangesDialog>` (producto, orden, colección y ajustes).
   En el formulario, `isFormDirty` (utils/productForm.js); mientras se guarda no se bloquea la navegación.
+
+## Asistente (bot) de la tienda
+- Sin IA y gratis: todo corre en el navegador. Motor en `utils/bot/` (funciones puras, probadas con un corpus de preguntas reales):
+  `lexicon.js` (palabras vacías, sinónimos, categorías), `botText.js` (normalizar, raíz del plural, errores de tipeo con
+  Damerau-Levenshtein), `faqMatcher.js` (puntaje por pesos + IDF; umbrales SURE/MAYBE), `productFinder.js` (categoría,
+  terminación, precio, colección y nombres), `intents.js` (saludo, gracias, hablar con una persona), `botReply.js` (decide
+  la respuesta) y `botMessages.js` (respuesta → mensajes, regalo, WhatsApp con la consulta).
+- Nunca responder con seguridad algo dudoso: si no hay coincidencia clara → "¿Quisiste preguntar…?"; si no sabe → lo dice,
+  ofrece WhatsApp y guarda la pregunta. Al cambiar el motor, correr el corpus y sumar los casos nuevos.
+- UI: `BotLauncher` (botón "Ayuda", se apaga desde Ajustes con `bot_enabled`) carga `BotPanel` con `lazy` al abrirse.
+  Panel no modal (`role="dialog"`), mensajes en `role="log"` (envolviendo la `<ol>`), Escape cierra y devuelve el foco.
+- `/preguntas-frecuentes`: `<details>`, datos estructurados FAQPage (`utils/faqSchema.js`), enlace en el footer.
 
 ## Reglas de arquitectura
 - Componentes funcionales, uno por archivo, nombre en PascalCase.

@@ -72,7 +72,7 @@ Todo con herramientas gratuitas. Decisiones de la dueña:
 
 - [x] Etapa A: Ajustes (WhatsApp, Instagram, envíos y puntos de retiro) editables desde /admin/ajustes
 - [x] Etapa B: Colecciones configurables (/admin/colecciones), migración de "marina"
-- [ ] Etapa C: Bot de preguntas frecuentes + preguntas sin respuesta + página SEO
+- [x] Etapa C: Bot de preguntas frecuentes + preguntas sin respuesta + página SEO
 - [ ] Etapa D: Inventario (modos de stock) + alertas en panel y email (Resend + función de Supabase)
 - [ ] Etapa E: GA4 + Meta Pixel con aviso de cookies (IDs desde Ajustes)
 

@@ -18,7 +18,7 @@ npm run dev                  # http://localhost:5173
 | `npm run dev` | Servidor de desarrollo |
 | `npm run build` | Build de producción en `dist/` |
 | `npm run lint` | Revisa el código con oxlint |
-| `npm run db:seed` | Regenera `supabase/seed.sql` a partir de `src/data/products.json` |
+| `npm run db:seed` | Regenera `supabase/seed.sql` (colecciones, productos y preguntas frecuentes) |
 | `npm run brand:logo` | Genera el logo web (WebP transparente) y los favicons desde `design/` |
 | `npm run brand:hero` | Convierte las fotos del Hero Slider (`design/hero/`) a WebP optimizado |
 
@@ -52,7 +52,7 @@ cambiar un poco con el tiempo; si algo no coincide, busca la opción equivalente
 2. Copia **todo** el contenido de [`supabase/schema.sql`](supabase/schema.sql), pégalo y toca **Run**.
    Tiene que decir *Success. No rows returned*.
 3. Otra **New query**: pega **todo** [`supabase/seed.sql`](supabase/seed.sql) y toca **Run**.
-4. Verifica en **Table Editor** → `products` que haya **67 filas** y en `collections`, **1** (Marina).
+4. Verifica en **Table Editor** → `products` que haya **67 filas**, en `collections` **1** (Marina) y en `faqs` **5**.
 5. En **Storage** tiene que aparecer el bucket **`products`**, marcado como *Public*.
 
 > Los dos archivos se pueden volver a ejecutar sin romper nada. El seed **no** pisa
@@ -119,6 +119,10 @@ No hay ningún enlace visible en la tienda a propósito. Sin sesión, te lleva a
 | Cambiar la foto principal | En el formulario: estrella ☆ sobre la foto o flechas ← → |
 | Eliminar para siempre | Ícono de la papelera → confirmar (borra también sus fotos subidas) |
 | Cambiar el orden de la tienda | **Ordenar catálogo** → arrastrar (o flechas ↑ ↓) → **Guardar orden** |
+| Editar las preguntas frecuentes | **Preguntas** → lápiz o **Nueva pregunta** (se usan en el asistente y en /preguntas-frecuentes) |
+| Ver qué preguntó la gente y el asistente no supo | **Preguntas** → **Sin responder** → **Crear respuesta** |
+| Probar cómo responde el asistente | **Preguntas** → cuadro **Probar el asistente** |
+| Apagar el asistente | **Ajustes** → **Mostrar el asistente en la tienda** |
 | Cambiar el WhatsApp de pedidos | **Ajustes** → número con código de país → **Probar este número** → **Guardar ajustes** |
 | Cambiar Instagram, envíos o puntos de retiro | **Ajustes** → editar → **Guardar ajustes** |
 | Salir | **Cerrar sesión** (arriba a la derecha) |
@@ -145,6 +149,8 @@ Notas:
 1. En [vercel.com](https://vercel.com): **Add New… → Project** e importa este repositorio.
    Vercel detecta Vite automáticamente.
 2. En **Environment Variables** carga `VITE_SUPABASE_URL` y `VITE_SUPABASE_ANON_KEY`, con los mismos valores que `.env.local`.
+   Cuando tengas el dominio, suma `SITE_URL` (ej: `https://ayyquemonna.com.ar`): con eso cada build genera
+   `sitemap.xml` para Google. Después, en Google Search Console, envía `https://tu-dominio/sitemap.xml`.
 3. **Deploy**.
 
 `vercel.json` redirige todas las rutas a `index.html`. Sin esa regla, abrir directamente una

@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "postbuild": "node scripts/generate-sitemap.mjs",
     "lint": "oxlint",
     "preview": "vite preview",
     "db:seed": "node scripts/generate-seed.mjs",

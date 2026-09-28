@@ -21,6 +21,9 @@ export function getAdminErrorMessage(error) {
   if (error?.code === '23514' && text.includes('store_settings')) {
     return 'Algún ajuste no es válido. Revisa el número de WhatsApp y el usuario de Instagram.'
   }
+  if (error?.code === '23514' && text.includes('faqs')) {
+    return 'Revisa la pregunta (3 a 200 caracteres), la respuesta (hasta 1000) y las palabras clave (hasta 30).'
+  }
   if (error?.code === '23514') return 'Algún dato no es válido (revisa precio, categoría o colección).'
   if (error?.code === '42501' || error?.code === 'PGRST116' || /permis/i.test(text)) {
     return 'No tienes permisos para este cambio. Vuelve a iniciar sesión.'

@@ -5,6 +5,7 @@ import Shop from './pages/Shop/Shop.jsx'
 import Product from './pages/Product/Product.jsx'
 import NotFound from './pages/NotFound/NotFound.jsx'
 import Selection from './pages/Selection/Selection.jsx'
+import Faq from './pages/Faq/Faq.jsx'
 
 // "lazy" carga el código del panel solo cuando alguien entra a /admin.
 // import() devuelve una Promesa con el módulo; usamos su export por defecto como componente.
@@ -20,6 +21,7 @@ export const router = createBrowserRouter([
       { path: '/tienda/:categoria', element: <Shop /> },
       { path: '/producto/:id', element: <Product /> },
       { path: '/seleccion/:slug', element: <Selection /> },
+      { path: '/preguntas-frecuentes', element: <Faq /> },
       { path: '*', element: <NotFound /> },
     ],
   },
@@ -41,6 +43,10 @@ export const router = createBrowserRouter([
               // "nueva" va antes que ":id" para que no se interprete como un id
               { path: 'colecciones/nueva', lazy: lazyPage(() => import('./pages/Admin/AdminCollectionForm.jsx')) },
               { path: 'colecciones/:id', lazy: lazyPage(() => import('./pages/Admin/AdminCollectionForm.jsx')) },
+              { path: 'preguntas', lazy: lazyPage(() => import('./pages/Admin/AdminFaqs.jsx')) },
+              { path: 'preguntas/sin-responder', lazy: lazyPage(() => import('./pages/Admin/AdminBotQuestions.jsx')) },
+              { path: 'preguntas/nueva', lazy: lazyPage(() => import('./pages/Admin/AdminFaqForm.jsx')) },
+              { path: 'preguntas/:id', lazy: lazyPage(() => import('./pages/Admin/AdminFaqForm.jsx')) },
               { path: 'ajustes', lazy: lazyPage(() => import('./pages/Admin/AdminSettings.jsx')) },
               { path: 'orden', lazy: lazyPage(() => import('./pages/Admin/AdminCatalogOrder.jsx')) },
               // "nuevo" va antes que ":id" para que no se interprete como un id

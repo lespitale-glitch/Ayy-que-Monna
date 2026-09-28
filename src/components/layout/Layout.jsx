@@ -3,6 +3,7 @@ import Header from './Header.jsx'
 import Footer from './Footer.jsx'
 import CatalogGate from './CatalogGate.jsx'
 import CartDrawer from '../cart/CartDrawer.jsx'
+import BotLauncher from '../bot/BotLauncher.jsx'
 import { CartProvider } from '../../context/CartContext.jsx'
 import { ProductsProvider } from '../../context/ProductsContext.jsx'
 import { SettingsProvider } from '../../context/SettingsContext.jsx'
@@ -28,6 +29,8 @@ function Layout() {
             <ScrollRestoration />
           </div>
           <CartDrawer />
+          {/* Botón "Ayuda" del asistente (se puede apagar desde Ajustes) */}
+          <BotLauncher />
         </CartProvider>
       </ProductsProvider>
     </SettingsProvider>

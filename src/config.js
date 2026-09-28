@@ -14,6 +14,7 @@ export const DEFAULT_SETTINGS = {
   shippingNote: 'Enviamos a todo el país. El costo del envío está a cargo de quien compra y varía según la ubicación.',
   shippingFrom: 6000, // "desde $…"; null = no se muestra
   pickupPoints: ['Ballester', 'Carapachay', 'Belgrano'],
+  botEnabled: true, // asistente de preguntas frecuentes en la tienda
 }
 
 // Categorías de la tienda: `slug` es lo que aparece en la URL (/tienda/aros)
