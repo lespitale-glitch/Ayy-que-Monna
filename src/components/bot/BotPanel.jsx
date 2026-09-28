@@ -11,10 +11,18 @@ function BotPanel({ onClose }) {
   const inputRef = useRef(null)
   const endRef = useRef(null)
 
+  // Con llaves y sin "return": un useEffect solo puede devolver una función de limpieza.
+  // scrollIntoView() devuelve una Promesa en los navegadores nuevos, y si el efecto la
+  // devolviera, React intentaría ejecutarla como limpieza ("l is not a function").
+
   // Al abrir, el foco va al campo de texto
-  useEffect(() => inputRef.current?.focus(), [])
+  useEffect(() => {
+    inputRef.current?.focus()
+  }, [])
   // Con cada mensaje nuevo, bajamos hasta el final de la conversación
-  useEffect(() => endRef.current?.scrollIntoView({ block: 'end' }), [messages])
+  useEffect(() => {
+    endRef.current?.scrollIntoView({ block: 'end' })
+  }, [messages])
 
   const handleSubmit = (event) => {
     event.preventDefault()
