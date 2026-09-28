@@ -80,6 +80,10 @@ Solo se consulta como referencia: no copiar código de allí.
 
 ## Panel /admin
 - Rutas cargadas con `lazy` en `router.jsx`: la tienda nunca descarga código del panel.
+- Todo `import()` dinámico pasa por `importWithReload` (utils/lazyImport.js): si un deploy borró el archivo viejo,
+  recarga la página una vez; si igual falla, `RouteError` ("Hay una versión nueva"). `errorElement` en tienda y panel.
+- `useEffect` SIEMPRE con llaves: nunca devolver el resultado de una llamada (ej. `scrollIntoView()` devuelve una
+  Promesa en Chrome nuevo y React la ejecutaría como limpieza → "l is not a function").
 - `AdminRoot` (AuthProvider + meta noindex) → `/admin/login` | `ProtectedRoute` → `AdminLayout` → páginas.
 - `isAdmin` sale de `supabase.rpc('is_admin')`; una cuenta válida que no es admin se desloguea al instante.
 - Indexación: meta `noindex` + cabecera `X-Robots-Tag` (vercel.json). `/admin` NO se bloquea en robots.txt (si no, el buscador no ve el noindex).

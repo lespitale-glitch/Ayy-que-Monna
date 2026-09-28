@@ -7,10 +7,12 @@ import NotFound from './pages/NotFound/NotFound.jsx'
 import Selection from './pages/Selection/Selection.jsx'
 import Faq from './pages/Faq/Faq.jsx'
 import RouteError from './components/layout/RouteError.jsx'
+import { importWithReload } from './utils/lazyImport.js'
 
 // "lazy" carga el código del panel solo cuando alguien entra a /admin.
 // import() devuelve una Promesa con el módulo; usamos su export por defecto como componente.
-const lazyPage = (importer) => async () => ({ Component: (await importer()).default })
+// importWithReload: si el archivo ya no existe (hubo un deploy nuevo), recarga la página una vez.
+const lazyPage = (importer) => async () => ({ Component: (await importWithReload(importer)).default })
 
 export const router = createBrowserRouter([
   // Tienda pública: todas las páginas comparten el Layout (Header + Footer)

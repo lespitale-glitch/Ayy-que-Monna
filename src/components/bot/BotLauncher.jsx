@@ -1,10 +1,11 @@
 import { lazy, Suspense, useRef, useState } from 'react'
 import { MessageCircle } from 'lucide-react'
 import { useSettings } from '../../hooks/useSettings.js'
+import { importWithReload } from '../../utils/lazyImport.js'
 
 // El panel (y el motor del bot) se descargan recién la primera vez que alguien toca "Ayuda":
 // así no suman peso a la carga inicial de la tienda.
-const BotPanel = lazy(() => import('./BotPanel.jsx'))
+const BotPanel = lazy(() => importWithReload(() => import('./BotPanel.jsx')))
 
 function BotLauncher() {
   const { botEnabled } = useSettings()
