@@ -2,12 +2,16 @@ import { Link } from 'react-router-dom'
 import BrandLogo from './BrandLogo.jsx'
 import { CATEGORIES } from '../../config.js'
 import { useSettings } from '../../hooks/useSettings.js'
+import { useConsent } from '../../hooks/useConsent.js'
+import { hasAnalytics } from '../../utils/consent.js'
 import { instagramUrl } from '../../utils/settings.js'
 
 function Footer() {
   // Calculamos el año actual para no tener que actualizarlo a mano cada enero
   const year = new Date().getFullYear()
-  const { instagramHandle } = useSettings()
+  const settings = useSettings()
+  const { instagramHandle } = settings
+  const { reopen } = useConsent()
 
   return (
     <footer className="mt-24 border-t border-line">
@@ -44,6 +48,18 @@ function Footer() {
                 Preguntas frecuentes
               </Link>
             </li>
+            {/* Solo si hay analítica configurada: permite cambiar la elección de cookies */}
+            {hasAnalytics(settings) && (
+              <li>
+                <button
+                  type="button"
+                  onClick={reopen}
+                  className="text-left decoration-fucsia decoration-2 underline-offset-4 hover:underline"
+                >
+                  Preferencias de cookies
+                </button>
+              </li>
+            )}
           </ul>
         </nav>
 

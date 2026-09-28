@@ -6,6 +6,8 @@ export const INSTAGRAM_PATTERN = /^[A-Za-z0-9._]{0,30}$/
 export const SHIPPING_NOTE_MAX = 300
 export const PICKUP_MAX = 10
 export const PICKUP_NAME_MAX = 40
+export const GA4_PATTERN = /^G-[A-Z0-9]{4,20}$/
+export const PIXEL_PATTERN = /^[0-9]{5,20}$/
 
 // Deja solo los dígitos: "+54 9 11 1234-5678" → "5491112345678"
 export const onlyDigits = (text) => text.replace(/\D/g, '')
@@ -53,6 +55,8 @@ export function valuesFromSettings(settings) {
     pickupPoints: settings.pickupPoints.map((name) => newPickupPoint(name)),
     botEnabled: settings.botEnabled,
     showLowStock: settings.showLowStock,
+    ga4Id: settings.ga4Id ?? '',
+    metaPixelId: settings.metaPixelId ?? '',
   }
 }
 
@@ -68,6 +72,9 @@ export function toSettings(values) {
     pickupPoints: values.pickupPoints.map((p) => p.name.trim()).filter(Boolean),
     botEnabled: values.botEnabled,
     showLowStock: values.showLowStock,
+    // Se aceptan con espacios o en minúsculas (al copiar y pegar); se guardan limpios
+    ga4Id: values.ga4Id.trim().toUpperCase(),
+    metaPixelId: values.metaPixelId.replace(/\s/g, ''),
   }
 }
 
@@ -93,6 +100,11 @@ export function validateSettings(values) {
   if (settings.pickupPoints.length > PICKUP_MAX) errors.pickupPoints = `Máximo ${PICKUP_MAX} puntos de retiro.`
   else if (settings.pickupPoints.some((p) => p.length > PICKUP_NAME_MAX))
     errors.pickupPoints = `Cada punto puede tener hasta ${PICKUP_NAME_MAX} caracteres.`
+
+  if (settings.ga4Id && !GA4_PATTERN.test(settings.ga4Id))
+    errors.ga4Id = 'Empieza con "G-" seguido de letras y números (ej: G-AB12CD34EF).'
+  if (settings.metaPixelId && !PIXEL_PATTERN.test(settings.metaPixelId))
+    errors.metaPixelId = 'Solo números (entre 5 y 20).'
 
   return errors
 }

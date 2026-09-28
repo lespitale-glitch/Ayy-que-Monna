@@ -16,6 +16,8 @@ export const DEFAULT_SETTINGS = {
   pickupPoints: ['Ballester', 'Carapachay', 'Belgrano'],
   botEnabled: true, // asistente de preguntas frecuentes en la tienda
   showLowStock: true, // "Últimas unidades" cuando queda poco stock
+  ga4Id: '', // Google Analytics 4 (G-XXXXXXX); vacío = no se mide
+  metaPixelId: '', // Meta Pixel (solo números); vacío = no se mide
 }
 
 // Categorías de la tienda: `slug` es lo que aparece en la URL (/tienda/aros)

@@ -705,5 +705,22 @@ create policy "Admin: borrar avisos de stock"
 -- Ajuste de la tienda: mostrar "Últimas unidades" cuando el stock está bajo
 alter table public.store_settings add column if not exists show_low_stock boolean not null default true;
 
+
+
+-- -----------------------------------------------------------------------------
+-- 11. Analítica (Google Analytics 4 y Meta Pixel), editable desde /admin/ajustes
+-- -----------------------------------------------------------------------------
+-- Son identificadores públicos (igual aparecen en el código de cualquier página que los usa).
+-- Vacío = no se usa. Los scripts solo se cargan si la visita acepta las cookies.
+alter table public.store_settings add column if not exists ga4_id text not null default '';
+alter table public.store_settings add column if not exists meta_pixel_id text not null default '';
+
+alter table public.store_settings drop constraint if exists store_settings_ga4_id_check;
+alter table public.store_settings add constraint store_settings_ga4_id_check
+  check (ga4_id = '' or ga4_id ~ '^G-[A-Z0-9]{4,20}$');
+alter table public.store_settings drop constraint if exists store_settings_meta_pixel_id_check;
+alter table public.store_settings add constraint store_settings_meta_pixel_id_check
+  check (meta_pixel_id = '' or meta_pixel_id ~ '^[0-9]{5,20}$');
+
 -- Avisa a la API de Supabase que la estructura cambió (columnas nuevas o borradas)
 notify pgrst, 'reload schema';

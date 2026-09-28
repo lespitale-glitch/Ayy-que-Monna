@@ -3,6 +3,7 @@ import ContactFields from './ContactFields.jsx'
 import ShippingFields from './ShippingFields.jsx'
 import AssistantFields from './AssistantFields.jsx'
 import InventoryFields from './InventoryFields.jsx'
+import AnalyticsFields from './AnalyticsFields.jsx'
 import UnsavedChangesDialog from '../UnsavedChangesDialog.jsx'
 import { useUnsavedChangesGuard } from '../../../hooks/useUnsavedChangesGuard.js'
 import { isSettingsDirty, validateSettings } from '../../../utils/settings.js'
@@ -59,7 +60,10 @@ function SettingsForm({ initialValues, isSaving, saveError, onSubmit }) {
           <AssistantFields values={values} setField={setField} disabled={isSaving} />
           <InventoryFields values={values} setField={setField} disabled={isSaving} />
         </div>
-        <ShippingFields values={values} errors={errors} onField={onField} setField={setField} disabled={isSaving} />
+        <div className="grid content-start gap-16">
+          <ShippingFields values={values} errors={errors} onField={onField} setField={setField} disabled={isSaving} />
+          <AnalyticsFields values={values} errors={errors} onField={onField} disabled={isSaving} />
+        </div>
       </div>
 
       <div className="sticky bottom-0 -mx-6 mt-12 flex items-center justify-end gap-3 border-t border-line bg-bone/95 px-6 py-4 backdrop-blur">

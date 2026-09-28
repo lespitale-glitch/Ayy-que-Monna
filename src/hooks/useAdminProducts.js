@@ -21,8 +21,10 @@ export function useAdminProducts() {
         setStatus('ready')
       })
       .catch((error) => {
+        // Si ya se salió de la página (pedido cancelado al navegar), no es un error real
+        if (ignore) return
         console.error('No se pudieron cargar los productos del panel:', error)
-        if (!ignore) setStatus('error')
+        setStatus('error')
       })
     return () => {
       ignore = true

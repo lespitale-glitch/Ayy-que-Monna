@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { MessageCircle } from 'lucide-react'
 import BotProducts from './BotProducts.jsx'
+import { trackEvent } from '../../lib/analytics.js'
 
 const chipClass =
   'rounded-full border border-fucsia bg-white px-3 py-1.5 text-left text-xs text-fucsia-deep transition-colors duration-300 ease-soft hover:bg-fucsia/10'
@@ -31,7 +32,13 @@ function BotMessage({ message, onChoose, onNavigate }) {
       {(message.link || message.whatsappUrl || message.faqLink) && (
         <div className="flex flex-wrap gap-2">
           {message.whatsappUrl && (
-            <a href={message.whatsappUrl} target="_blank" rel="noopener noreferrer" className="btn-primary px-4 py-2 text-[11px]">
+            <a
+              href={message.whatsappUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => trackEvent('contact')}
+              className="btn-primary px-4 py-2 text-[11px]"
+            >
               <MessageCircle size={14} strokeWidth={1.5} aria-hidden="true" />
               Escribir por WhatsApp
             </a>

@@ -5,4 +5,6 @@ export const SETTINGS_LABELS = {
   shippingNote: 'Texto de envíos',
   shippingFrom: 'Costo desde',
   pickupPoints: 'Puntos de retiro',
+  ga4Id: 'Google Analytics',
+  metaPixelId: 'Meta Pixel',
 }

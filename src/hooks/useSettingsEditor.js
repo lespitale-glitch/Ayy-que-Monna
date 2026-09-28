@@ -19,8 +19,9 @@ export function useSettingsEditor() {
         if (!ignore) setLoad({ status: 'ready', settings })
       })
       .catch((error) => {
+        if (ignore) return // ya se salió de la página: no es un error real
         console.error(error)
-        if (!ignore) setLoad({ status: 'error', settings: null })
+        setLoad({ status: 'error', settings: null })
       })
     return () => {
       ignore = true

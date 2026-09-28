@@ -74,7 +74,7 @@ Todo con herramientas gratuitas. Decisiones de la dueña:
 - [x] Etapa B: Colecciones configurables (/admin/colecciones), migración de "marina"
 - [x] Etapa C: Bot de preguntas frecuentes + preguntas sin respuesta + página SEO
 - [x] Etapa D: Inventario (modos de stock) + alertas en panel y email (Resend + función de Supabase)
-- [ ] Etapa E: GA4 + Meta Pixel con aviso de cookies (IDs desde Ajustes)
+- [x] Etapa E: GA4 + Meta Pixel con aviso de cookies (IDs desde Ajustes)
 
 ## Fase 4 — Newsletter
 - [ ] Formulario de suscripción en el footer y en un modal discreto

@@ -32,8 +32,9 @@ export function useCollectionEditor(id) {
         })
       })
       .catch((error) => {
+        if (ignore) return // ya se salió de la página: no es un error real
         console.error(error)
-        if (!ignore) setLoad((prev) => ({ ...prev, status: 'error' }))
+        setLoad((prev) => ({ ...prev, status: 'error' }))
       })
     return () => {
       ignore = true

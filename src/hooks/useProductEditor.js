@@ -28,8 +28,9 @@ export function useProductEditor(id) {
         if (!ignore) setLoad({ status: isNew || product ? 'ready' : 'notfound', product, collections })
       })
       .catch((error) => {
+        if (ignore) return // ya se salió de la página: no es un error real
         console.error(error)
-        if (!ignore) setLoad({ status: 'error', product: null, collections: [] })
+        setLoad({ status: 'error', product: null, collections: [] })
       })
     return () => {
       ignore = true

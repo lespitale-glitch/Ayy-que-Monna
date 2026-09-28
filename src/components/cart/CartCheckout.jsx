@@ -2,6 +2,7 @@ import { useCart } from '../../hooks/useCart.js'
 import { useSettings } from '../../hooks/useSettings.js'
 import { formatPrice } from '../../utils/formatPrice.js'
 import { buildOrderMessage, buildWhatsAppUrl } from '../../utils/whatsapp.js'
+import { trackEvent } from '../../lib/analytics.js'
 
 // Pie del carrito: subtotal, condiciones de envío y botón para pedir por WhatsApp
 function CartCheckout() {
@@ -24,7 +25,13 @@ function CartCheckout() {
       <p className="mt-1 text-xs text-stone">El envío y el pago se coordinan por WhatsApp.</p>
 
       {whatsappUrl ? (
-        <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="btn-primary mt-6 flex h-12 w-full px-3">
+        <a
+          href={whatsappUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={() => trackEvent('begin_checkout', orderLines)}
+          className="btn-primary mt-6 flex h-12 w-full px-3"
+        >
           Finalizar pedido por WhatsApp
         </a>
       ) : (

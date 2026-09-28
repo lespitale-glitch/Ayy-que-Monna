@@ -4,6 +4,7 @@ import { useSettings } from '../../hooks/useSettings.js'
 import { fillAnswer } from '../../utils/faqText.js'
 import { buildFaqSchema, toJsonLd } from '../../utils/faqSchema.js'
 import { whatsappFor } from '../../utils/bot/botMessages.js'
+import { trackEvent } from '../../lib/analytics.js'
 
 // /preguntas-frecuentes: las mismas preguntas que usa el asistente, pensadas también para Google
 function Faq() {
@@ -61,7 +62,7 @@ function Faq() {
         <h2 className="font-display text-2xl">¿No encontraste tu respuesta?</h2>
         <p className="mt-3 text-sm text-stone">Escribinos y te respondemos a la brevedad.</p>
         {whatsappUrl && (
-          <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="btn-primary mt-6">
+          <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" onClick={() => trackEvent('contact')} className="btn-primary mt-6">
             <MessageCircle size={16} strokeWidth={1.5} aria-hidden="true" />
             Escribir por WhatsApp
           </a>

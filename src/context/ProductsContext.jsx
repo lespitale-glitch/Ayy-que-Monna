@@ -24,8 +24,9 @@ export function ProductsProvider({ children }) {
         if (!ignore) setState({ status: 'ready', products, collections, source, error: null })
       })
       .catch((error) => {
+        if (ignore) return // ya se salió de la página: no es un error real
         console.error('No se pudo cargar el catálogo:', error)
-        if (!ignore) setState({ status: 'error', products: [], collections: [], source: null, error })
+        setState({ status: 'error', products: [], collections: [], source: null, error })
       })
 
     return () => {

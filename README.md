@@ -126,6 +126,7 @@ No hay ningún enlace visible en la tienda a propósito. Sin sesión, te lleva a
 | Descontar una venta de WhatsApp | Columna **Stock** de la lista → botón **−** (y **+** al reponer). Se guarda al instante |
 | Ver qué hay que reponer | Aviso **Revisa el stock** arriba de la lista, o filtro **Stock** → *Stock bajo* / *Agotados* |
 | Mostrar u ocultar "Últimas unidades" | **Ajustes** → **Inventario** |
+| Activar Google Analytics o Meta Pixel | **Ajustes** → **Analítica** → pegar el ID (ver "Analítica" más abajo) |
 | Apagar el asistente | **Ajustes** → **Mostrar el asistente en la tienda** |
 | Cambiar el WhatsApp de pedidos | **Ajustes** → número con código de país → **Probar este número** → **Guardar ajustes** |
 | Cambiar Instagram, envíos o puntos de retiro | **Ajustes** → editar → **Guardar ajustes** |
@@ -192,6 +193,28 @@ En el panel, pon un producto en **Con stock** con 3 unidades y "avisar con" 2, y
 En un minuto te llega "Stock bajo: …". Si no llega: **Edge Functions** → `stock-alert` → **Logs**.
 
 > 🔒 La clave de Resend vive solo en los secretos de Supabase. Nunca va en el código ni en `.env.local`.
+
+---
+
+## Analítica: Google Analytics 4 y Meta Pixel (opcional, gratis)
+
+Cuando cargas un ID en **Ajustes → Analítica**, la tienda muestra un aviso de cookies. Solo si la visita
+toca **Aceptar** se cargan los scripts de Google o Meta; si rechaza (o no elige), no se mide nada.
+El panel `/admin` nunca se mide. Se registran: páginas vistas, producto visto, agregar al carrito,
+"Finalizar pedido por WhatsApp" y contactos por WhatsApp desde el asistente o las preguntas frecuentes.
+
+**Google Analytics 4**
+1. En [analytics.google.com](https://analytics.google.com): **Administrar** → **Crear propiedad** (moneda: peso argentino).
+2. **Flujos de datos** → **Web** → la dirección de tu tienda.
+3. Copia el **ID de medición** (empieza con `G-`) y pégalo en **Ajustes → Analítica**.
+4. Deja activada la **Medición mejorada** (con ella GA4 registra solo las páginas vistas).
+
+**Meta Pixel** (para anuncios de Facebook e Instagram)
+1. En el **Administrador de eventos** de Meta: **Conectar orígenes de datos** → **Web** → crea el píxel.
+2. Elige instalarlo manualmente y copia solo el **ID del píxel** (son números). Pégalo en **Ajustes → Analítica**.
+
+> Los datos tardan hasta 24–48 h en aparecer en los informes. Para probar al instante:
+> **Tiempo real** en GA4, o **Probar eventos** en Meta (recuerda aceptar las cookies en la tienda).
 
 ---
 

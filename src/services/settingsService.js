@@ -1,7 +1,7 @@
 import { supabase, isSupabaseConfigured } from '../lib/supabase.js'
 import { DEFAULT_SETTINGS } from '../config.js'
 
-const COLUMNS = 'whatsapp_number, instagram_handle, shipping_enabled, shipping_note, shipping_from, pickup_points, bot_enabled, show_low_stock'
+const COLUMNS = 'whatsapp_number, instagram_handle, shipping_enabled, shipping_note, shipping_from, pickup_points, bot_enabled, show_low_stock, ga4_id, meta_pixel_id'
 
 // snake_case (base) ↔ camelCase (frontend): la traducción vive solo en los servicios
 export function fromSettingsRow(row) {
@@ -14,6 +14,8 @@ export function fromSettingsRow(row) {
     pickupPoints: row.pickup_points ?? [],
     botEnabled: row.bot_enabled ?? true,
     showLowStock: row.show_low_stock ?? true,
+    ga4Id: row.ga4_id ?? '',
+    metaPixelId: row.meta_pixel_id ?? '',
   }
 }
 
@@ -27,6 +29,8 @@ export function toSettingsRow(settings) {
     pickup_points: settings.pickupPoints,
     bot_enabled: settings.botEnabled,
     show_low_stock: settings.showLowStock,
+    ga4_id: settings.ga4Id,
+    meta_pixel_id: settings.metaPixelId,
   }
 }
 

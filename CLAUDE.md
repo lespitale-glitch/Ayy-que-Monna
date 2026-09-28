@@ -25,8 +25,8 @@ src/
   assets/        # imágenes de la interfaz (logo, banners) importadas desde el código
   components/    # componentes reutilizables (Button, ProductCard, Header…)
   pages/         # una carpeta por ruta (Home, Shop, Product, Cart, Admin)
-  context/       # ProductsContext (catálogo), SettingsContext (ajustes), CartContext, AuthContext (solo /admin)
-  lib/           # supabase.js (cliente; null si faltan las claves)
+  context/       # ProductsContext, SettingsContext, ConsentContext (cookies), CartContext, AuthContext (solo /admin)
+  lib/           # supabase.js (cliente; null si faltan las claves), analytics.js (GA4 + Meta Pixel)
   services/      # products, collections, settings y faqsService: ÚNICOS lugares que hablan con Supabase
   data/          # products.json, collections.json, faqs.json (seed y modo local), selections.js
   hooks/         # hooks propios (useCart…)
@@ -124,6 +124,17 @@ Solo se consulta como referencia: no copiar código de allí.
 - UI: `BotLauncher` (botón "Ayuda", se apaga desde Ajustes con `bot_enabled`) carga `BotPanel` con `lazy` al abrirse.
   Panel no modal (`role="dialog"`), mensajes en `role="log"` (envolviendo la `<ol>`), Escape cierra y devuelve el foco.
 - `/preguntas-frecuentes`: `<details>`, datos estructurados FAQPage (`utils/faqSchema.js`), enlace en el footer.
+
+## Analítica (GA4 + Meta Pixel)
+- IDs en Ajustes (`store_settings.ga4_id`, `meta_pixel_id`; vacíos = no se mide). Sin IDs no hay aviso de cookies.
+- NADA se carga sin consentimiento: `CookieBanner` (Aceptar / Rechazar del mismo tamaño) guarda la elección en
+  localStorage (`utils/consent.js`, con VERSION para volver a preguntar si cambia lo que se mide). "Preferencias de
+  cookies" en el footer reabre el aviso.
+- `AnalyticsManager` (solo en el Layout de la tienda) llama a `enableAnalytics` / `disableAnalytics` (lib/analytics.js).
+  Al entrar al panel se desmonta y la medición se pausa (`ga-disable-ID`, `fbq('consent','revoke')`): /admin nunca se mide.
+- Páginas vistas: GA4 las registra sola (medición mejorada); Meta a mano (`disablePushState`, `autoConfig` apagado).
+- Eventos: `trackEvent(nombre, lines)` con nombres de GA4 (view_item, add_to_cart, begin_checkout, contact) que se
+  traducen a Meta (ViewContent, AddToCart, InitiateCheckout, Contact). Si no está activa, no hace nada.
 
 ## Reglas de arquitectura
 - Componentes funcionales, uno por archivo, nombre en PascalCase.

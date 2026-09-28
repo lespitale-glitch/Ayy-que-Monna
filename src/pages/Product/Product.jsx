@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import ProductGallery from '../../components/product/ProductGallery.jsx'
 import ProductTags from '../../components/product/ProductTags.jsx'
@@ -11,6 +11,7 @@ import { formatPrice } from '../../utils/formatPrice.js'
 import { useProducts } from '../../hooks/useProducts.js'
 import { getCategory } from '../../utils/products.js'
 import { getAvailability } from '../../utils/stock.js'
+import { trackEvent } from '../../lib/analytics.js'
 
 // El "key" hace que React cree una página nueva al pasar de un producto a otro,
 // así la cantidad y la foto elegida vuelven a empezar de cero.
@@ -29,9 +30,19 @@ function ProductDetail({ product }) {
   const { status, maxQuantity } = getAvailability(product)
   const isOut = status === 'out'
 
+  // Analítica: "vio el producto" (solo se envía si la visita aceptó las cookies).
+  // El ref recuerda el último enviado: en desarrollo React corre los efectos dos veces a propósito.
+  const trackedId = useRef(null)
+  useEffect(() => {
+    if (trackedId.current === product.id) return
+    trackedId.current = product.id
+    trackEvent('view_item', [{ product, quantity: 1 }])
+  }, [product])
+
   // Agrega la cantidad elegida y abre el panel para que se vea el resultado
   const handleAddToCart = () => {
     addItem(product.id, quantity)
+    trackEvent('add_to_cart', [{ product, quantity }])
     openCart()
     setQuantity(1)
   }

@@ -18,8 +18,9 @@ export function SettingsProvider({ children }) {
         if (!ignore) setState({ status: 'ready', settings })
       })
       .catch((error) => {
+        if (ignore) return // ya se salió de la página: no es un error real
         console.error('No se pudieron cargar los ajustes:', error)
-        if (!ignore) setState((prev) => ({ ...prev, status: 'error' }))
+        setState((prev) => ({ ...prev, status: 'error' }))
       })
     return () => {
       ignore = true
