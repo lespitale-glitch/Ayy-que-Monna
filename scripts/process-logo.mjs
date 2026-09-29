@@ -8,14 +8,10 @@
 import sharp from 'sharp'
 
 const SOURCES = {
-  wordmark: 'design/logo-original.jpg', // "Monna" (la M es el símbolo); se recorta la cola final
-  symbol: 'design/logo-m-original.jpg', // la "M" sola
+  full: 'design/logo-completo.png', // logo completo: "ayy que" arriba y "Monna" (la M es el símbolo)
+  symbol: 'design/logo-m-original.jpg', // la "M" sola (favicons)
 }
 const OUT = 'src/assets/brand'
-// El logotipo original termina con una cola en forma de "s" después de la "a" ("monnaꝭ").
-// La marca es "Monna": recortamos la imagen justo después del palo recto de la "a" (columna 1040
-// del archivo original de 1280 px). Así queda "M" (el logo) + "onna".
-const WORDMARK_CUT_X = 1041
 
 const LOW = 10 // distancia al fondo por debajo de la cual el píxel es 100% transparente
 const HIGH = 70 // distancia a partir de la cual es 100% opaco
@@ -53,8 +49,10 @@ async function run() {
   // trim() recorta los bordes transparentes; lo hacemos sobre un PNG intermedio
   const trimmed = async (file, cropWidth) => sharp(await (await removeBackground(file, cropWidth)).toBuffer()).trim()
 
-  const wordmark = await trimmed(SOURCES.wordmark, WORDMARK_CUT_X)
-  await wordmark.clone().resize({ height: 96 }).webp({ quality: 90, alphaQuality: 100 }).toFile(`${OUT}/logo-monna.webp`)
+  // 144 px de alto: nítido en pantallas de alta densidad (el logo se muestra de 36 a 64 px)
+  const full = await trimmed(SOURCES.full)
+  const info = await full.clone().resize({ height: 144 }).webp({ quality: 88, alphaQuality: 100 }).toFile(`${OUT}/logo.webp`)
+  console.log('logo.webp', `${info.width}x${info.height}`, `${Math.round(info.size / 1024)} KB`)
 
   const symbol = await trimmed(SOURCES.symbol)
   await symbol.clone().resize({ height: 160 }).webp({ quality: 90, alphaQuality: 100 }).toFile(`${OUT}/logo-m.webp`)
