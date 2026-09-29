@@ -19,7 +19,7 @@ npm run dev                  # http://localhost:5173
 | `npm run build` | Build de producción en `dist/` |
 | `npm run lint` | Revisa el código con oxlint |
 | `npm run db:seed` | Regenera `supabase/seed.sql` (colecciones, productos y preguntas frecuentes) |
-| `npm run brand:logo` | Genera el logo web (WebP transparente) y los favicons desde `design/` |
+| `npm run brand:logo` | Genera el logo web (`design/logo-completo.png` → WebP transparente) y los favicons desde `design/` |
 | `npm run brand:hero` | Convierte las fotos originales del carrusel (`design/hero/`) a WebP en `public/hero/` |
 
 ## Contenido editable sin programar
