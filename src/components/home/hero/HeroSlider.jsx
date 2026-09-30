@@ -3,21 +3,16 @@ import HeroSlide from './HeroSlide.jsx'
 import SliderControls from './SliderControls.jsx'
 import { buildHeroSlides } from '../../../utils/heroSlides.js'
 import { useProducts } from '../../../hooks/useProducts.js'
-import { useSettings } from '../../../hooks/useSettings.js'
 import { useSlider } from '../../../hooks/useSlider.js'
 
 const SWIPE_THRESHOLD = 50 // px mínimos de deslizamiento para cambiar de diapositiva
 
 // Carrusel principal de la Home (patrón de carrusel accesible de WAI-ARIA)
 function HeroSlider() {
-  // Diapositivas del panel (/admin/inicio) + las automáticas de Ajustes (retiro, Instagram)
+  // Diapositivas del panel (/admin/inicio)
   const { heroSlides } = useProducts()
-  const { pickupPoints, instagramHandle } = useSettings()
-  // useMemo: la lista se rearma solo si cambian los datos que la afectan
-  const slides = useMemo(
-    () => buildHeroSlides(heroSlides, { pickupPoints, instagramHandle }),
-    [heroSlides, pickupPoints, instagramHandle],
-  )
+  // useMemo: la lista se rearma solo si cambian los datos
+  const slides = useMemo(() => buildHeroSlides(heroSlides), [heroSlides])
   const slider = useSlider(slides.length)
   const pointerStartX = useRef(null)
 
@@ -33,7 +28,7 @@ function HeroSlider() {
     if (distance < -SWIPE_THRESHOLD) slider.next()
   }
 
-  // Sin diapositivas (todas ocultas y sin ajustes automáticos): no se muestra el carrusel
+  // Sin diapositivas (todas ocultas): no se muestra el carrusel
   if (slides.length === 0) return null
 
   return (

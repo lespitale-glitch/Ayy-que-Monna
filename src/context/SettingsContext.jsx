@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { SettingsContext } from './settingsContext.js'
 import { fetchSettings } from '../services/settingsService.js'
 import { DEFAULT_SETTINGS } from '../config.js'
+import { applyTheme } from '../utils/theme.js'
 
 // Ajustes de la tienda (WhatsApp, Instagram, envíos) compartidos con toda la tienda.
 // A diferencia del catálogo, no bloquean la página: los textos usan los valores por
@@ -15,7 +16,10 @@ export function SettingsProvider({ children }) {
     let ignore = false
     fetchSettings()
       .then((settings) => {
-        if (!ignore) setState({ status: 'ready', settings })
+        if (ignore) return
+        setState({ status: 'ready', settings })
+        // Colores de la marca → variables CSS en <html> (sin pedir nada extra: vienen con los ajustes)
+        applyTheme(settings)
       })
       .catch((error) => {
         if (ignore) return // ya se salió de la página: no es un error real

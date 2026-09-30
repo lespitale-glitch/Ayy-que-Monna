@@ -76,6 +76,7 @@ Todo con herramientas gratuitas. Decisiones de la dueña:
 - [x] Etapa D: Inventario (modos de stock) + alertas en panel y email (Resend + función de Supabase)
 - [x] Etapa E: GA4 + Meta Pixel con aviso de cookies (IDs desde Ajustes)
 - [x] Extra: carrusel del inicio editable desde el panel (/admin/inicio)
+- [x] Extra: colores de la marca (degradado de botones y títulos) editables desde Ajustes, con control de contraste AA
 
 ## Fase 4 — Newsletter
 - [ ] Formulario de suscripción en el footer y en un modal discreto

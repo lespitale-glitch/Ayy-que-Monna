@@ -3,6 +3,13 @@
 @tailwind utilities;
 
 @layer base {
+  /* Colores de marca (tonos "deep" del logo). Se reemplazan desde /admin/ajustes: utils/theme.js
+     los escribe en <html style="…">, que tiene prioridad sobre este :root. */
+  :root {
+    --brand-from: #c2410c;
+    --brand-to: #be185d;
+  }
+
   body {
     @apply bg-bone font-sans text-ink antialiased;
   }
