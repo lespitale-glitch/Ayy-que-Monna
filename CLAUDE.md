@@ -78,7 +78,12 @@ Solo se consulta como referencia: no copiar código de allí.
   Carrito: tope = stock; los agotados quedan en la lista marcados y NO van en el pedido (`orderLines`).
 - Carrusel del inicio: tabla `hero_slides` (`image`, `image_small`, `alt`, `eyebrow`, `title`, `highlight`, `cta_label`,
   `cta_link` solo '/…' o 'https://…', `is_visible`, `position`; RPC `reorder_hero_slides`). Fotos nuevas en `products/hero/`
-  del bucket (grande 1600 + chica 800). `buildHeroSlides` (utils/heroSlides.js) suma al final retiro e Instagram (Ajustes).
+  del bucket (grande 1600 + chica 800). `buildHeroSlides` (utils/heroSlides.js) las convierte al formato del slider (no hay placas fijas).
+- Colores de la marca: `store_settings.brand_color_from` / `brand_color_to` ("#RRGGBB", por defecto los "deep" del logo).
+  Se aplican como variables CSS `--brand-from` / `--brand-to` en `<html>` (`applyTheme`, utils/theme.js); tailwind.config.js
+  las usa en `mango-deep`, `fucsia-deep` y `bg-brand-deep`, así que `btn-primary`, `text-gradient`, eyebrows y foco cambian
+  solos. El panel exige contraste AA (≥ 4.5:1 contra blanco y `bone`); si llega un color que no pasa, se usan los del logo.
+  `index.html` aplica en línea el último tema guardado en localStorage (`monna-theme`) antes de React: sin parpadeo.
 - `ProductsContext` carga productos + colecciones + carrusel juntos (`Promise.all`) y expone `heroSlides`, `collections`, `selections`
   (colecciones + selecciones automáticas de `data/selections.js`) y `homeCollections`.
 
@@ -170,7 +175,8 @@ El producto sigue siendo el protagonista: el color acompaña, no compite.
   - Marca, SOLO decorativo (fondos, bordes, degradados, íconos grandes): `mango` #FD8927 y `fucsia` #F27084
     (los colores exactos del logo). Degradado de marca: `bg-brand` (mango → fucsia).
   - Marca para TEXTO y botones con texto blanco (pasan AA): `mango-deep` #C2410C, `fucsia-deep` #BE185D.
-    Degradado de texto: `text-gradient` (mango-deep → fucsia-deep).
+    Degradado de texto: `text-gradient` (mango-deep → fucsia-deep). Son variables CSS editables desde
+    Ajustes → "Colores de la marca": NO escribir estos hex en los componentes, usar siempre los tokens.
   - Colecciones: cada una elige un tema, `brand` o `marina` (`COLLECTION_THEMES` en `utils/collections.js`,
     con las clases escritas completas para que Tailwind las genere). `marina` (decorativo) / `marina-deep` (texto).
   - Regla de contraste: mango, fucsia y marina NUNCA como color de texto ni como fondo de texto blanco (no pasan AA).

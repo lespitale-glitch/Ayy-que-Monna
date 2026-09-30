@@ -1,4 +1,5 @@
 import { formatPrice } from './formatPrice.js'
+import { colorError, normalizeHex } from './theme.js'
 
 // Reglas de los ajustes: las mismas que los CHECK de store_settings en schema.sql.
 export const WHATSAPP_PATTERN = /^[0-9]{10,15}$/
@@ -57,6 +58,8 @@ export function valuesFromSettings(settings) {
     showLowStock: settings.showLowStock,
     ga4Id: settings.ga4Id ?? '',
     metaPixelId: settings.metaPixelId ?? '',
+    brandColorFrom: settings.brandColorFrom,
+    brandColorTo: settings.brandColorTo,
   }
 }
 
@@ -75,6 +78,9 @@ export function toSettings(values) {
     // Se aceptan con espacios o en minúsculas (al copiar y pegar); se guardan limpios
     ga4Id: values.ga4Id.trim().toUpperCase(),
     metaPixelId: values.metaPixelId.replace(/\s/g, ''),
+    // El selector de color devuelve minúsculas ("#c2410c"); se guarda "#C2410C"
+    brandColorFrom: normalizeHex(values.brandColorFrom),
+    brandColorTo: normalizeHex(values.brandColorTo),
   }
 }
 
@@ -105,6 +111,11 @@ export function validateSettings(values) {
     errors.ga4Id = 'Empieza con "G-" seguido de letras y números (ej: G-AB12CD34EF).'
   if (settings.metaPixelId && !PIXEL_PATTERN.test(settings.metaPixelId))
     errors.metaPixelId = 'Solo números (entre 5 y 20).'
+
+  const fromError = colorError(settings.brandColorFrom)
+  if (fromError) errors.brandColorFrom = fromError
+  const toError = colorError(settings.brandColorTo)
+  if (toError) errors.brandColorTo = toError
 
   return errors
 }

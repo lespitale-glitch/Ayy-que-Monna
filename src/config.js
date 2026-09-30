@@ -1,5 +1,6 @@
 // Configuración general de la tienda. Todo lo que pueda cambiar vive aquí,
 // así no hay que buscar valores sueltos dentro de los componentes.
+import { DEFAULT_THEME } from './utils/theme.js'
 
 // Ajustes por defecto de la tienda. Con Supabase configurado, los valores reales se
 // editan desde /admin/ajustes (tabla store_settings); estos se usan:
@@ -18,6 +19,7 @@ export const DEFAULT_SETTINGS = {
   showLowStock: true, // "Últimas unidades" cuando queda poco stock
   ga4Id: '', // Google Analytics 4 (G-XXXXXXX); vacío = no se mide
   metaPixelId: '', // Meta Pixel (solo números); vacío = no se mide
+  ...DEFAULT_THEME, // colores de la marca (brandColorFrom, brandColorTo): los del logo
 }
 
 // Categorías de la tienda: `slug` es lo que aparece en la URL (/tienda/aros)

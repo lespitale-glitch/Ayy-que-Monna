@@ -806,5 +806,22 @@ $$;
 revoke execute on function public.reorder_hero_slides(uuid[]) from public, anon;
 grant execute on function public.reorder_hero_slides(uuid[]) to authenticated;
 
+-- -----------------------------------------------------------------------------
+-- 13. Colores de la marca (editables desde /admin/ajustes)
+-- -----------------------------------------------------------------------------
+-- Los dos tonos del degradado de los botones principales y de los textos destacados.
+-- Por defecto, los tonos "deep" del logo. Formato "#RRGGBB" en mayúsculas.
+-- El contraste (texto blanco encima, mínimo 4.5:1) lo controla el panel (utils/theme.js);
+-- si llegara un color que no pasa, la tienda usa los del logo.
+alter table public.store_settings add column if not exists brand_color_from text not null default '#C2410C';
+alter table public.store_settings add column if not exists brand_color_to text not null default '#BE185D';
+
+alter table public.store_settings drop constraint if exists store_settings_brand_color_from_check;
+alter table public.store_settings add constraint store_settings_brand_color_from_check
+  check (brand_color_from ~ '^#[0-9A-F]{6}$');
+alter table public.store_settings drop constraint if exists store_settings_brand_color_to_check;
+alter table public.store_settings add constraint store_settings_brand_color_to_check
+  check (brand_color_to ~ '^#[0-9A-F]{6}$');
+
 -- Avisa a la API de Supabase que la estructura cambió (columnas nuevas o borradas)
 notify pgrst, 'reload schema';

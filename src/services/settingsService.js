@@ -1,7 +1,8 @@
 import { supabase, isSupabaseConfigured } from '../lib/supabase.js'
 import { DEFAULT_SETTINGS } from '../config.js'
+import { DEFAULT_THEME } from '../utils/theme.js'
 
-const COLUMNS = 'whatsapp_number, instagram_handle, shipping_enabled, shipping_note, shipping_from, pickup_points, bot_enabled, show_low_stock, ga4_id, meta_pixel_id'
+const COLUMNS = 'whatsapp_number, instagram_handle, shipping_enabled, shipping_note, shipping_from, pickup_points, bot_enabled, show_low_stock, ga4_id, meta_pixel_id, brand_color_from, brand_color_to'
 
 // snake_case (base) ↔ camelCase (frontend): la traducción vive solo en los servicios
 export function fromSettingsRow(row) {
@@ -16,6 +17,8 @@ export function fromSettingsRow(row) {
     showLowStock: row.show_low_stock ?? true,
     ga4Id: row.ga4_id ?? '',
     metaPixelId: row.meta_pixel_id ?? '',
+    brandColorFrom: row.brand_color_from ?? DEFAULT_THEME.brandColorFrom,
+    brandColorTo: row.brand_color_to ?? DEFAULT_THEME.brandColorTo,
   }
 }
 
@@ -31,6 +34,8 @@ export function toSettingsRow(settings) {
     show_low_stock: settings.showLowStock,
     ga4_id: settings.ga4Id,
     meta_pixel_id: settings.metaPixelId,
+    brand_color_from: settings.brandColorFrom,
+    brand_color_to: settings.brandColorTo,
   }
 }
 

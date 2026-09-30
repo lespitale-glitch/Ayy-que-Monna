@@ -7,4 +7,6 @@ export const SETTINGS_LABELS = {
   pickupPoints: 'Puntos de retiro',
   ga4Id: 'Google Analytics',
   metaPixelId: 'Meta Pixel',
+  brandColorFrom: 'Color 1 del degradado',
+  brandColorTo: 'Color 2 del degradado',
 }

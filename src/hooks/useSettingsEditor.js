@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { fetchSettings, updateSettings } from '../services/settingsService.js'
 import { getAdminErrorMessage } from '../utils/adminErrors.js'
 import { toSettings } from '../utils/settings.js'
+import { applyTheme } from '../utils/theme.js'
 
 // Carga y guarda los ajustes de la tienda en /admin/ajustes
 export function useSettingsEditor() {
@@ -16,7 +17,9 @@ export function useSettingsEditor() {
     let ignore = false
     fetchSettings()
       .then((settings) => {
-        if (!ignore) setLoad({ status: 'ready', settings })
+        if (ignore) return
+        setLoad({ status: 'ready', settings })
+        applyTheme(settings) // el panel también usa los colores guardados
       })
       .catch((error) => {
         if (ignore) return // ya se salió de la página: no es un error real
@@ -35,6 +38,8 @@ export function useSettingsEditor() {
     try {
       const settings = await updateSettings(toSettings(values))
       setLoad({ status: 'ready', settings })
+      // Los colores nuevos se ven al instante en el panel (en la tienda, al recargar)
+      applyTheme(settings)
       setVersion((v) => v + 1)
       return true
     } catch (error) {

@@ -8,6 +8,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Ayy Que Monna — bijouterie" />
     <title>Ayy Que Monna</title>
+    <!-- Colores de marca elegidos en /admin/ajustes (guardados en la visita anterior, utils/theme.js).
+         Va en línea y antes de la app para que los botones no "parpadeen" con los colores viejos. -->
+    <script>
+      try {
+        var t = JSON.parse(localStorage.getItem('monna-theme'))
+        var ok = /^#[0-9A-F]{6}$/
+        if (t && ok.test(t.brandColorFrom) && ok.test(t.brandColorTo)) {
+          document.documentElement.style.setProperty('--brand-from', t.brandColorFrom)
+          document.documentElement.style.setProperty('--brand-to', t.brandColorTo)
+        }
+      } catch (e) {}
+    </script>
   </head>
   <body>
     <div id="root"></div>

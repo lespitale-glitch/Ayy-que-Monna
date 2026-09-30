@@ -42,7 +42,7 @@ function AdminHeroSlides() {
           <p className="text-xs uppercase tracking-widest text-stone">Panel de administración</p>
           <h1 className="mt-3 text-4xl">Carrusel del inicio</h1>
           <p className="mt-3 max-w-xl text-sm text-stone">
-            Se muestran en este orden. Al final se suman solas las de retiro gratis e Instagram (salen de Ajustes).
+            Se muestran en este orden. Las ocultas no aparecen en la tienda.
           </p>
         </div>
         <Link to="/admin/inicio/nueva" className="btn-primary px-5">

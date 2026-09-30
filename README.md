@@ -30,6 +30,7 @@ npm run dev                  # http://localhost:5173
 - **Colecciones:** desde el panel, en **/admin/colecciones**. Las selecciones automáticas del menú
   (Novedades, Destacados, Dorados, Plateados) están en `src/data/selections.js`.
 - **WhatsApp, Instagram, envíos y puntos de retiro:** desde el panel, en **/admin/ajustes**.
+- **Colores de los botones y títulos destacados:** en **/admin/ajustes** → **Colores de la marca**.
   Sin Supabase (modo local) se usan los valores de `DEFAULT_SETTINGS` en `src/config.js`.
 
 ---
@@ -125,6 +126,7 @@ No hay ningún enlace visible en la tienda a propósito. Sin sesión, te lleva a
 | Cargar el stock de un producto | Lápiz → sección **Stock**: *Sin control*, *Con stock* (unidades y "avisar con") o *A pedido* |
 | Descontar una venta de WhatsApp | Columna **Stock** de la lista → botón **−** (y **+** al reponer). Se guarda al instante |
 | Ver qué hay que reponer | Aviso **Revisa el stock** arriba de la lista, o filtro **Stock** → *Stock bajo* / *Agotados* |
+| Cambiar los colores de botones y títulos | **Ajustes** → **Colores de la marca** → combinación lista o tus dos colores (con vista previa) → **Guardar ajustes** |
 | Mostrar u ocultar "Últimas unidades" | **Ajustes** → **Inventario** |
 | Activar Google Analytics o Meta Pixel | **Ajustes** → **Analítica** → pegar el ID (ver "Analítica" más abajo) |
 | Apagar el asistente | **Ajustes** → **Mostrar el asistente en la tienda** |

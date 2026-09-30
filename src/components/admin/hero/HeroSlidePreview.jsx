@@ -6,22 +6,19 @@ import { buildHeroSlides } from '../../../utils/heroSlides.js'
 function HeroSlidePreview({ values }) {
   const photo = values.photo
   if (!photo) return null
-  const [slide] = buildHeroSlides(
-    [
-      {
-        id: 'preview',
-        image: photo.url ?? photo.previewUrl,
-        imageSmall: photo.urlSmall ?? null,
-        alt: '',
-        eyebrow: values.eyebrow,
-        title: values.title || 'Título',
-        highlight: values.highlight,
-        ctaLabel: values.ctaLabel || 'Botón',
-        ctaLink: '/',
-      },
-    ],
-    { pickupPoints: [], instagramHandle: '' },
-  )
+  const [slide] = buildHeroSlides([
+    {
+      id: 'preview',
+      image: photo.url ?? photo.previewUrl,
+      imageSmall: photo.urlSmall ?? null,
+      alt: '',
+      eyebrow: values.eyebrow,
+      title: values.title || 'Título',
+      highlight: values.highlight,
+      ctaLabel: values.ctaLabel || 'Botón',
+      ctaLink: '/',
+    },
+  ])
 
   return (
     <section aria-label="Vista previa" className="rounded-2xl border border-line bg-bone p-3">
