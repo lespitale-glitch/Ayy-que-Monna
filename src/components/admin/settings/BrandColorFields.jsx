@@ -1,12 +1,10 @@
 import ColorInput from './ColorInput.jsx'
 import BrandPreview from './BrandPreview.jsx'
-import { HEX_PATTERN, THEME_PRESETS, colorError, normalizeHex } from '../../../utils/theme.js'
-
-// El aviso de contraste aparece en vivo (al elegir el color); el de formato, recién al guardar
-// (mientras se escribe un código siempre está incompleto).
-const liveError = (hex, submitError) => submitError ?? (HEX_PATTERN.test(hex) ? colorError(hex) : null)
+import { THEME_PRESETS, normalizeHex, pairError } from '../../../utils/theme.js'
 
 // Colores de la marca: los dos tonos del degradado de los botones principales y de los textos destacados
+// El aviso de la combinación (muy claro + muy oscuro) aparece en vivo; el de formato, recién al guardar
+// (mientras se escribe un código siempre está incompleto).
 function BrandColorFields({ values, errors, setField, disabled }) {
   const from = normalizeHex(values.brandColorFrom)
   const to = normalizeHex(values.brandColorTo)
@@ -20,8 +18,9 @@ function BrandColorFields({ values, errors, setField, disabled }) {
     <fieldset className="grid content-start gap-6">
       <legend className="font-display text-2xl">Colores de la marca</legend>
       <p className="-mt-2 text-xs text-stone">
-        Degradado de los botones principales y de las palabras destacadas de los títulos. Tienen que ser tonos
-        oscuros para que el texto blanco se lea bien (el panel te avisa si no).
+        Degradado de los botones principales y de las palabras destacadas de los títulos. Puede ser cualquier
+        color: si es claro, las letras del botón se ponen negras y los textos destacados usan un tono más oscuro
+        del mismo color, para que siempre se lean.
       </p>
 
       <div>
@@ -61,7 +60,7 @@ function BrandColorFields({ values, errors, setField, disabled }) {
           id="brandColorFrom"
           label="Color 1 (izquierda)"
           value={values.brandColorFrom}
-          error={liveError(from, errors.brandColorFrom)}
+          error={errors.brandColorFrom}
           setField={setField}
           disabled={disabled}
         />
@@ -69,7 +68,7 @@ function BrandColorFields({ values, errors, setField, disabled }) {
           id="brandColorTo"
           label="Color 2 (derecha)"
           value={values.brandColorTo}
-          error={liveError(to, errors.brandColorTo)}
+          error={errors.brandColorTo ?? pairError(from, to)}
           setField={setField}
           disabled={disabled}
         />

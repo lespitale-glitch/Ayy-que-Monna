@@ -1,5 +1,5 @@
 import { formatPrice } from './formatPrice.js'
-import { colorError, normalizeHex } from './theme.js'
+import { colorError, normalizeHex, pairError } from './theme.js'
 
 // Reglas de los ajustes: las mismas que los CHECK de store_settings en schema.sql.
 export const WHATSAPP_PATTERN = /^[0-9]{10,15}$/
@@ -114,7 +114,8 @@ export function validateSettings(values) {
 
   const fromError = colorError(settings.brandColorFrom)
   if (fromError) errors.brandColorFrom = fromError
-  const toError = colorError(settings.brandColorTo)
+  // El error de la combinación (claro + oscuro) se marca en el color 2
+  const toError = colorError(settings.brandColorTo) ?? pairError(settings.brandColorFrom, settings.brandColorTo)
   if (toError) errors.brandColorTo = toError
 
   return errors

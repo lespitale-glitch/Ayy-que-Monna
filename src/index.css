@@ -4,10 +4,14 @@
 
 @layer base {
   /* Colores de marca (tonos "deep" del logo). Se reemplazan desde /admin/ajustes: utils/theme.js
-     los escribe en <html style="…">, que tiene prioridad sobre este :root. */
+     los escribe en <html style="…">, que tiene prioridad sobre este :root.
+     brand-from/to = degradado de los botones; brand-on = sus letras; brand-text-* = textos destacados. */
   :root {
     --brand-from: #c2410c;
     --brand-to: #be185d;
+    --brand-on: #ffffff;
+    --brand-text-from: #c2410c;
+    --brand-text-to: #be185d;
   }
 
   body {
@@ -27,9 +31,9 @@
 }
 
 @layer components {
-  /* Botón principal: degradado de marca en tonos "deep" para que el texto blanco pase AA */
+  /* Botón principal: degradado de marca; las letras (blancas o negras) se eligen para que pasen AA */
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 rounded-full bg-brand-deep px-8 py-3 text-xs font-medium uppercase tracking-widest text-white transition-[filter,opacity] duration-300 ease-soft hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50;
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-brand-deep px-8 py-3 text-xs font-medium uppercase tracking-widest text-on-brand transition-[filter,opacity] duration-300 ease-soft hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50;
   }
 
   /* Botón secundario: contorno fino */
@@ -37,9 +41,9 @@
     @apply inline-flex items-center justify-center gap-2 rounded-full border border-ink px-8 py-3 text-xs font-medium uppercase tracking-widest transition-colors duration-300 ease-soft hover:bg-ink hover:text-bone disabled:cursor-not-allowed disabled:opacity-50;
   }
 
-  /* Texto con el degradado de la marca (versión deep: legible sobre fondo claro) */
+  /* Texto con el degradado de la marca (versión legible sobre el fondo crema) */
   .text-gradient {
-    @apply bg-brand-deep bg-clip-text text-transparent;
+    @apply bg-brand-text bg-clip-text text-transparent;
   }
 }
 

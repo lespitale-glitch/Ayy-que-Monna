@@ -37,7 +37,7 @@ function ProductCard({ product }) {
           {/* Etiquetas apiladas: en tarjetas angostas (celular) no entran una al lado de la otra */}
           <div className="absolute inset-x-3 top-3 flex flex-col items-start gap-1.5">
             {product.isNew && (
-              <span className="rounded-full bg-brand-deep px-3 py-1 text-[10px] font-medium uppercase tracking-widest text-white">
+              <span className="rounded-full bg-brand-deep px-3 py-1 text-[10px] font-medium uppercase tracking-widest text-on-brand">
                 Nuevo
               </span>
             )}

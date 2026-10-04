@@ -80,9 +80,12 @@ Solo se consulta como referencia: no copiar código de allí.
   `cta_link` solo '/…' o 'https://…', `is_visible`, `position`; RPC `reorder_hero_slides`). Fotos nuevas en `products/hero/`
   del bucket (grande 1600 + chica 800). `buildHeroSlides` (utils/heroSlides.js) las convierte al formato del slider (no hay placas fijas).
 - Colores de la marca: `store_settings.brand_color_from` / `brand_color_to` ("#RRGGBB", por defecto los "deep" del logo).
-  Se aplican como variables CSS `--brand-from` / `--brand-to` en `<html>` (`applyTheme`, utils/theme.js); tailwind.config.js
-  las usa en `mango-deep`, `fucsia-deep` y `bg-brand-deep`, así que `btn-primary`, `text-gradient`, eyebrows y foco cambian
-  solos. El panel exige contraste AA (≥ 4.5:1 contra blanco y `bone`); si llega un color que no pasa, se usan los del logo.
+  Se acepta cualquier tono: `resolveTheme` (utils/theme.js) calcula lo demás para que todo pase AA:
+  `--brand-on` (letras del botón: blanco o `ink`, la que mejor se lea en todo el degradado) y `--brand-text-from/to`
+  (el mismo tono con menos luminosidad, en HSL, hasta leerse sobre `bone`). Única combinación rechazada: muy claro + muy
+  oscuro (`pairError`: ninguna letra sirve en todo el botón); si llega una así, se usan los del logo.
+  `applyTheme` escribe las variables en `<html>`. Tokens: `bg-brand-deep` + `text-on-brand` (botones, chips, badges),
+  `bg-brand-text` (`text-gradient`), `mango-deep` / `fucsia-deep` (textos y foco). Sobre `bg-brand-deep` NUNCA `text-white`.
   `index.html` aplica en línea el último tema guardado en localStorage (`monna-theme`) antes de React: sin parpadeo.
 - `ProductsContext` carga productos + colecciones + carrusel juntos (`Promise.all`) y expone `heroSlides`, `collections`, `selections`
   (colecciones + selecciones automáticas de `data/selections.js`) y `homeCollections`.
@@ -174,8 +177,8 @@ El producto sigue siendo el protagonista: el color acompaña, no compite.
   - Base: fondo `bone` (crema cálido), texto `ink`, secundario `stone`, bordes `line`.
   - Marca, SOLO decorativo (fondos, bordes, degradados, íconos grandes): `mango` #FD8927 y `fucsia` #F27084
     (los colores exactos del logo). Degradado de marca: `bg-brand` (mango → fucsia).
-  - Marca para TEXTO y botones con texto blanco (pasan AA): `mango-deep` #C2410C, `fucsia-deep` #BE185D.
-    Degradado de texto: `text-gradient` (mango-deep → fucsia-deep). Son variables CSS editables desde
+  - Marca para TEXTO (pasan AA): `mango-deep` #C2410C, `fucsia-deep` #BE185D. Degradado de texto: `text-gradient`.
+    Botones: `bg-brand-deep` con letras `text-on-brand`. Son variables CSS editables desde
     Ajustes → "Colores de la marca": NO escribir estos hex en los componentes, usar siempre los tokens.
   - Colecciones: cada una elige un tema, `brand` o `marina` (`COLLECTION_THEMES` en `utils/collections.js`,
     con las clases escritas completas para que Tailwind las genere). `marina` (decorativo) / `marina-deep` (texto).
