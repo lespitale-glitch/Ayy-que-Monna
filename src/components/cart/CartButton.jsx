@@ -16,7 +16,7 @@ function CartButton() {
       {totalItems > 0 && (
         <span
           aria-hidden="true"
-          className="absolute right-0 top-0 flex h-4 min-w-4 items-center justify-center rounded-full bg-brand-deep px-1 text-[10px] leading-none text-white"
+          className="absolute right-0 top-0 flex h-4 min-w-4 items-center justify-center rounded-full bg-brand-deep px-1 text-[10px] leading-none text-on-brand"
         >
           {totalItems}
         </span>

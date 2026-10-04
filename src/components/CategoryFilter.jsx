@@ -18,7 +18,7 @@ function CategoryFilter() {
               end={filter.end}
               className={({ isActive }) =>
                 `inline-block rounded-full px-4 py-2 text-xs uppercase tracking-widest transition-colors duration-300 ease-soft ${
-                  isActive ? 'bg-brand-deep text-white' : 'text-stone hover:bg-brand-soft hover:text-ink'
+                  isActive ? 'bg-brand-deep text-on-brand' : 'text-stone hover:bg-brand-soft hover:text-ink'
                 }`
               }
             >

@@ -126,7 +126,7 @@ No hay ningún enlace visible en la tienda a propósito. Sin sesión, te lleva a
 | Cargar el stock de un producto | Lápiz → sección **Stock**: *Sin control*, *Con stock* (unidades y "avisar con") o *A pedido* |
 | Descontar una venta de WhatsApp | Columna **Stock** de la lista → botón **−** (y **+** al reponer). Se guarda al instante |
 | Ver qué hay que reponer | Aviso **Revisa el stock** arriba de la lista, o filtro **Stock** → *Stock bajo* / *Agotados* |
-| Cambiar los colores de botones y títulos | **Ajustes** → **Colores de la marca** → combinación lista o tus dos colores (con vista previa) → **Guardar ajustes** |
+| Cambiar los colores de botones y títulos | **Ajustes** → **Colores de la marca** → combinación lista o tus dos colores, claros u oscuros (con vista previa; las letras se ajustan solas) → **Guardar ajustes** |
 | Mostrar u ocultar "Últimas unidades" | **Ajustes** → **Inventario** |
 | Activar Google Analytics o Meta Pixel | **Ajustes** → **Analítica** → pegar el ID (ver "Analítica" más abajo) |
 | Apagar el asistente | **Ajustes** → **Mostrar el asistente en la tienda** |
